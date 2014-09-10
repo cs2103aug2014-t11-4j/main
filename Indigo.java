@@ -6,6 +6,10 @@ public class Indigo{
     		+ " where you get tasks from to-do to done!");     
     public static Scanner input = new Scanner(System.in);
     
+    enum Commands {
+        ADD, EDIT, DELETE, VIEW, CLEAR;
+    }
+    
     public static void main(String[]args) {         
     	System.out.println(WELCOME_MESSAGE);     
     	System.out.println("To test you are not a robot: What is 1 + 1 in binary?");
@@ -15,5 +19,6 @@ public class Indigo{
     		System.out.println("No, you are a robot! GoodBye!");
     	}
     	
-    } 
+    }
+    
 }
