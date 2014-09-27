@@ -1,3 +1,9 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+
 /** This a main program of Indigo.
  *  Indigo is a software that can store, process and display tasks on the desktop as a task manager.
  *  Indigo also supports audio remainder, auto-correction, and color-coded highlighting.
@@ -7,6 +13,11 @@
  *
  */
 public class IndigoMain {
+	
+	private static final String FILE_NAME = "myTask";
+	private static final String MESSAGE_ERROR_FILE_NOT_FOUND = FILE_NAME + " is not found!";
+	// Storage of our list of tasks
+	private static ArrayList<Task> taskList = new ArrayList<Task>();
 
 	public static void main(String[] args) {
 		/* outline:
@@ -46,12 +57,49 @@ public class IndigoMain {
 
 	private static void loadData() {
 		// TODO load data from the local disk into memory
-		
+		try{
+			FileInputStream fis = new FileInputStream(FILE_NAME);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			Object obj = ois.readObject();
+			if (obj instanceof ArrayList<?>){
+				ArrayList<?> al = (ArrayList<?>) obj;
+			if (al.size() > 0){
+				for (int i = 0; i < al.size(); i++){
+					Object o = al.get(i);
+					if (o instanceof Task){
+						taskList.add((Task) o);
+					}
+				}
+			
+			}
+			ois.close();
+			fis.close();
+			}
+		} catch (IOException ioe){
+			ioe.printStackTrace();
+			return;
+		} catch (ClassNotFoundException c){
+			System.out.println("ioe exception");
+			c.printStackTrace();
+			return;
+		}
+	
 	}
 
 	private static boolean isDataPresent() {
 		// TODO check if there is data on the disk
-		return false;
+		try {
+			FileInputStream fis = new FileInputStream(FILE_NAME);
+			fis.close();
+		} catch (FileNotFoundException e) {
+			System.out.println(MESSAGE_ERROR_FILE_NOT_FOUND);
+			return false;
+		} catch (IOException ioe){
+			System.out.println("ioe exception");
+			ioe.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	private static void displayWelcomeMessage() {
