@@ -52,9 +52,9 @@ public class Parser {
 			 if(!checkValidMonthNumber())  
 				 System.out.println(INVALID_MONTH_MESSAGE); 
 			 else {
-				 dateInt = Integer.parseInt(date[0]);
-			     monthInt = Integer.parseInt(date[1]);
-			     yearInt = Integer.parseInt(date[2]);
+		 		dateInt = Integer.parseInt(date[0]);
+			     	monthInt = Integer.parseInt(date[1]);
+			     	yearInt = Integer.parseInt(date[2]);
 			 } 
 		 } 
 		 	
