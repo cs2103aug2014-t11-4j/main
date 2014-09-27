@@ -2,10 +2,10 @@ import java.util.ArrayList;
 
 public class Parser {
 	String keyWord  			  	= null; 
-	String commandWords  			= null; 
-	String [] commandSentence	= null; 
-	String [] details 		  	= null; 
-	String toDo            		= null; 
+	String commandWords  				= null; 
+	String [] commandSentence			= null; 
+	String [] details 			  	= null; 
+	String toDo            				= null; 
 	String [] date 			  		= null;
 	String dateStr 			  		= null; 
 	int dateInt 			    		= 0;
