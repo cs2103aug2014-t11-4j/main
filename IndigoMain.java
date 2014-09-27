@@ -50,13 +50,16 @@ public class IndigoMain {
 
 		while (true) {
 			String userCommand = readCommand();
-			System.out.println(userCommand); // TODO a stub to test readCommand
+			
+			System.out.println(userCommand); 
+			// TODO GUI for displaying system message after each operation.
 		}
 	}
 
 	// TODO a simple input for testing
 	private static Scanner scanner = new Scanner(System.in);
 	
+	// TODO GUI for user inputs
 	private static String readCommand() {
 		/*
 		 * TODO 
@@ -80,7 +83,7 @@ public class IndigoMain {
 	}
 
 	private static String saveTaskList() {
-		// TODO save taskList into raw bytes
+		//  save taskList into raw bytes
 		if (taskList.size() > 0) {
 			try {
 				FileOutputStream fos = new FileOutputStream(FILE_NAME);
@@ -89,19 +92,19 @@ public class IndigoMain {
 				oos.close();
 				fos.close();
 			} catch (IOException ioe) {
-				return "ioe Exception";
+				return "ioe Exception.";
 			}
 			return FILE_NAME + "is saved!";
 		}
-		return "taskList is empty()";
+		return "taskList is empty().";
 	}
 
-	private static void displayTutorialMessage() {
+	private static String displayTutorialMessage() {
 		// TODO ask user if want to enter tutorial mode
-
+		return "Congragulations! You have completed tutorials.";
 	}
 
-	private static void loadData() {
+	private static String loadData() {
 		// load data from the local disk into memory
 		try {
 			FileInputStream fis = new FileInputStream(FILE_NAME);
@@ -123,13 +126,13 @@ public class IndigoMain {
 			}
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			return;
+			return "ioe exception while loading.";
 		} catch (ClassNotFoundException c) {
-			System.out.println("ioe exception");
+			System.out.println("ioe exception.");
 			c.printStackTrace();
-			return;
+			return "ClassNotFoundException while loading.";
 		}
-
+		return FILE_NAME + " is loaded.";
 	}
 
 	private static boolean isDataPresent() {
@@ -141,7 +144,7 @@ public class IndigoMain {
 			System.out.println(MESSAGE_ERROR_FILE_NOT_FOUND);
 			return false;
 		} catch (IOException ioe) {
-			System.out.println("ioe exception");
+			System.out.println("ioe exception.");
 			ioe.printStackTrace();
 			return false;
 		}
@@ -150,7 +153,6 @@ public class IndigoMain {
 
 	private static void displayWelcomeMessage() {
 		// TODO display welcomeMessage
-
 	}
 
 }
