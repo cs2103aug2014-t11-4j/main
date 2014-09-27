@@ -8,6 +8,8 @@ public class Task {
 	
 	private String taskTitle;
 	
+	private Type taskType;
+	
 	private String taskDescription;
 	
 	private String taskTime;
@@ -18,14 +20,19 @@ public class Task {
 	
 	public static int numOfTasks = 0;
 	// total number of tasks in the list
+	
+	public enum Type {
+		FLOATING, DAILY, WEEKLY
+	}
 
 	public Task() {
 		// a stub default value for default constructor
-		this ("CS2103", "finish CS2103 assignments", "today", "immediate");
+		this ("CS2103", Type.FLOATING, "finish CS2103 assignments", "today", "immediate");
 	}
 	
-	public Task(String title, String description, String time, String importance){
+	public Task(String title, Type type, String description, String time, String importance){
 		taskTitle = title;
+		taskType = type;
 		taskDescription = description;
 		taskTime = time;
 		taskImportance = importance;
@@ -35,6 +42,10 @@ public class Task {
 	// accessor
 	public String getTitle(){
 		return taskTitle;
+	}
+	
+	public Type getType(){
+		return taskType;
 	}
 	
 	public String getDescription(){
