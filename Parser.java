@@ -46,7 +46,7 @@ public class Parser {
 		case "undo" : 
 		} 					
 	}
-	public void parseDate() 
+	public void parseDate(){
 		 if(detailsList.contains("/")) {	   			// date is in the format of 23/12/2014
 			 dateStr = details[details.length-1];
 			 if(!checkValidMonthNumber())  
@@ -58,9 +58,9 @@ public class Parser {
 			 } 
 		 } 
 		 	
-		 if(detailsList.contains(daysList)			   	// date is in the format of Monday
+		 if(detailsList.contains(daysList)){			   	// date is in the format of Monday
 			 dateStr = details[details.length-1]; 
-		 
+		 }
 		 else { 							// date is in the format of 23 Dec 2014
 			 for(int j=details.length-3; j<details.length; j++) {  
 				 int p=0; 
