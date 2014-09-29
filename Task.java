@@ -1,5 +1,9 @@
 /** this class is meant for storage of one task only
- * There are 4 fields for creating a new task: the title, the decription, the time and the level of importance.
+ * 3 way to create a task
+ * -task(Parser)
+ * -task()
+ * -task(String, Type, String, String, String)
+ * There are 5 fields for creating a new task: the title, the description, the time, the type of the task and the level of importance.
  * @author jjlu
  *
  */
@@ -12,14 +16,12 @@ public class Task {
 	
 	private String taskDescription;
 	
+	//TODO data type to be amended
 	private String taskTime;
 	// exact time period, date, week or month
 	
 	private String taskImportance;
 	// important, immediate, normal or pleasure
-	
-	public static int numOfTasks = 0;
-	// total number of tasks in the list
 	
 	public enum Type {
 		FLOATING, DAILY, WEEKLY
@@ -30,13 +32,17 @@ public class Task {
 		this ("CS2103", Type.FLOATING, "finish CS2103 assignments", "today", "immediate");
 	}
 	
+	// TODO exact class method to be ammended
+	public Task(Parser userCommand){
+		this (userCommand.getCommand(), Type.FLOATING, "Enter your task description", userCommand.getTime(), "immediate");
+	}
+	
 	public Task(String title, Type type, String description, String time, String importance){
 		taskTitle = title;
 		taskType = type;
 		taskDescription = description;
 		taskTime = time;
 		taskImportance = importance;
-		numOfTasks ++;
 	}
 	
 	// accessor
