@@ -17,7 +17,7 @@ public class Task {
 	private String taskDescription;
 	
 	//TODO data type to be amended
-	private String taskTime;
+	private int[] taskTime;
 	// exact time period, date, week or month
 	
 	private String taskImportance;
@@ -29,15 +29,15 @@ public class Task {
 
 	public Task() {
 		// a stub default value for default constructor
-		this ("CS2103", Type.FLOATING, "finish CS2103 assignments", "today", "immediate");
+		this ("CS2103", Type.FLOATING, "finish CS2103 assignments", null, "immediate");
 	}
 	
 	// TODO exact class method to be ammended
 	public Task(Parser userCommand){
-		this (userCommand.toDo, Type.FLOATING, "Enter your task description", userCommand.dateStr, "immediate");
+		this (userCommand.getCommand(), Type.FLOATING, "Enter your task description", userCommand.getDate(), "immediate");
 	}
 	
-	public Task(String title, Type type, String description, String time, String importance){
+	public Task(String title, Type type, String description, int[] time, String importance){
 		taskTitle = title;
 		taskType = type;
 		taskDescription = description;
@@ -58,7 +58,7 @@ public class Task {
 		return taskDescription;
 	}
 	
-	public String getTime(){
+	public int[] getTime(){
 		return taskTime;
 	}
 	
@@ -77,7 +77,7 @@ public class Task {
 		return newDescription;
 	}
 	
-	public String editTime (String newTime){
+	public int[] editTime (int[] newTime){
 		taskTime = newTime;
 		return newTime;
 	}
