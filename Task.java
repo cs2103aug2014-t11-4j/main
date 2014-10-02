@@ -45,6 +45,10 @@ public class Task {
 		taskImportance = importance;
 	}
 	
+	public Task(String taskDescription){
+		this("title", Type.FLOATING, taskDescription, null, "immediate");
+	}
+	
 	// accessor
 	public String getTitle(){
 		return taskTitle;
@@ -85,6 +89,11 @@ public class Task {
 	public String editImportance (String newImportance){
 		taskImportance = newImportance;
 		return newImportance;
+	}
+	
+	// TODO support floating task only
+	public String toString(){
+		return this.getDescription();
 	}
 
 }
