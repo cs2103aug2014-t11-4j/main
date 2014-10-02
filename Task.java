@@ -34,7 +34,7 @@ public class Task {
 	
 	// TODO exact class method to be ammended
 	public Task(Parser userCommand){
-		this (userCommand.getCommand(), Type.FLOATING, "Enter your task description", userCommand.getTime(), "immediate");
+		this (userCommand.toDo, Type.FLOATING, "Enter your task description", userCommand.dateStr, "immediate");
 	}
 	
 	public Task(String title, Type type, String description, String time, String importance){
