@@ -102,4 +102,10 @@ public class Task {
 		return this.getDescription();
 	}
 
+	@Override
+	public boolean equals(Object anotherTask) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 }
