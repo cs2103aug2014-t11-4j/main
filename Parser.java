@@ -3,34 +3,36 @@
  * @author Joanna
  *
  */
-import java.util.ArrayList;
 import java.util.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 
 public class Parser {
-	String keyWord  			= null;  		//stores the key command "add"/"delete" to return to logic
-	String commandWords  			= null; 		//stores the remaining words excluding key command
-	String [] commandSentence 		= new String[2]; 	//to help store the splited string command
-	String [] details 		  	= null; 		//store the remaining words excluding key command individually
-	String toDo               		= ""; 			//stores the final command to return to logic
-	String [] date  			= new String[3];	//stores the date in string array (deal with 23 dec 2014)
-	int [] dateIntArr 			= new int[3];		//stores the date to return to logic
-	String dateStr 			  	= null; 		//stores the date in string to eliminate "/" 		
-	String timeArr[] 			= new String [2]; 
-	String timeStr 				= null;
+	String keyWord  				= null;  					//stores the key command "add"/"delete" to return to logic
+	String commandWords  			= null; 					//stores the remaining words excluding key command
+	String [] commandSentence 		= new String[2]; 			//to help store the splited string command
+	String [] details 		  		= null; 					//store the remaining words excluding key command individually
+	String toDo               		= ""; 						//stores the final command to return to logic
+	String [] date = 				new String[3];				//stores the date in string array (deal with 23 dec 2014)
+	int [] dateIntArr 				= new int[3];				//stores the date to return to logic
+	String dateStr 			  		= null; 					//stores the date in string to eliminate "/" 		
+	String timeArr[] 				= new String [2]; 
+	String timeStr 					= null;
 	String startTimeStr 			= null;
-	String endTimeStr			= null;
-	boolean containConj 			= false;		//determine if it is a floating task
-	int dateInt 			  	= 0;
-	int monthInt			  	= 0;
-	int yearInt      		  	= 0; 
-	int delIndex				= 0; 
-	int editIndex 				= 0; 
-	ArrayList<String> conjWords 		= new ArrayList<String>();
-	ArrayList<String> detailsList 		= new ArrayList<String>();
-	ArrayList<String> month      		= new ArrayList<String>();
-	ArrayList<String> monthWords 		= new ArrayList<String>();
-	ArrayList<String> daysList  		= new ArrayList<String>();
-	String INVALID_MONTH_MESSAG		= "Month input is invalid.";
+	String endTimeStr				= null;
+	boolean containConj 			= false;					//determine if it is a floating task
+	int dateInt 			  		= 0;
+	int monthInt			  		= 0;
+	int yearInt      		  		= 0; 
+	int delIndex					= 0; 
+	int editIndex 					= 0; 
+	ArrayList<String> conjWords 	= new ArrayList<String>();
+	ArrayList<String> detailsList 	= new ArrayList<String>();
+	ArrayList<String> month      	= new ArrayList<String>();
+	ArrayList<String> monthWords 	= new ArrayList<String>();
+	ArrayList<String> daysList  	= new ArrayList<String>();
+	String INVALID_MONTH_MESSAGE    = "Month input is invalid.";
 	static String testInput 		= null;
 	
 	public static void main(String args[]) { 
@@ -55,10 +57,10 @@ public class Parser {
 		addDays(); 
 		
 		conjWords.add("by"); 
-		conjWords.add("on"); 					// words to filter out dates
+		conjWords.add("on"); 							// words to filter out dates
 		
 		switch(keyWord) { 
-		case "add": 						// for instance add buy a cat on 23/12/2014
+		case "add": 									// for instance add buy a cat on 23/12/2014
 			 details = commandWords.split(" "); 
 			 for(int i=0; i<details.length; i++) 
 				detailsList.add(details[i]);
@@ -75,7 +77,7 @@ public class Parser {
 				 break;  
 			 }
 			 
-			 else{ 						// this is a floating task
+			 else{ 										// this is a floating task
 				for(int b=0; b<details.length; b++) { 
 					toDo = toDo+ " " + details[b]; 
 				}
@@ -86,7 +88,7 @@ public class Parser {
 			delIndex = Integer.parseInt(commandSentence[1]); 
 			break;
 		
-		case "edit" : 						// edit 2 catch a cat
+		case "edit" : 									// edit 2 catch a cat
 			details = commandWords.split(" ");
 			editIndex = Integer.parseInt(details[0]);
 			for(int c=1; c<details.length; c++) { 
@@ -116,7 +118,7 @@ public class Parser {
 			} 
 		}
 
-		 else{ 							// date is in the format of 23 Dec 2014
+		 else{ 											// date is in the format of 23 Dec 2014
 			 for(int j=details.length-3; j<details.length; j++) {   
 				 date[p] = details[j]; 
 				 p++; 
@@ -228,12 +230,18 @@ public class Parser {
 		dateIntArr[0] = dateInt;
 		dateIntArr[1] = monthInt;
 		dateIntArr[2] = yearInt; 
-		System.out.print("Date:");
-		for(int k=0; k<3; k++) { 
-			System.out.print(dateIntArr[k]);
+		if(checkValidDate()) { 
+			System.out.print("Date:");
+			for(int k=0; k<3; k++) { 
+				System.out.print(dateIntArr[k]);
+			}
+			System.out.println(); 
+			return dateIntArr; 
 		}
-		System.out.println();
-		return dateIntArr;
+		else { // date is not valid
+			System.out.println("Date input is invalid.");
+			return null;
+		}
 	}
 	public String getCommand() { 
 		toDo = toDo.trim();
@@ -251,5 +259,23 @@ public class Parser {
 	public int getEditIndex() { 
 		System.out.println("Edit index: " +editIndex);
 		return editIndex; 
+	}
+	public boolean checkValidDate() {
+		String validateDate = dateIntArr[1] + "/" + dateIntArr[0] + "/" + dateIntArr[2];
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyy"); 
+		Date testDate = null;
+		try{
+			testDate = sdf.parse(validateDate); 		
+		}
+		catch(ParseException e)
+		{
+			System.out.println("Date input is in wrong format");
+			return false;
+		}
+		if(!sdf.format(testDate).equals(validateDate)) { 
+			System.out.println("Date input is invalid.");
+			return false; 
+		}
+		return true; 
 	}
 }
