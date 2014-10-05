@@ -1,11 +1,4 @@
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Scanner;
 
 /**
@@ -18,17 +11,11 @@ import java.util.Scanner;
  *
  */
 public class IndigoMain {
-	
+
 	private static final String FILE_NAME = "myTask";
-	private static final String MESSAGE_ERROR_FILE_NOT_FOUND = FILE_NAME
-			+ " is not found!";
 	
 	// Storage of our list of tasks
 	private static ArrayList<Task> taskList = new ArrayList<Task>();
-	
-	public enum Commands {
-		ADD,DELETE,EDIT,DISPLAY,SAVE,EXIT
-	}
 
 	public static void main(String[] args) {
 		/*
@@ -42,12 +29,6 @@ public class IndigoMain {
 		 */
 
 		displayWelcomeMessage();
-
-		if (isDataPresent()) {
-			loadData();
-		} else {
-			displayTutorialMessage();
-		}
 
 		while (true) {
 			String userCommand = readCommand();
@@ -68,160 +49,34 @@ public class IndigoMain {
 		 * 2.execute Command
 		 */
 		String userCommand = scanner.nextLine(); // TODO simple input for testing
-		executeUserCommand(userCommand);
+		return executeCommand(userCommand);
 	}
 
-/*	private static String executeCommand(String command) {
-		
+	private static String executeCommand(String command) {
+		/*
 		 * TODO 
 		 * 1.executeCommand 
 		 * 2.save taskList
 		 * 
 		 * A standardized command should have String systemMessage returned.
-		 
+		 */
 		String returnMessage = new String();;
 		return returnMessage + saveTaskList();
-	}*/
-
-	//This method is the interaction with user. It reads and execute the commands 
-	//the user wants.
-	public static void executeUserCommand(String commandLine) {
-		//This boolean variable will become false if the user wants to exit.
-		boolean continueProgramme = true;
-		while(continueProgramme){
-			continueProgramme = readCommand(commandLine);
-		}
-	}	
-
-	public static boolean readCommand(String commandLine, LinkedList<String> taskList){
-		boolean continueProgramme = true;
-		continueProgramme = executeCommand(taskList, instruction, detail);
-		return continueProgramme;
-	}
-
-	public static boolean executeCommand(LinkedList<String> taskList,
-			String instruction, String detail) {
-		switch (instruction.toLowerCase()) {
-		case "add":
-			addTask(detail, taskList);
-			break;
-		case "delete":
-			deleteTask(detail, taskList);
-			break;
-/*		case "display":
-			displayTaskList(taskList, detail);
-			break;
-		case "clear":
-			clearTaskList(taskList);
-			break;
-		case "search":
-			searchTaskList(detail, taskList);
-			break;
-		case "edit":
-			editTask(detail, taskList);
-			break; */
-		case "exit":
-			return false;
-		default:
-			System.out.println("Error");
-			break;
-		}
-		return true;
-	}
-
-	public static void addTask(String details, LinkedList<String> taskList) {
-		taskList.add(details);
-	}
-
-	public static void deleteTask(String detail, LinkedList<String> taskList) {
-		try {
-			int number = Integer.parseInt(detail);
-			if (number <= taskList.size()) {
-				taskList.remove(number - 1);
-			} else {
-				printMessage("Error");
-			}
-		} catch (NumberFormatException exception) {
-			printMessage("Error");
-		}
-		
-	}
-	
-	private static void printMessage(String errorMessage) {
-		// TODO Auto-generated method stub
-		System.out.println(errorMessage);
 	}
 
 	private static String saveTaskList() {
-		//  save taskList into raw bytes
-		if (taskList.size() > 0) {
-			try {
-				FileOutputStream fos = new FileOutputStream(FILE_NAME);
-				ObjectOutputStream oos = new ObjectOutputStream(fos);
-				oos.writeObject(taskList);
-				oos.close();
-				fos.close();
-			} catch (IOException ioe) {
-				return "ioe Exception.";
-			}
-			return FILE_NAME + "is saved!";
-		}
-		return "taskList is empty().";
-	}
-
-	private static String displayTutorialMessage() {
-		// TODO ask user if want to enter tutorial mode
-		return "Congragulations! You have completed tutorials.";
+		//  save taskList into TEXT file
+		return storeArrayList.saveFile(taskList, FILE_NAME);
 	}
 
 	private static String loadData() {
 		// load data from the local disk into memory
-		try {
-			FileInputStream fis = new FileInputStream(FILE_NAME);
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			Object obj = ois.readObject();
-			if (obj instanceof ArrayList<?>) {
-				ArrayList<?> al = (ArrayList<?>) obj;
-				if (al.size() > 0) {
-					for (int i = 0; i < al.size(); i++) {
-						Object o = al.get(i);
-						if (o instanceof Task) {
-							taskList.add((Task) o);
-						}
-					}
-
-				}
-				ois.close();
-				fis.close();
-			}
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-			return "ioe exception while loading.";
-		} catch (ClassNotFoundException c) {
-			System.out.println("ioe exception.");
-			c.printStackTrace();
-			return "ClassNotFoundException while loading.";
-		}
-		return FILE_NAME + " is loaded.";
+		return storeArrayList.readFile(taskList, FILE_NAME);
 	}
 
-	private static boolean isDataPresent() {
-		// check if there is data on the disk
-		try {
-			FileInputStream fis = new FileInputStream(FILE_NAME);
-			fis.close();
-		} catch (FileNotFoundException e) {
-			System.out.println(MESSAGE_ERROR_FILE_NOT_FOUND);
-			return false;
-		} catch (IOException ioe) {
-			System.out.println("ioe exception.");
-			ioe.printStackTrace();
-			return false;
-		}
-		return true;
-	}
 
 	private static void displayWelcomeMessage() {
+		loadData();
 		// TODO display welcomeMessage
 	}
 
