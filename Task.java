@@ -33,9 +33,15 @@ public class Task {
 	}
 	
 	// TODO exact class method to be ammended
+<<<<<<< HEAD
 	/*public Task(Parser userCommand){
 		this (userCommand.getCommand(), Type.FLOATING, "Enter your task description", userCommand.getTime(), "immediate");
 	}*/
+=======
+	public Task(Parser userCommand){
+		this (userCommand.toDo, Type.FLOATING, "Enter your task description", userCommand.dateStr, "immediate");
+	}
+>>>>>>> 11750a10ff622c25b72a0beaa9c638a9aa943301
 	
 	public Task(String title, Type type, String description, String time, String importance){
 		taskTitle = title;
