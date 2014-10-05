@@ -9,30 +9,30 @@ import java.text.SimpleDateFormat;
 
 
 public class Parser {
-	String keyWord  				= null;  					//stores the key command "add"/"delete" to return to logic
-	String commandWords  			= null; 					//stores the remaining words excluding key command
+	String keyWord  			= null;  				//stores the key command "add"/"delete" to return to logic
+	String commandWords  			= null; 				//stores the remaining words excluding key command
 	String [] commandSentence 		= new String[2]; 			//to help store the splited string command
-	String [] details 		  		= null; 					//store the remaining words excluding key command individually
-	String toDo               		= ""; 						//stores the final command to return to logic
-	String [] date = 				new String[3];				//stores the date in string array (deal with 23 dec 2014)
-	int [] dateIntArr 				= new int[3];				//stores the date to return to logic
-	String dateStr 			  		= null; 					//stores the date in string to eliminate "/" 		
-	String timeArr[] 				= new String [2]; 
-	String timeStr 					= null;
+	String [] details 		  	= null; 				//store the remaining words excluding key command individually
+	String toDo               		= ""; 					//stores the final command to return to logic
+	String [] date  			= new String[3];			//stores the date in string array (deal with 23 dec 2014)
+	int [] dateIntArr 			= new int[3];				//stores the date to return to logic
+	String dateStr 			  	= null; 				//stores the date in string to eliminate "/" 		
+	String timeArr[] 			= new String [2]; 
+	String timeStr 				= null;
 	String startTimeStr 			= null;
-	String endTimeStr				= null;
-	boolean containConj 			= false;					//determine if it is a floating task
-	int dateInt 			  		= 0;
-	int monthInt			  		= 0;
-	int yearInt      		  		= 0; 
-	int delIndex					= 0; 
-	int editIndex 					= 0; 
-	ArrayList<String> conjWords 	= new ArrayList<String>();
-	ArrayList<String> detailsList 	= new ArrayList<String>();
-	ArrayList<String> month      	= new ArrayList<String>();
-	ArrayList<String> monthWords 	= new ArrayList<String>();
-	ArrayList<String> daysList  	= new ArrayList<String>();
-	String INVALID_MONTH_MESSAGE    = "Month input is invalid.";
+	String endTimeStr			= null;
+	boolean containConj 			= false;				//determine if it is a floating task
+	int dateInt 			  	= 0;
+	int monthInt			  	= 0;
+	int yearInt      		  	= 0; 
+	int delIndex				= 0; 
+	int editIndex 				= 0; 
+	ArrayList<String> conjWords 		= new ArrayList<String>();
+	ArrayList<String> detailsList 		= new ArrayList<String>();
+	ArrayList<String> month      		= new ArrayList<String>();
+	ArrayList<String> monthWords 		= new ArrayList<String>();
+	ArrayList<String> daysList  		= new ArrayList<String>();
+	String INVALID_MONTH_MESSAG		= "Month input is invalid.";
 	static String testInput 		= null;
 	
 	public static void main(String args[]) { 
@@ -60,7 +60,7 @@ public class Parser {
 		conjWords.add("on"); 							// words to filter out dates
 		
 		switch(keyWord) { 
-		case "add": 									// for instance add buy a cat on 23/12/2014
+		case "add": 								// for instance add buy a cat on 23/12/2014
 			 details = commandWords.split(" "); 
 			 for(int i=0; i<details.length; i++) 
 				detailsList.add(details[i]);
@@ -77,7 +77,7 @@ public class Parser {
 				 break;  
 			 }
 			 
-			 else{ 										// this is a floating task
+			 else{ 								// this is a floating task
 				for(int b=0; b<details.length; b++) { 
 					toDo = toDo+ " " + details[b]; 
 				}
@@ -88,7 +88,7 @@ public class Parser {
 			delIndex = Integer.parseInt(commandSentence[1]); 
 			break;
 		
-		case "edit" : 									// edit 2 catch a cat
+		case "edit" : 								// edit 2 catch a cat
 			details = commandWords.split(" ");
 			editIndex = Integer.parseInt(details[0]);
 			for(int c=1; c<details.length; c++) { 
@@ -104,10 +104,10 @@ public class Parser {
 		int p = 0;
 		int size = detailsList.size();
 		
-		if(detailsList.get(size-1).contains(")")) 		//it is a timed task eg: [5pm-7pm]
+		if(detailsList.get(size-1).contains(")")) 				//it is a timed task eg: [5pm-7pm]
 			parseTime(); 
 	
-		if(detailsList.get(size-1).contains("/")) {		// date is in the format of 23/12/2014
+		if(detailsList.get(size-1).contains("/")) {				// date is in the format of 23/12/2014
 			dateStr = details[details.length-1];
 			if(!checkValidMonthNumber())  
 				System.out.println("monthnumber invalid"); 
@@ -118,7 +118,7 @@ public class Parser {
 			} 
 		}
 
-		 else{ 											// date is in the format of 23 Dec 2014
+		 else{ 									// date is in the format of 23 Dec 2014
 			 for(int j=details.length-3; j<details.length; j++) {   
 				 date[p] = details[j]; 
 				 p++; 
