@@ -16,14 +16,20 @@ public class IndigoMain {
 	
 	// Storage of our list of tasks
 	private static ArrayList<Task> taskList = new ArrayList<Task>();
+	
+	//Enum class for commands
+	public enum Command{
+		ADD, VIEW, EDIT, DELETE, UNDO
+	}
 
 	public static void main(String[] args) {
 		/*
-		 * outline: 1.welcome message 
+		 * outline: 
+		 * 1.welcome message 
 		 * 2.check if there is local disk storage
 		 * -yes load data 
-		 * -no display beginner tutorial message 3.asks for user
-		 * command 
+		 * -no display beginner tutorial message 
+		 * 3.asks for user command 
 		 * 4.process user command 
 		 * 5.repeating 3-4 until exit
 		 */
