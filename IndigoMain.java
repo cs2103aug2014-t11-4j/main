@@ -18,8 +18,8 @@ public class IndigoMain {
 	private static ArrayList<Task> taskList = new ArrayList<Task>();
 	
 	//Enum class for commands
-	public enum Command{
-		ADD, VIEW, EDIT, DELETE, UNDO
+	public enum COMMAND{
+		CREATE, READ, UPDATE, DELETE, UNDO
 	}
 
 	public static void main(String[] args) {
@@ -37,9 +37,9 @@ public class IndigoMain {
 		displayWelcomeMessage();
 
 		while (true) {
-			String userCommand = readCommand();
+			//String userCommand = readCommand();
 			
-			IndigoUserInterface(executeCommand(userCommand)); 
+			InputWindow.getUserCommand(); 
 			// TODO GUI for displaying system message after each operation.
 		}
 	}
@@ -67,7 +67,64 @@ public class IndigoMain {
 		 * A standardized command should have String systemMessage returned.
 		 */
 		String returnMessage = new String();;
+		COMMAND comm = changecomm(command);
+		switch (comm){
+			case CREATE:
+				create();
+				break;
+			case READ:
+				read();
+				break;
+			case UPDATE:
+				update();
+				break;
+			case DELETE:
+				delete();
+				break;
+			case UNDO:
+				undo();
+				break;
+			default:
+				System.exit(0);
+		}
 		return returnMessage + saveTaskList();
+	}
+	
+	private static COMMAND changecomm(String hello){
+		switch (hello){
+			case "add":
+				return COMMAND.CREATE;
+			case "view":
+				return COMMAND.READ;
+			case "edit":
+				return COMMAND.UPDATE;
+			case "delete":
+				return COMMAND.DELETE;
+			case "undo":
+				return COMMAND.UNDO;
+			default:
+				return COMMAND.READ;
+		}
+	}
+	
+	private static void create(){
+		
+	}
+	
+	private static void read(){
+		
+	}
+	
+	private static void update(){
+		
+	}
+	
+	private static void delete(){
+		
+	}
+	
+	private static void undo(){
+		
 	}
 
 	private static String saveTaskList() {
