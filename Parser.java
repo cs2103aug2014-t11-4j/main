@@ -15,18 +15,18 @@ import java.text.SimpleDateFormat;
 
 public class Parser {
 	String keyWord  			= null;  				//stores the key command "add"/"delete" to return to logic
-	String commandWords  			= null; 				//stores the remaining words excluding key command
-	String [] commandSentence 		= new String[2]; 			//to help store the splited string command
+	String commandWords  		= null; 				//stores the remaining words excluding key command
+	String [] commandSentence 	= new String[2]; 			//to help store the splited string command
 	String [] details 		  	= null; 				//store the remaining words excluding key command individually
-	String toDo               		= ""; 					//stores the final command to return to logic
+	String toDo               	= ""; 					//stores the final command to return to logic
 	String [] date 				= new String[3];			//stores the date in string array (deal with 23 dec 2014)
 	int [] dateIntArr 			= new int[3];				//stores the date to return to logic
 	String dateStr 			  	= null; 				//stores the date in string to eliminate "/" 		
 	String timeArr[] 			= new String [2]; 
 	String timeStr 				= null;
-	String startTimeStr 			= null;
+	String startTimeStr 		= null;
 	String endTimeStr			= null;
-	boolean containConj 			= false;				//determine if it is a floating task
+	boolean containConj 		= false;				//determine if it is a floating task
 	int dateInt 			  	= 0;
 	int monthInt			  	= 0;
 	int yearInt      		  	= 0; 
@@ -37,8 +37,8 @@ public class Parser {
 	ArrayList<String> month      		= new ArrayList<String>();
 	ArrayList<String> monthWords 		= new ArrayList<String>();
 	ArrayList<String> daysList  		= new ArrayList<String>();
-	String INVALID_MONTH_MESSAG		= "Month input is invalid.";
-	static String testInput 		= null;
+	String INVALID_MONTH_MESSAG			= "Month input is invalid.";
+	static String testInput 			= null;
 	
 	public static void main(String args[]) { 
 		System.out.println("Enter command:");

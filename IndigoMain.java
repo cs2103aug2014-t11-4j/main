@@ -33,13 +33,12 @@ public class IndigoMain {
 		 * 4.process user command 
 		 * 5.repeating 3-4 until exit
 		 */
-
 		displayWelcomeMessage();
 
 		while (true) {
 			//String userCommand = readCommand();
 			
-			InputWindow.getUserCommand(); 
+	//	InputWindow.getUserCommand(); 
 			// TODO GUI for displaying system message after each operation.
 		}
 	}
@@ -108,23 +107,30 @@ public class IndigoMain {
 	}
 	
 	private static void create(){
-		
+		Task tt = new Task();
+		taskList.add(tt);
 	}
 	
 	private static void read(){
-		
+		for(int i = 0; i < taskList.size(); i++){
+			System.out.println(taskList.get(i));
+		}
 	}
 	
 	private static void update(){
-		
+		Task tt = new Task();
+		int i = 9;
+		taskList.set(i, tt);
 	}
 	
 	private static void delete(){
-		
+		int i = 9;
+		taskList.remove(i);
 	}
 	
 	private static void undo(){
-		
+		ParserList ps = new ParserList();
+		ps.undo();
 	}
 
 	private static String saveTaskList() {
