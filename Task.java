@@ -5,15 +5,6 @@
  * type of the task and the level of importance.
  * 
  * @author jjlu
- * 
- * API:
- * Constructor:
- * Task()
- * Task(String)
- * Task(Parser)
- * 
- * method:
- * String toString()
  *
  */
 
@@ -44,6 +35,19 @@ public class Task {
 	}
 
 	// TODO exact class method to be ammended
+<<<<<<< HEAD
+<<<<<<< HEAD
+	/*public Task(Parser userCommand){
+		this (userCommand.getCommand(), Type.FLOATING, "Enter your task description", userCommand.getTime(), "immediate");
+	}*/
+=======
+	public Task(Parser userCommand){
+		this (userCommand.toDo, Type.FLOATING, "Enter your task description", userCommand.dateStr, "immediate");
+	}
+>>>>>>> 11750a10ff622c25b72a0beaa9c638a9aa943301
+	
+	public Task(String title, Type type, String description, String time, String importance){
+=======
 	public Task(Parser userCommand) {
 		this(userCommand.getCommand(), Type.FLOATING,
 				"Enter your task description", userCommand.getDate(),
@@ -52,6 +56,7 @@ public class Task {
 
 	public Task(String title, Type type, String description, int[] time,
 			String importance) {
+>>>>>>> 69d1925e9b922a1192a971a9b0f91925d5f3bbae
 		taskTitle = title;
 		taskType = type;
 		taskDescription = description;
