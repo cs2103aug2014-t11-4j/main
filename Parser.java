@@ -14,7 +14,7 @@ public class Parser {
 	String [] commandSentence 		= new String[2]; 			//to help store the splited string command
 	String [] details 		  	= null; 				//store the remaining words excluding key command individually
 	String toDo               		= ""; 					//stores the final command to return to logic
-	String [] date  			= new String[3];			//stores the date in string array (deal with 23 dec 2014)
+	String [] date 				= new String[3];			//stores the date in string array (deal with 23 dec 2014)
 	int [] dateIntArr 			= new int[3];				//stores the date to return to logic
 	String dateStr 			  	= null; 				//stores the date in string to eliminate "/" 		
 	String timeArr[] 			= new String [2]; 
@@ -39,8 +39,7 @@ public class Parser {
 		System.out.println("Enter command:");
 		Scanner sc = new Scanner(System.in);
 		testInput = sc.nextLine();
-		Parser test = new Parser();
-		test.parse(testInput);
+		Parser test = new Parser(testInput);
 		test.getKeyCommand();
 		test.getDate(); 
 		test.getCommand();
@@ -49,7 +48,7 @@ public class Parser {
 		sc.close(); 
 	}
 	
-	public void parse(String userCommand) { 
+	public Parser(String userCommand) { 
 		userCommand.toLowerCase();
 		commandSentence = userCommand.split(" ", 2);
 		keyWord = commandSentence[0];
@@ -61,7 +60,7 @@ public class Parser {
 		
 		switch(keyWord) { 
 		case "add": 								// for instance add buy a cat on 23/12/2014
-			 details = commandWords.split(" "); 
+			 details = commandWords.split(" ");
 			 for(int i=0; i<details.length; i++) 
 				detailsList.add(details[i]);
 				 
@@ -104,11 +103,11 @@ public class Parser {
 		int p = 0;
 		int size = detailsList.size();
 		
-		if(detailsList.get(size-1).contains(")")) 				//it is a timed task eg: [5pm-7pm]
+		if(detailsList.get(size-1).contains(")")) 			//it is a timed task eg: [5pm-7pm]
 			parseTime(); 
 	
-		if(detailsList.get(size-1).contains("/")) {				// date is in the format of 23/12/2014
-			dateStr = details[details.length-1];
+		if(detailsList.get(size-1).contains("/")) {			// date is in the format of 23/12/2014
+			dateStr = details[details.length-1];	
 			if(!checkValidMonthNumber())  
 				System.out.println("monthnumber invalid"); 
 			else {
@@ -118,7 +117,7 @@ public class Parser {
 			} 
 		}
 
-		 else{ 									// date is in the format of 23 Dec 2014
+		 else{ 								// date is in the format of 23 Dec 2014
 			 for(int j=details.length-3; j<details.length; j++) {   
 				 date[p] = details[j]; 
 				 p++; 
