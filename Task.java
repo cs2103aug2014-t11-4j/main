@@ -63,6 +63,13 @@ public class Task {
 	public Task(String taskDescription) {
 		this("title", Type.FLOATING, taskDescription, null, "immediate");
 	}
+	
+	// deadline task
+	public Task(String taskDescription, int[] taskTime){
+		this("titie", Type.DEADLINE, taskDescription, taskTime, "immediate");
+	}
+	
+	// timed task
 
 	// accessor
 	public String getTitle() {
