@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 /**
@@ -17,7 +18,7 @@ import java.util.Scanner;
  *
  */
 public class IndigoMain {
-
+	
 	private static final String FILE_NAME = "myTask";
 	private static final String MESSAGE_ERROR_FILE_NOT_FOUND = FILE_NAME
 			+ " is not found!";
@@ -67,19 +68,88 @@ public class IndigoMain {
 		 * 2.execute Command
 		 */
 		String userCommand = scanner.nextLine(); // TODO simple input for testing
-		return executeCommand(userCommand);
+		executeUserCommand(userCommand);
 	}
 
-	private static String executeCommand(String command) {
-		/*
+/*	private static String executeCommand(String command) {
+		
 		 * TODO 
 		 * 1.executeCommand 
 		 * 2.save taskList
 		 * 
 		 * A standardized command should have String systemMessage returned.
-		 */
+		 
 		String returnMessage = new String();;
 		return returnMessage + saveTaskList();
+	}*/
+
+	//This method is the interaction with user. It reads and execute the commands 
+	//the user wants.
+	public static void executeUserCommand(String commandLine) {
+		//This boolean variable will become false if the user wants to exit.
+		boolean continueProgramme = true;
+		while(continueProgramme){
+			continueProgramme = readCommand(commandLine);
+		}
+	}	
+
+	public static boolean readCommand(String commandLine, LinkedList<String> taskList){
+		boolean continueProgramme = true;
+		continueProgramme = executeCommand(taskList, instruction, detail);
+		return continueProgramme;
+	}
+
+	public static boolean executeCommand(LinkedList<String> taskList,
+			String instruction, String detail) {
+		switch (instruction.toLowerCase()) {
+		case "add":
+			addTask(detail, taskList);
+			break;
+		case "delete":
+			deleteTask(detail, taskList);
+			break;
+/*		case "display":
+			displayTaskList(taskList, detail);
+			break;
+		case "clear":
+			clearTaskList(taskList);
+			break;
+		case "search":
+			searchTaskList(detail, taskList);
+			break;
+		case "edit":
+			editTask(detail, taskList);
+			break; */
+		case "exit":
+			return false;
+		default:
+			System.out.println("Error");
+			break;
+		}
+		return true;
+	}
+
+	public static void addTask(String details, LinkedList<String> taskList) {
+		taskList.add(details);
+	}
+
+	public static void deleteTask(String detail, LinkedList<String> taskList) {
+		try {
+			int number = Integer.parseInt(detail);
+			if (number <= taskList.size()) {
+				taskList.remove(number - 1);
+			} else {
+				printMessage("Error");
+			}
+		} catch (NumberFormatException exception) {
+			printMessage("Error");
+		}
+		
+	}
+	
+	private static void printMessage(String errorMessage) {
+		// TODO Auto-generated method stub
+		System.out.println(errorMessage);
 	}
 
 	private static String saveTaskList() {

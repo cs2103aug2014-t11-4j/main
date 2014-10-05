@@ -1,71 +1,84 @@
 import java.util.ArrayList;
 
-/** This class stores 4 lists of tasks, named as daily,weekly,monthly or floating.
- *  All the functionalities should be contained in this class.
+/** This class stores the task-list as an arrayList.
  *  The basic functions have been provided as a skeleton program.
  * @author jjlu
+ * 
  *
+ *
+ * API:
+ * Constructor
+ * taskList()
+ * taskList(String)
+ * store a string into an arrayList
+ * 
+ * methods:
+ * Task addTask(Task)
+ * Task deleteTask(Task)
+ * Task deleteTask(int)
+ * Task viewTask(int)
+ * Task editTask(int, Task)
+ * return the original task before editing.
+ * ArrayList<Task> viewTaskList()
+ * return the string version of taskList
+ * String viewList()
+ * return the string version of taskList
  */
 
 
 public class TaskList {
 	
-	private ArrayList<Task> floatingTask = new ArrayList<Task>();
-	
-	private ArrayList<Task> dailyTask = new ArrayList<Task>();
-	
-	private ArrayList<Task> weeklyTask = new ArrayList<Task>();
-	
-	private ArrayList<Task> monthlyTask = new ArrayList<Task>();
+	private ArrayList<Task> taskList = new ArrayList<Task>();
 
-	public enum Type {
-		FLOATING, DAILY, WEEKLY, MONTHLY
-	}
 	public TaskList() {
-		this(Type.FLOATING, new Task());
+		
+	}	
+	
+	public TaskList(String allTasks){
+		//TODO takes a string and stores them in an arrayList
 	}
 	
-	public TaskList(Type type, Task newTask){
-		switch (type) {
-			case DAILY:
-				dailyTask.add(newTask);
-				break;
-			
-			case WEEKLY:
-				weeklyTask.add(newTask);
-			
-			case MONTHLY:
-				monthlyTask.add(newTask);
-				
-			default:
-				floatingTask.add(newTask);
-		}
+	public ArrayList<Task> viewTaskList(){
+		return taskList;
 	}
 	
+	public String viewList(){
+		//TODO a string representation of taskList
+		return "";
+	}
 	
 	// basic functions
 	// add
-	public String addTask(String type, Task newTask){
-		//stub
-		return null;
+	public Task addTask(Task newTask){
+		taskList.add(newTask);
+		return newTask;
 	}
 	
 	// delete
-	public String deleteTask(String type, Task newTask){
-		// stub
-		return null;
+	public Task deleteTask(Task task){
+		taskList.remove(task);
+		return task;
+	}
+	public Task deleteTask(int index){
+		int indexComputing = index - 1;
+		Task tempTask = taskList.get(indexComputing);
+		taskList.remove(indexComputing);
+		return tempTask;
 	}
 	
 	// edit
-	public String editTask(String type, Task newTask){
-		// stub
-		return null;
+	public Task editTask(int index, Task newTask){
+		int indexComputing = index - 1;
+		Task tempTask = taskList.get(indexComputing);
+		taskList.add(indexComputing, newTask);
+		taskList.remove(index);
+		return tempTask;
 	}
 	
 	// view the taskList in a particular format
-	public String viewTask(String type){
-		// stub
-		return null;
+	public Task viewTask(int index){
+		int indexComputing = index - 1;
+		return taskList.get(indexComputing);
 	}
 
 }
