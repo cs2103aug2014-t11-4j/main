@@ -33,7 +33,7 @@ public class IndigoMain {
 		while (true) {
 			String userCommand = readCommand();
 			
-			System.out.println(userCommand); 
+			IndigoUserInterface(executeCommand(userCommand)); 
 			// TODO GUI for displaying system message after each operation.
 		}
 	}
