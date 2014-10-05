@@ -93,6 +93,9 @@ public class Parser {
 				toDo = toDo + " " + details[c];
 			}
 			break;
+		
+		case "undo" : 
+			break; 
 		} 					
 	}
 	public void parseDate() {  
