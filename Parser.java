@@ -1,5 +1,10 @@
 /** this class is meant to read in the command line from the user in the form of a string
  * and parse it so that the logic can access it simply. 
+ * currently implemented: 
+ * add function: add buy a fish by OR on 23 dec 2014 OR /23/12/2014
+ * delete function: delete 3 (integer)
+ * edit: edit 3 buy a cat instead (integer + command)
+ * undo: does nothing but return keycommand
  * @author Joanna
  *
  */
