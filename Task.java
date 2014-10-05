@@ -5,15 +5,6 @@
  * type of the task and the level of importance.
  * 
  * @author jjlu
- * 
- * API:
- * Constructor:
- * Task()
- * Task(String)
- * Task(Parser)
- * 
- * method:
- * String toString()
  *
  */
 
