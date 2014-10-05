@@ -20,6 +20,11 @@ public class InputWindow  extends JFrame implements ActionListener{
 	
 	public static void main(String[] args){
 		
+		CreateWindow();
+		
+	}
+	
+	private static void CreateWindow() {
 		inputs.add("call mom");
 		inputs.add("catch a dog");
 		inputs.add("catch a fish");
@@ -29,7 +34,7 @@ public class InputWindow  extends JFrame implements ActionListener{
 		welcome.setVisible(true);
 		welcome.setBackground(Color.white);
 	}
-	
+
 	public InputWindow(){
 		
 		super("Indigo");
@@ -74,3 +79,5 @@ public class InputWindow  extends JFrame implements ActionListener{
 		userCommand = text;
 		
 	}
+
+}
