@@ -15,6 +15,7 @@ public class InputWindow  extends JFrame implements ActionListener{
 	JPanel welcomeWindow = new JPanel(new BorderLayout());
 	JTextField readInput = new JTextField();
 	static JTextArea textArea = new JTextArea("",5, 20);
+	
 	public static String userCommand;
 	public static final ArrayList<String> inputs = new ArrayList<String>();
 	
@@ -46,13 +47,14 @@ public class InputWindow  extends JFrame implements ActionListener{
 		add(welcomeWindow);
 		
 		readInput.addActionListener(this);
-		
+
 		setVisible(true);
 	}
 	
 	
-	public static void showFeedback(String feedback) {
-		textArea.setText(feedback + "\n");	
+	public static void showFeedback(IndigoMain logic){
+		textArea.setText(logic.dateLeft + "\n");
+		textArea.append(logic.feedback + "\n");	
 	}
 	public static void showTaskList(){
 		for (int i=0; i < inputs.size(); i++){
@@ -70,7 +72,8 @@ public class InputWindow  extends JFrame implements ActionListener{
 	        readInput.selectAll();
 	//        setUserCommand(text);
 	        textArea.setText("");
-	        showFeedback(IndigoMain.start(text));
+	        IndigoMain controller = new IndigoMain(text);
+	        showFeedback(controller);
 	//        showTaskList();
 	        
 	    }

@@ -53,7 +53,12 @@ public class Parser {
 		sc.close(); 
 	}
 	
-	public Parser(String userCommand) { 
+	public Parser(String userCommand) {
+		addDays(); 
+		
+		conjWords.add("by"); 
+		conjWords.add("on"); 							// words to filter out dates
+		
 		userCommand.toLowerCase();
 		if (userCommand.contains(" ")){
 			commandSentence = userCommand.split(" ", 2);
@@ -112,10 +117,6 @@ public class Parser {
 			}
 		}
 		
-		addDays(); 
-		
-		conjWords.add("by"); 
-		conjWords.add("on"); 							// words to filter out dates
 		
 					
 	}

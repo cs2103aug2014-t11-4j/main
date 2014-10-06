@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -11,6 +12,10 @@ import java.util.Scanner;
  *
  */
 public class IndigoMain {
+	public String feedback;
+	
+	public String dateLeft;
+	
 	private static ParserList ps = new ParserList();
 	
 	private static Parser parser;
@@ -46,11 +51,13 @@ public class IndigoMain {
 		}
 	}
 	
-	public static String start(String userCommand){
+	public IndigoMain(String userCommand){
 		if (taskList.isEmpty()){
 			loadData();
 		}
-		return readCommand(userCommand);
+		feedback = readCommand(userCommand);
+		Date dateCurrent = new Date();
+		dateLeft = dateCurrent.toString();
 	}
 	
 	// TODO a simple input for testing
@@ -75,7 +82,7 @@ public class IndigoMain {
 		 * 
 		 * A standardized command should have String systemMessage returned.
 		 */
-		String returnMessage = new String();;
+		String returnMessage = new String();
 		COMMAND comm = changecomm(command);
 		switch (comm){
 			case CREATE:
@@ -123,7 +130,6 @@ public class IndigoMain {
 	}
 	
 	private static void read(){
-		ps.push(new Parser("view"));
 	}
 	
 	private static void update(int index, String task){
@@ -133,16 +139,20 @@ public class IndigoMain {
 	}
 	
 	private static void delete(int index){
+		System.out.println(taskList.get(index).getDescription());
 		ps.push(new Parser("add " + taskList.get(index).getDescription()));
 		taskList.remove(index);
 	}
 
 	private static void undo(){
+		if (ps.isUndoAble() == false){
+			return;
+		}
 		Parser commandPre = ps.undo();
 		COMMAND comm = changecomm(commandPre.getKeyCommand());
 		switch (comm){
 			case CREATE:
-				taskList.add(new Task(commandPre.getKeyCommand()));
+				taskList.add(new Task(commandPre.getCommand()));
 				break;
 			case READ:
 				break;
