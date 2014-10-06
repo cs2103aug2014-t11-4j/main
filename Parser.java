@@ -55,54 +55,69 @@ public class Parser {
 	
 	public Parser(String userCommand) { 
 		userCommand.toLowerCase();
-		commandSentence = userCommand.split(" ", 2);
-		keyWord = commandSentence[0];
-		commandWords = commandSentence[1];
+		if (userCommand.contains(" ")){
+			commandSentence = userCommand.split(" ", 2);
+			keyWord = commandSentence[0];
+			commandWords = commandSentence[1];
+			switch(keyWord) { 
+			case "add": 								// for instance add buy a cat on 23/12/2014
+				 details = commandWords.split(" ");
+				 for(int i=0; i<details.length; i++) 
+					detailsList.add(details[i]);
+					 
+				 for(int j=0; j<details.length; j++) { 
+					 if(conjWords.contains(details[j])) {
+						 containConj = true; 
+					 }
+				 }
+						
+				 if(containConj == true) {
+					 parseInfo();
+					 parseDate(); 				 
+					 break;  
+				 }
+				 
+				 else{ 								// this is a floating task
+					for(int b=0; b<details.length; b++) { 
+						toDo = toDo+ " " + details[b]; 
+					}
+				 }
+				 break;
+				 			 
+			case "delete" : 
+				delIndex = Integer.parseInt(commandSentence[1]); 
+				break;
+			
+			case "edit" : 								// edit 2 catch a cat
+				details = commandWords.split(" ");
+				editIndex = Integer.parseInt(details[0]);
+				for(int c=1; c<details.length; c++) { 
+					toDo = toDo + " " + details[c];
+				}
+				break;
+			
+			case "undo" :
+				break; 
+			} 
+		}	else {
+			switch (userCommand){
+			case "delete":
+				keyWord = "delete";
+				break;
+			case "undo":
+				keyWord = "undo";
+				break;
+			default:
+				keyWord = "view";
+			}
+		}
+		
 		addDays(); 
 		
 		conjWords.add("by"); 
 		conjWords.add("on"); 							// words to filter out dates
 		
-		switch(keyWord) { 
-		case "add": 								// for instance add buy a cat on 23/12/2014
-			 details = commandWords.split(" ");
-			 for(int i=0; i<details.length; i++) 
-				detailsList.add(details[i]);
-				 
-			 for(int j=0; j<details.length; j++) { 
-				 if(conjWords.contains(details[j])) {
-					 containConj = true; 
-				 }
-			 }
 					
-			 if(containConj == true) {
-				 parseInfo();
-				 parseDate(); 				 
-				 break;  
-			 }
-			 
-			 else{ 								// this is a floating task
-				for(int b=0; b<details.length; b++) { 
-					toDo = toDo+ " " + details[b]; 
-				}
-			 }
-			 break;
-			 			 
-		case "delete" : 
-			delIndex = Integer.parseInt(commandSentence[1]); 
-			break;
-		
-		case "edit" : 								// edit 2 catch a cat
-			details = commandWords.split(" ");
-			editIndex = Integer.parseInt(details[0]);
-			for(int c=1; c<details.length; c++) { 
-				toDo = toDo + " " + details[c];
-			}
-			break;
-		
-		case "undo" : 
-			break; 
-		} 					
 	}
 	public void parseDate() {  
 		int p = 0;

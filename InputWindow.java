@@ -51,8 +51,8 @@ public class InputWindow  extends JFrame implements ActionListener{
 	}
 	
 	
-	public static void showFeedback() {
-		textArea.append("added task: "+ userCommand + "\n");	
+	public static void showFeedback(String feedback) {
+		textArea.setText(feedback + "\n");	
 	}
 	public static void showTaskList(){
 		for (int i=0; i < inputs.size(); i++){
@@ -68,10 +68,10 @@ public class InputWindow  extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent evt) {
 		 	String text = readInput.getText();
 	        readInput.selectAll();
-	        setUserCommand(text);
+	//        setUserCommand(text);
 	        textArea.setText("");
-	        showFeedback();
-	        showTaskList();
+	        showFeedback(IndigoMain.start(text));
+	//        showTaskList();
 	        
 	    }
 

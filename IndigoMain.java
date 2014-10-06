@@ -11,6 +11,9 @@ import java.util.Scanner;
  *
  */
 public class IndigoMain {
+	private static ParserList ps = new ParserList();
+	
+	private static Parser parser;
 
 	private static final String FILE_NAME = "myTask";
 	
@@ -42,19 +45,26 @@ public class IndigoMain {
 			// TODO GUI for displaying system message after each operation.
 		}
 	}
-
+	
+	public static String start(String userCommand){
+		if (taskList.isEmpty()){
+			loadData();
+		}
+		return readCommand(userCommand);
+	}
+	
 	// TODO a simple input for testing
 	private static Scanner scanner = new Scanner(System.in);
 	
 	// TODO GUI for user inputs
-	private static String readCommand() {
+	private static String readCommand(String userCommand) {
 		/*
 		 * TODO 
 		 * 1.read a command from user and process it 
 		 * 2.execute Command
-		 */
-		String userCommand = scanner.nextLine(); // TODO simple input for testing
-		return executeCommand(userCommand);
+		 */ // TODO simple input for testing
+		parser = new Parser(userCommand);
+		return executeCommand(parser.getKeyCommand());
 	}
 
 	private static String executeCommand(String command) {
@@ -75,10 +85,10 @@ public class IndigoMain {
 				read();
 				break;
 			case UPDATE:
-				update();
+				update(parser.getEditIndex(), parser.getCommand());
 				break;
 			case DELETE:
-				delete();
+				delete(parser.getDelIndex());
 				break;
 			case UNDO:
 				undo();
@@ -107,30 +117,47 @@ public class IndigoMain {
 	}
 	
 	private static void create(){
-		Task tt = new Task();
+		ps.push(new Parser("delete 0"));
+		Task tt = new Task(parser.getCommand());
 		taskList.add(tt);
 	}
 	
 	private static void read(){
-		for(int i = 0; i < taskList.size(); i++){
-			System.out.println(taskList.get(i));
-		}
+		ps.push(new Parser("view"));
 	}
 	
-	private static void update(){
-		Task tt = new Task();
-		int i = 9;
-		taskList.set(i, tt);
+	private static void update(int index, String task){
+		ps.push(new Parser("edit "+ index + " " + taskList.get(index).getDescription()));
+		Task tt = new Task(task);
+		taskList.set(index, tt);
 	}
 	
-	private static void delete(){
-		int i = 9;
-		taskList.remove(i);
+	private static void delete(int index){
+		ps.push(new Parser("add " + taskList.get(index).getDescription()));
+		taskList.remove(index);
 	}
-	
+
 	private static void undo(){
-		ParserList ps = new ParserList();
-		ps.undo();
+		Parser commandPre = ps.undo();
+		COMMAND comm = changecomm(commandPre.getKeyCommand());
+		switch (comm){
+			case CREATE:
+				taskList.add(new Task(commandPre.getKeyCommand()));
+				break;
+			case READ:
+				break;
+			case UPDATE:
+				taskList.set(commandPre.getEditIndex(), new Task(commandPre.getCommand()));
+				break;
+			case DELETE:
+				taskList.remove(taskList.size()-1);
+				break;
+			case UNDO:
+				undo();
+				break;
+			default:
+				;
+		}
 	}
 
 	private static String saveTaskList() {
