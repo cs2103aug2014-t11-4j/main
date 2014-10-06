@@ -35,11 +35,11 @@ public class Task {
 	}
 
 	// TODO exact class method to be ammended
-	public Task(Parser userCommand) {
+/*	public Task(Parser userCommand) {
 		this(userCommand.getCommand(), Type.FLOATING,
 				"Enter your task description", userCommand.getDate(),
 				"immediate");
-	}
+	}*/
 
 	public Task(String title, Type type, String description, int[] time,
 			String importance) {
@@ -72,7 +72,7 @@ public class Task {
 	}
 
 	public String getDescription() {
-		return taskDescription;
+		return this.taskDescription;
 	}
 
 	public int[] getTime() {

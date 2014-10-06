@@ -37,8 +37,16 @@ public class ParserList {
 	}
 	
 	public void push(Parser newParser){
+		clear();
 		parserList.add(newParser);
 		currentPos++;
+	}
+
+	public void clear(){
+		int i = currentPos+1;
+		while (i<parserList.size()){
+			parserList.remove(i);
+		}
 	}
 	
 	public Parser undo(){
@@ -49,5 +57,9 @@ public class ParserList {
 	public Parser redo(){
 		currentPos++;
 		return parserList.get(currentPos);
+	}
+	
+	public boolean isUndoAble(){
+		return currentPos >= 0;
 	}
 }
