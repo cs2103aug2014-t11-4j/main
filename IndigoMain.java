@@ -104,16 +104,13 @@ public class IndigoMain {
 		return returnMessage + saveTaskList();
 	}
 	
-<<<<<<< HEAD
-	private static COMMAND getCommand(String hello){
-=======
 	private static void complete(int index) {
 		ps.push(new Parser("UnComplete " + index));
 		taskList.get(index).complete();
 	}
 
-	private static COMMAND changecomm(String hello){
->>>>>>> origin/Floating-Task
+	private static COMMAND getCommand(String hello){
+
 		switch (hello){
 			case "add":
 				return COMMAND.CREATE;
