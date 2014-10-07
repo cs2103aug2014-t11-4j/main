@@ -85,8 +85,7 @@ public class IndigoMain {
 				create();
 				break;
 			case READ:
-				read();
-				break;
+				return read(parser.getCommand());
 			case UPDATE:
 				update(parser.getEditIndex(), parser.getCommand());
 				break;
@@ -98,6 +97,7 @@ public class IndigoMain {
 				break;
 			case COMPLETE:
 				complete(parser.getEditIndex());
+				break;
 			default:
 				System.exit(0);
 		}
@@ -135,7 +135,15 @@ public class IndigoMain {
 		taskList.add(tt);
 	}
 	
-	private static void read(){
+	private static String read(String command){
+		if (command == null){
+			return saveTaskList();
+		} else if (command.contains("-done")){
+			return viewDone();
+		} else if (command.contains("-undone")){
+			return viewUndone();
+		}
+		return saveTaskList();
 	}
 	
 	private static void update(int index, String task){
@@ -199,7 +207,7 @@ public class IndigoMain {
 		StringBuilder str = new StringBuilder("Tasks Completed: \n");
 		for (int i=0,j=1; i<taskList.size();i++){
 			if (taskList.get(i).isCompleted()){
-				str.append( j + ". " + taskList.get(i).getDescription() + "\n");
+				str.append( j++ + ". " + taskList.get(i).getDescription() + "\n");
 			}
 		}
 		return str.toString();
@@ -209,7 +217,7 @@ public class IndigoMain {
 		StringBuilder str = new StringBuilder("Tasks Due: \n");
 		for (int i=0,j=1; i<taskList.size();i++){
 			if (!taskList.get(i).isCompleted()){
-				str.append( j + ". " + taskList.get(i).getDescription() + "\n");
+				str.append( j++ + ". " + taskList.get(i).getDescription() + "\n");
 			}
 		}
 		return str.toString();

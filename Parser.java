@@ -106,7 +106,13 @@ public class Parser {
 			case "undo" :
 				keyWord = "undo";
 				break;
-				
+			case "view" :
+				keyWord = "view";
+				details = commandWords.split(" ");
+				for(int c=0; c<details.length; c++) { 
+					toDo = toDo + " " + details[c];
+				}
+				break;
 			} 
 		}	else {
 			switch (userCommand){
