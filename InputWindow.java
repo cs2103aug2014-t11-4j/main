@@ -3,18 +3,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
 public class InputWindow  extends JFrame implements ActionListener{
 	
 	JPanel welcomeWindow = new JPanel(new BorderLayout());
 	JTextField readInput = new JTextField();
-	static JTextArea textArea = new JTextArea("",5, 20);
+	static JTextPane textPane = new JTextPane();
+//	static JTextArea textArea = new JTextArea("",5, 20);
 	
 	public static String userCommand;
 	public static final ArrayList<String> inputs = new ArrayList<String>();
@@ -42,8 +43,9 @@ public class InputWindow  extends JFrame implements ActionListener{
 		setResizable(true);
 		welcomeWindow.setBorder(new EmptyBorder(20,20,20,20));
 
-		welcomeWindow.add(readInput, BorderLayout.NORTH);
-		welcomeWindow.add(textArea, BorderLayout.CENTER);
+		welcomeWindow.add(readInput, BorderLayout.SOUTH);
+//		welcomeWindow.add(textArea, BorderLayout.CENTER);
+		welcomeWindow.add(textPane, BorderLayout.CENTER);
 		add(welcomeWindow);
 		
 		readInput.addActionListener(this);
@@ -53,12 +55,15 @@ public class InputWindow  extends JFrame implements ActionListener{
 	
 	
 	public static void showFeedback(IndigoMain logic){
-		textArea.setText(logic.dateLeft + "\n");
-		textArea.append(logic.feedback + "\n");	
+//		textArea.setText(logic.dateLeft + "\n");
+//		textArea.append(logic.feedback + "\n");	
+		textPane.setText(logic.dateLeft + "\n");
+		textPane.setText(logic.feedback + "\n");
 	}
 	public static void showTaskList(){
 		for (int i=0; i < inputs.size(); i++){
-			textArea.append(inputs.get(i) + '\n');	
+			//textArea.append(inputs.get(i) + '\n');
+			textPane.setText(inputs.get(i) + '\n');
 		}
 			
 	}
@@ -71,7 +76,8 @@ public class InputWindow  extends JFrame implements ActionListener{
 		 	String text = readInput.getText();
 	        readInput.selectAll();
 	//        setUserCommand(text);
-	        textArea.setText("");
+	        //textArea.setText("");
+	        textPane.setText("");
 	        IndigoMain controller = new IndigoMain(text);
 	        showFeedback(controller);
 	//        showTaskList();

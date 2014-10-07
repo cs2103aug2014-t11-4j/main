@@ -1,11 +1,10 @@
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Scanner;
 
 /**
  * This a main program of Indigo. Indigo is a software that can store, process
  * and display tasks on the desktop as a task manager. Indigo also supports
- * audio remainder, auto-correction, and color-coded highlighting. Indigo takes
+ * audio reminder, auto-correction, and color-coded highlighting. Indigo takes
  * input from keyboard only. Indigo stores data on a local disk.
  * 
  * @author jjlu
@@ -60,9 +59,6 @@ public class IndigoMain {
 		dateLeft = dateCurrent.toString();
 	}
 	
-	// TODO a simple input for testing
-	private static Scanner scanner = new Scanner(System.in);
-	
 	// TODO GUI for user inputs
 	private static String readCommand(String userCommand) {
 		/*
@@ -83,7 +79,7 @@ public class IndigoMain {
 		 * A standardized command should have String systemMessage returned.
 		 */
 		String returnMessage = new String();
-		COMMAND comm = changecomm(command);
+		COMMAND comm = getCommand(command);
 		switch (comm){
 			case CREATE:
 				create();
@@ -106,7 +102,7 @@ public class IndigoMain {
 		return returnMessage + saveTaskList();
 	}
 	
-	private static COMMAND changecomm(String hello){
+	private static COMMAND getCommand(String hello){
 		switch (hello){
 			case "add":
 				return COMMAND.CREATE;
@@ -149,7 +145,7 @@ public class IndigoMain {
 			return;
 		}
 		Parser commandPre = ps.undo();
-		COMMAND comm = changecomm(commandPre.getKeyCommand());
+		COMMAND comm = getCommand(commandPre.getKeyCommand());
 		switch (comm){
 			case CREATE:
 				taskList.add(new Task(commandPre.getCommand()));
