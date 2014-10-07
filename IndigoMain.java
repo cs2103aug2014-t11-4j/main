@@ -26,7 +26,7 @@ public class IndigoMain {
 	
 	//Enum class for commands
 	public enum COMMAND{
-		CREATE, READ, UPDATE, DELETE, UNDO, COMPLETE
+		CREATE, READ, UPDATE, DELETE, UNDO, COMPLETE, UNCOMPLETE
 	}
 
 	public static void main(String[] args) {
@@ -170,6 +170,9 @@ public class IndigoMain {
 				break;
 			case UNDO:
 				undo();
+				break;
+			case UNCOMPLETE:
+				taskList.get(commandPre.getEditIndex()).unComplete();
 				break;
 			default:
 				;
