@@ -59,7 +59,7 @@ public class Parser {
 		conjWords.add("by"); 
 		conjWords.add("on"); 							// words to filter out dates
 		
-		userCommand.toLowerCase();
+		userCommand.trim().toLowerCase();
 		if (userCommand.contains(" ")){
 			commandSentence = userCommand.split(" ", 2);
 			keyWord = commandSentence[0];
@@ -94,6 +94,7 @@ public class Parser {
 				break;
 			
 			case "edit" : 								// edit 2 catch a cat
+			case "complete" :	
 				details = commandWords.split(" ");
 				editIndex = Integer.parseInt(details[0]);
 				for(int c=1; c<details.length; c++) { 
@@ -102,7 +103,9 @@ public class Parser {
 				break;
 			
 			case "undo" :
-				break; 
+				keyWord = "undo";
+				break;
+				
 			} 
 		}	else {
 			switch (userCommand){
