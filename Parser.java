@@ -80,7 +80,7 @@ public class Parser {
 					 parseInfo();
 					 parseDate(); 				 
 					 break;  
-				 }
+				 }	
 				 
 				 else{ 								// this is a floating task
 					for(int b=0; b<details.length; b++) { 
@@ -284,11 +284,11 @@ public class Parser {
 	}
 	public int getDelIndex() { 
 		System.out.println("Delete index: " +delIndex); 
-		return delIndex; 
+		return delIndex-1; 
 	}
 	public int getEditIndex() { 
 		System.out.println("Edit index: " +editIndex);
-		return editIndex; 
+		return editIndex-1; 
 	}
 	public boolean checkValidDate() {
 		String validateDate = dateIntArr[1] + "/" + dateIntArr[0] + "/" + dateIntArr[2];

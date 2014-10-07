@@ -52,7 +52,7 @@ public class storeArrayList {
 		if (taskList.size() > 0){
 			String fileContent = "";
 			for (int i=0; i<taskList.size();i++){
-				fileContent = fileContent + Integer.toString(i) + ". " + taskList.get(i).toString() + System.lineSeparator();
+				fileContent = fileContent + Integer.toString(i+1) + ". " + taskList.get(i).toString() + System.lineSeparator();
 			}
 			//System.out.print(fileContent);
 			BufferedWriter writer = null;
