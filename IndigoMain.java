@@ -27,7 +27,7 @@ public class IndigoMain {
 	
 	//Enum class for commands
 	public enum COMMAND{
-		CREATE, READ, UPDATE, DELETE, UNDO
+		CREATE, READ, UPDATE, DELETE, UNDO, COMPLETE
 	}
 
 	public static void main(String[] args) {
@@ -100,12 +100,19 @@ public class IndigoMain {
 			case UNDO:
 				undo();
 				break;
+			case COMPLETE:
+				complete(parser.getEditIndex());
 			default:
 				System.exit(0);
 		}
 		return returnMessage + saveTaskList();
 	}
 	
+	private static void complete(int index) {
+		ps.push(new Parser("UnComplete " + index));
+		taskList.get(index).complete();
+	}
+
 	private static COMMAND changecomm(String hello){
 		switch (hello){
 			case "add":
@@ -118,6 +125,8 @@ public class IndigoMain {
 				return COMMAND.DELETE;
 			case "undo":
 				return COMMAND.UNDO;
+			case "complete":
+				return COMMAND.COMPLETE;
 			default:
 				return COMMAND.READ;
 		}
@@ -184,6 +193,26 @@ public class IndigoMain {
 	private static void displayWelcomeMessage() {
 		loadData();
 		// TODO display welcomeMessage
+	}
+	
+	public static String viewDone(){
+		StringBuilder str = new StringBuilder("Tasks Completed: \n");
+		for (int i=0,j=1; i<taskList.size();i++){
+			if (taskList.get(i).isCompleted()){
+				str.append( j + ". " + taskList.get(i).getDescription() + "\n");
+			}
+		}
+		return str.toString();
+	}
+	
+	public static String viewUndone(){
+		StringBuilder str = new StringBuilder("Tasks Due: \n");
+		for (int i=0,j=1; i<taskList.size();i++){
+			if (!taskList.get(i).isCompleted()){
+				str.append( j + ". " + taskList.get(i).getDescription() + "\n");
+			}
+		}
+		return str.toString();
 	}
 
 }
