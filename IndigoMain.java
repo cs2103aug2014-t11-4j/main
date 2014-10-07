@@ -153,7 +153,7 @@ public class IndigoMain {
 	}
 	
 	private static void delete(int index){
-		ps.push(new Parser("add " + index + " " + taskList.get(index).getDescription()));
+		ps.push(new Parser("add " + taskList.get(index).getDescription()));
 		taskList.remove(index);
 	}
 

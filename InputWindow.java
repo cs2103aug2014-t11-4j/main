@@ -10,6 +10,13 @@ import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
+/** bugs to be fixed:
+ * -undo command for (delete int) operation
+ * -(delete someString) cause error
+ * 
+ *
+ */
+
 public class InputWindow  extends JFrame implements ActionListener{
 	
 	JPanel welcomeWindow = new JPanel(new BorderLayout());
