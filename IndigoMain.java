@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Date;
+import java.text.DateFormat;
 
 /**
  * This a main program of Indigo. Indigo is a software that can store, process
@@ -41,6 +42,7 @@ public class IndigoMain {
 		 * 5.repeating 3-4 until exit
 		 */
 		displayWelcomeMessage();
+		
 
 		while (true) {
 			//String userCommand = readCommand();
@@ -56,7 +58,8 @@ public class IndigoMain {
 		}
 		feedback = readCommand(userCommand);
 		Date dateCurrent = new Date();
-		dateLeft = dateCurrent.toString();
+		DateFormat dateForm = DateFormat.getDateInstance();
+		dateLeft = dateForm.format(dateCurrent);
 	}
 	
 	// TODO GUI for user inputs
