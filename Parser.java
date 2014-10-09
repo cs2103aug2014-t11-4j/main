@@ -53,56 +53,82 @@ public class Parser {
 		sc.close(); 
 	}
 	
-	public Parser(String userCommand) { 
-		userCommand.toLowerCase();
-		commandSentence = userCommand.split(" ", 2);
-		keyWord = commandSentence[0];
-		commandWords = commandSentence[1];
+	public Parser(String userCommand) {
 		addDays(); 
 		
 		conjWords.add("by"); 
 		conjWords.add("on"); 							// words to filter out dates
 		
-		switch(keyWord) { 
-		case "add": 								// for instance add buy a cat on 23/12/2014
-			 details = commandWords.split(" ");
-			 for(int i=0; i<details.length; i++) 
-				detailsList.add(details[i]);
-				 
-			 for(int j=0; j<details.length; j++) { 
-				 if(conjWords.contains(details[j])) {
-					 containConj = true; 
+		userCommand = userCommand.trim().toLowerCase();
+		if (userCommand.contains(" ")){
+			commandSentence = userCommand.split(" ", 2);
+			keyWord = commandSentence[0];
+			commandWords = commandSentence[1];
+			switch(keyWord) { 
+			case "add": 								// for instance add buy a cat on 23/12/2014
+				 details = commandWords.split(" ");
+				 for(int i=0; i<details.length; i++) 
+					detailsList.add(details[i]);
+					 
+				 for(int j=0; j<details.length; j++) { 
+					 if(conjWords.contains(details[j])) {
+						 containConj = true; 
+					 }
 				 }
-			 }
-					
-			 if(containConj == true) {
-				 parseInfo();
-				 parseDate(); 				 
-				 break;  
-			 }
-			 
-			 else{ 								// this is a floating task
-				for(int b=0; b<details.length; b++) { 
-					toDo = toDo+ " " + details[b]; 
+						
+				 if(containConj == true) {
+					 parseInfo();
+					 parseDate(); 				 
+					 break;  
+				 }	
+				 
+				 else{ 								// this is a floating task
+					for(int b=0; b<details.length; b++) { 
+						toDo = toDo+ " " + details[b]; 
+					}
+				 }
+				 break;
+				 			 
+			case "delete" : 
+				delIndex = Integer.parseInt(commandSentence[1]); 
+				break;
+			
+			case "edit" : 								// edit 2 catch a cat
+			case "complete" :
+			case "uncomplete" :
+				details = commandWords.split(" ");
+				editIndex = Integer.parseInt(details[0]);
+				for(int c=1; c<details.length; c++) { 
+					toDo = toDo + " " + details[c];
 				}
-			 }
-			 break;
-			 			 
-		case "delete" : 
-			delIndex = Integer.parseInt(commandSentence[1]); 
-			break;
-		
-		case "edit" : 								// edit 2 catch a cat
-			details = commandWords.split(" ");
-			editIndex = Integer.parseInt(details[0]);
-			for(int c=1; c<details.length; c++) { 
-				toDo = toDo + " " + details[c];
+				break;
+			
+			case "undo" :
+				keyWord = "undo";
+				break;
+			case "view" :
+				keyWord = "view";
+				details = commandWords.split(" ");
+				for(int c=0; c<details.length; c++) { 
+					toDo = toDo + " " + details[c];
+				}
+				break;
+			} 
+		}	else {
+			switch (userCommand){
+			case "delete":
+				keyWord = "delete";
+				break;
+			case "undo":
+				keyWord = "undo";
+				break;
+			default:
+				keyWord = "view";
 			}
-			break;
+		}
 		
-		case "undo" : 
-			break; 
-		} 					
+		
+					
 	}
 	public void parseDate() {  
 		int p = 0;
@@ -258,11 +284,11 @@ public class Parser {
 	}
 	public int getDelIndex() { 
 		System.out.println("Delete index: " +delIndex); 
-		return delIndex; 
+		return delIndex-1; 
 	}
 	public int getEditIndex() { 
 		System.out.println("Edit index: " +editIndex);
-		return editIndex; 
+		return editIndex-1; 
 	}
 	public boolean checkValidDate() {
 		String validateDate = dateIntArr[1] + "/" + dateIntArr[0] + "/" + dateIntArr[2];

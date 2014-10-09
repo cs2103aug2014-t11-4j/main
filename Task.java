@@ -4,6 +4,9 @@
  * fields for creating a new task: the title, the description, the time, the
  * type of the task and the level of importance.
  * 
+ * Change log:
+ * boolean isUndo added
+ * 
  * @author jjlu
  *
  */
@@ -11,6 +14,8 @@
 public class Task {
 
 	private String taskTitle; // without time
+	
+	private boolean isDone = false; // to indicate the status of task e.g is it done or due
 
 	private Type taskType;
 
@@ -35,11 +40,11 @@ public class Task {
 	}
 
 	// TODO exact class method to be ammended
-	public Task(Parser userCommand) {
+/*	public Task(Parser userCommand) {
 		this(userCommand.getCommand(), Type.FLOATING,
 				"Enter your task description", userCommand.getDate(),
 				"immediate");
-	}
+	}*/
 
 	public Task(String title, Type type, String description, int[] time,
 			String importance) {
@@ -72,7 +77,7 @@ public class Task {
 	}
 
 	public String getDescription() {
-		return taskDescription;
+		return this.taskDescription;
 	}
 
 	public int[] getTime() {
@@ -113,6 +118,18 @@ public class Task {
 	public boolean equals(Object anotherTask) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public void complete(){
+		isDone = true;
+	}
+	
+	public void unComplete(){
+		isDone = false;
+	}
+	
+	public boolean isCompleted(){
+		return isDone;
 	}
 	
 }

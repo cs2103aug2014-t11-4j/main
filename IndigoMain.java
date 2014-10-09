@@ -1,16 +1,24 @@
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.Date;
+import java.text.DateFormat;
 
 /**
  * This a main program of Indigo. Indigo is a software that can store, process
  * and display tasks on the desktop as a task manager. Indigo also supports
- * audio remainder, auto-correction, and color-coded highlighting. Indigo takes
+ * audio reminder, auto-correction, and color-coded highlighting. Indigo takes
  * input from keyboard only. Indigo stores data on a local disk.
  * 
  * @author jjlu
  *
  */
 public class IndigoMain {
+	public String feedback;
+	
+	public String dateLeft;
+	
+	private static ParserList ps = new ParserList();
+	
+	private static Parser parser;
 
 	private static final String FILE_NAME = "myTask";
 	
@@ -19,7 +27,7 @@ public class IndigoMain {
 	
 	//Enum class for commands
 	public enum COMMAND{
-		CREATE, READ, UPDATE, DELETE, UNDO
+		CREATE, READ, UPDATE, DELETE, UNDO, COMPLETE, UNCOMPLETE
 	}
 
 	public static void main(String[] args) {
@@ -34,6 +42,7 @@ public class IndigoMain {
 		 * 5.repeating 3-4 until exit
 		 */
 		displayWelcomeMessage();
+		
 
 		while (true) {
 			//String userCommand = readCommand();
@@ -42,19 +51,26 @@ public class IndigoMain {
 			// TODO GUI for displaying system message after each operation.
 		}
 	}
-
-	// TODO a simple input for testing
-	private static Scanner scanner = new Scanner(System.in);
+	
+	public IndigoMain(String userCommand){
+		if (taskList.isEmpty()){
+			loadData();
+		}
+		feedback = readCommand(userCommand);
+		Date dateCurrent = new Date();
+		DateFormat dateForm = DateFormat.getDateInstance();
+		dateLeft = dateForm.format(dateCurrent);
+	}
 	
 	// TODO GUI for user inputs
-	private static String readCommand() {
+	private static String readCommand(String userCommand) {
 		/*
 		 * TODO 
 		 * 1.read a command from user and process it 
 		 * 2.execute Command
-		 */
-		String userCommand = scanner.nextLine(); // TODO simple input for testing
-		return executeCommand(userCommand);
+		 */ // TODO simple input for testing
+		parser = new Parser(userCommand);
+		return executeCommand(parser.getKeyCommand());
 	}
 
 	private static String executeCommand(String command) {
@@ -65,23 +81,25 @@ public class IndigoMain {
 		 * 
 		 * A standardized command should have String systemMessage returned.
 		 */
-		String returnMessage = new String();;
-		COMMAND comm = changecomm(command);
+		String returnMessage = new String();
+		COMMAND comm = getCommand(command);
 		switch (comm){
 			case CREATE:
 				create();
 				break;
 			case READ:
-				read();
-				break;
+				return read(parser.getCommand());
 			case UPDATE:
-				update();
+				update(parser.getEditIndex(), parser.getCommand());
 				break;
 			case DELETE:
-				delete();
+				delete(parser.getDelIndex());
 				break;
 			case UNDO:
 				undo();
+				break;
+			case COMPLETE:
+				complete(parser.getEditIndex());
 				break;
 			default:
 				System.exit(0);
@@ -89,7 +107,13 @@ public class IndigoMain {
 		return returnMessage + saveTaskList();
 	}
 	
-	private static COMMAND changecomm(String hello){
+	private static void complete(int index) {
+		ps.push(new Parser("UnComplete " + index));
+		taskList.get(index).complete();
+	}
+
+	private static COMMAND getCommand(String hello){
+
 		switch (hello){
 			case "add":
 				return COMMAND.CREATE;
@@ -101,36 +125,68 @@ public class IndigoMain {
 				return COMMAND.DELETE;
 			case "undo":
 				return COMMAND.UNDO;
+			case "complete":
+				return COMMAND.COMPLETE;
 			default:
 				return COMMAND.READ;
 		}
 	}
 	
 	private static void create(){
-		Task tt = new Task();
+		ps.push(new Parser("delete 0"));
+		Task tt = new Task(parser.getCommand());
 		taskList.add(tt);
 	}
 	
-	private static void read(){
-		for(int i = 0; i < taskList.size(); i++){
-			System.out.println(taskList.get(i));
+	private static String read(String command){
+		if (command == null){
+			return saveTaskList();
+		} else if (command.contains("-done")){
+			return viewDone();
+		} else if (command.contains("-undone")){
+			return viewUndone();
 		}
+		return saveTaskList();
 	}
 	
-	private static void update(){
-		Task tt = new Task();
-		int i = 9;
-		taskList.set(i, tt);
+	private static void update(int index, String task){
+		ps.push(new Parser("edit "+ index + " " + taskList.get(index).getDescription()));
+		Task tt = new Task(task);
+		taskList.set(index, tt);
 	}
 	
-	private static void delete(){
-		int i = 9;
-		taskList.remove(i);
+	private static void delete(int index){
+		ps.push(new Parser("add " + taskList.get(index).getDescription()));
+		taskList.remove(index);
 	}
-	
+
 	private static void undo(){
-		ParserList ps = new ParserList();
-		ps.undo();
+		if (ps.isUndoAble() == false){
+			return;
+		}
+		Parser commandPre = ps.undo();
+		COMMAND comm = getCommand(commandPre.getKeyCommand());
+		switch (comm){
+			case CREATE:
+				taskList.add(new Task(commandPre.getCommand()));
+				break;
+			case READ:
+				break;
+			case UPDATE:
+				taskList.set(commandPre.getEditIndex(), new Task(commandPre.getCommand()));
+				break;
+			case DELETE:
+				taskList.remove(taskList.size()-1);
+				break;
+			case UNDO:
+				undo();
+				break;
+			case UNCOMPLETE:
+				taskList.get(commandPre.getEditIndex()).unComplete();
+				break;
+			default:
+				;
+		}
 	}
 
 	private static String saveTaskList() {
@@ -147,6 +203,26 @@ public class IndigoMain {
 	private static void displayWelcomeMessage() {
 		loadData();
 		// TODO display welcomeMessage
+	}
+	
+	public static String viewDone(){
+		StringBuilder str = new StringBuilder("Tasks Completed: \n");
+		for (int i=0,j=1; i<taskList.size();i++){
+			if (taskList.get(i).isCompleted()){
+				str.append( j++ + ". " + taskList.get(i).getDescription() + "\n");
+			}
+		}
+		return str.toString();
+	}
+	
+	public static String viewUndone(){
+		StringBuilder str = new StringBuilder("Tasks Due: \n");
+		for (int i=0,j=1; i<taskList.size();i++){
+			if (!taskList.get(i).isCompleted()){
+				str.append( j++ + ". " + taskList.get(i).getDescription() + "\n");
+			}
+		}
+		return str.toString();
 	}
 
 }

@@ -52,9 +52,9 @@ public class storeArrayList {
 		if (taskList.size() > 0){
 			String fileContent = "";
 			for (int i=0; i<taskList.size();i++){
-				fileContent = fileContent + Integer.toString(i) + ". " + taskList.get(i).toString() + System.lineSeparator();
+				fileContent = fileContent + Integer.toString(i+1) + ". " + taskList.get(i).toString() + System.lineSeparator();
 			}
-			System.out.print(fileContent);
+			//System.out.print(fileContent);
 			BufferedWriter writer = null;
 			try
 			{
@@ -77,7 +77,7 @@ public class storeArrayList {
 			    	return "IOException";
 			    }
 			}
-			return (fileName + " saved.");
+			return (fileContent);
 		}	else {
 			return("Empty array.");
 		}
