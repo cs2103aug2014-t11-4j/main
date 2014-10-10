@@ -12,7 +12,7 @@ public class TimedTask extends DeadlineTask {
 	
 	public static void main(String[] args){
 		FloatingTask time = new TimedTask("timed task", new DateTime(2014,10,9,19,15,00), new DateTime());
-		DateTimeFormatter dtf = DateTimeFormat.forPattern("MMMM, yyyy");
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy");
 		TimedTask newTask = (TimedTask)time;
 		System.out.println(newTask.toString(dtf));
 	}

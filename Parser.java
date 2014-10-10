@@ -284,11 +284,11 @@ public class Parser {
 	}
 	public int getDelIndex() { 
 		System.out.println("Delete index: " +delIndex); 
-		return delIndex-1; 
+		return delIndex; 
 	}
 	public int getEditIndex() { 
 		System.out.println("Edit index: " +editIndex);
-		return editIndex-1; 
+		return editIndex; 
 	}
 	public boolean checkValidDate() {
 		String validateDate = dateIntArr[1] + "/" + dateIntArr[0] + "/" + dateIntArr[2];

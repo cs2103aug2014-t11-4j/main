@@ -2,6 +2,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 /**
  * This a main program of Indigo. Indigo is a software that can store, process
  * and display tasks on the desktop as a task manager. Indigo also supports
@@ -19,16 +22,19 @@ public class IndigoMain {
 	private static ParserList ps = new ParserList();
 	
 	private static Parser parser;
+	
+	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yy");
 
 	private static final String FILE_NAME = "myTask";
 	
 	// Storage of our list of tasks
-	private static ArrayList<Task> taskList = new ArrayList<Task>();
+	private static TaskList taskList = new TaskList();
 	
 	//Enum class for commands
 	public enum COMMAND{
 		CREATE, READ, UPDATE, DELETE, UNDO, COMPLETE, UNCOMPLETE
 	}
+	
 
 	public static void main(String[] args) {
 		/*
@@ -41,25 +47,20 @@ public class IndigoMain {
 		 * 4.process user command 
 		 * 5.repeating 3-4 until exit
 		 */
-		displayWelcomeMessage();
-		
-
-		while (true) {
-			//String userCommand = readCommand();
-			
-	//	InputWindow.getUserCommand(); 
-			// TODO GUI for displaying system message after each operation.
-		}
+		IndigoMain test1 = new IndigoMain("add go to school");
+		IndigoMain test2 = new IndigoMain("add buy a fish");
+		IndigoMain test3 = new IndigoMain("add do revision");
+		System.out.println("test1: " + test1.feedback);
+		System.out.println("test2: " + test2.feedback);
+		System.out.println("test3: " + test3.feedback);
 	}
 	
 	public IndigoMain(String userCommand){
-		if (taskList.isEmpty()){
-			loadData();
-		}
+		loadData();
 		feedback = readCommand(userCommand);
-		Date dateCurrent = new Date();
-		DateFormat dateForm = DateFormat.getDateInstance();
-		dateLeft = dateForm.format(dateCurrent);
+//		Date dateCurrent = new Date();
+//		DateFormat dateForm = DateFormat.getDateInstance();
+//		dateLeft = dateForm.format(dateCurrent);
 	}
 	
 	// TODO GUI for user inputs
@@ -109,7 +110,7 @@ public class IndigoMain {
 	
 	private static void complete(int index) {
 		ps.push(new Parser("UnComplete " + index));
-		taskList.get(index).complete();
+		taskList.complete(index);
 	}
 
 	private static COMMAND getCommand(String hello){
@@ -134,13 +135,12 @@ public class IndigoMain {
 	
 	private static void create(){
 		ps.push(new Parser("delete 0"));
-		Task tt = new Task(parser.getCommand());
-		taskList.add(tt);
+		FloatingTask tt = new FloatingTask(parser.getCommand());
+		taskList.addTask(tt);
 	}
 	
 	private static String read(String command){
 		if (command == null){
-			return saveTaskList();
 		} else if (command.contains("-done")){
 			return viewDone();
 		} else if (command.contains("-undone")){
@@ -151,13 +151,13 @@ public class IndigoMain {
 	
 	private static void update(int index, String task){
 		ps.push(new Parser("edit "+ index + " " + taskList.get(index).getDescription()));
-		Task tt = new Task(task);
-		taskList.set(index, tt);
+		FloatingTask tt = new FloatingTask(task);
+		taskList.editTask(index, tt);
 	}
 	
 	private static void delete(int index){
 		ps.push(new Parser("add " + taskList.get(index).getDescription()));
-		taskList.remove(index);
+		taskList.deleteTask(index);
 	}
 
 	private static void undo(){
@@ -168,15 +168,15 @@ public class IndigoMain {
 		COMMAND comm = getCommand(commandPre.getKeyCommand());
 		switch (comm){
 			case CREATE:
-				taskList.add(new Task(commandPre.getCommand()));
+				taskList.addTask(new FloatingTask(commandPre.getCommand()));
 				break;
 			case READ:
 				break;
 			case UPDATE:
-				taskList.set(commandPre.getEditIndex(), new Task(commandPre.getCommand()));
+				taskList.editTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
 				break;
 			case DELETE:
-				taskList.remove(taskList.size()-1);
+				taskList.deleteTask(commandPre.getEditIndex());
 				break;
 			case UNDO:
 				undo();
@@ -191,38 +191,20 @@ public class IndigoMain {
 
 	private static String saveTaskList() {
 		//  save taskList into TEXT file
-		return storeArrayList.saveFile(taskList, FILE_NAME);
+		return taskList.write(FILE_NAME, DATE_FORMAT);
 	}
 
 	private static String loadData() {
 		// load data from the local disk into memory
-		return storeArrayList.readFile(taskList, FILE_NAME);
-	}
-
-
-	private static void displayWelcomeMessage() {
-		loadData();
-		// TODO display welcomeMessage
+		return taskList.read(FILE_NAME, DATE_FORMAT);
 	}
 	
 	public static String viewDone(){
-		StringBuilder str = new StringBuilder("Tasks Completed: \n");
-		for (int i=0,j=1; i<taskList.size();i++){
-			if (taskList.get(i).isCompleted()){
-				str.append( j++ + ". " + taskList.get(i).getDescription() + "\n");
-			}
-		}
-		return str.toString();
+		return taskList.viewDone();
 	}
 	
 	public static String viewUndone(){
-		StringBuilder str = new StringBuilder("Tasks Due: \n");
-		for (int i=0,j=1; i<taskList.size();i++){
-			if (!taskList.get(i).isCompleted()){
-				str.append( j++ + ". " + taskList.get(i).getDescription() + "\n");
-			}
-		}
-		return str.toString();
+		return taskList.viewUndone();
 	}
 
 }

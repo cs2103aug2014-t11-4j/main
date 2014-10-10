@@ -36,10 +36,13 @@ public class TaskList {
 	
 	public static void main(String[] args){
 		TaskList tasks = new TaskList();
-		tasks.addFloatingTask(new FloatingTask("floating task."));
-		tasks.addFloatingTask(new TimedTask("timed task.", new DateTime(), new DateTime()));
-		tasks.addFloatingTask(new DeadlineTask("deadline task.", new DateTime()));
-		DateTimeFormatter dtf = DateTimeFormat.forPattern("MMMM, yyyy");
+		tasks.addTask(new FloatingTask("floating task."));
+		tasks.addTask(new FloatingTask("floating task."));
+		tasks.addTask(new TimedTask("timed task.", new DateTime(), new DateTime()));
+		tasks.addTask(new DeadlineTask("deadline task.", new DateTime()));
+		tasks.addTask(new TimedTask("timed task.", new DateTime(), new DateTime()));
+		tasks.addTask(new DeadlineTask("deadline task.", new DateTime()));
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy");
 		System.out.println(tasks.write("mydata", dtf));
 		TaskList testTasks = new TaskList();
 		System.out.println(testTasks.read("mydata", dtf));
@@ -48,21 +51,21 @@ public class TaskList {
 	
 	// basic functions
 	// add
-	public FloatingTask addFloatingTask(FloatingTask newFloatingTask){
+	public FloatingTask addTask(FloatingTask newFloatingTask){
 		taskList.add(newFloatingTask);
 		return newFloatingTask;
 	}
-	public FloatingTask addFloatingTask(int index, FloatingTask newTask){
+	public FloatingTask addTask(int index, FloatingTask newTask){
 		taskList.add(index, newTask);
 		return newTask;
 	}
 	
 	// delete
-	public FloatingTask deleteFloatingTask(FloatingTask task){
+	public FloatingTask deleteTask(FloatingTask task){
 		taskList.remove(task);
 		return task;
 	}
-	public FloatingTask deleteFloatingTask(int index){
+	public FloatingTask deleteTask(int index){
 		int indexComputing = index - 1;
 		FloatingTask tempFloatingTask = taskList.get(indexComputing);
 		taskList.remove(indexComputing);
@@ -70,7 +73,7 @@ public class TaskList {
 	}
 	
 	// edit
-	public FloatingTask editFloatingTask(int index, FloatingTask newFloatingTask){
+	public FloatingTask editTask(int index, FloatingTask newFloatingTask){
 		int indexComputing = index - 1;
 		FloatingTask tempFloatingTask = taskList.get(indexComputing);
 		taskList.add(indexComputing, newFloatingTask);
@@ -111,8 +114,28 @@ public class TaskList {
 		return result.toString();
 	}
 	
+	public String viewDone(){
+		StringBuilder str = new StringBuilder("FloatingTasks Completed: \n");
+		for (int i=0,j=1; i<taskList.size();i++){
+			if (taskList.get(i).isCompleted()){
+				str.append( j++ + ". " + taskList.get(i).getDescription() + "\n");
+			}
+		}
+		return str.toString();
+	}
+	
+	public String viewUndone(){
+		StringBuilder str = new StringBuilder("FloatingTasks Due: \n");
+		for (int i=0,j=1; i<taskList.size();i++){
+			if (!taskList.get(i).isCompleted()){
+				str.append( j++ + ". " + taskList.get(i).getDescription() + "\n");
+			}
+		}
+		return str.toString();
+	}
+	
 	public String viewAll(DateTimeFormatter dtf){
-		StringBuilder result = new StringBuilder("There are " + taskList.size() + " of tasks listed:" + newLine);
+		StringBuilder result = new StringBuilder("There are " + taskList.size() + " tasks listed:" + newLine);
 		result.append(viewFloatingTask() + viewDeadlineTask(dtf) + viewTimedTask(dtf));
 		return result.toString();
 	}
@@ -153,60 +176,31 @@ public class TaskList {
 		    reader = new BufferedReader( new FileReader(fileName));
 		    String line = reader.readLine();
 		    while (line != null){
-		    	//System.out.print(line);
+		    	//System.out.println(line);
 		    	//existingFileContent = existingFileContent + line.substring(3) + System.lineSeparator();
 				//System.out.print(existingFileContent);
 		    	if (line.contains("tasks listed:")) {
 		    		line = reader.readLine();
 		    	} 
-		    	int markerDone;
-		    	int markerImpor;
 		    	if (line.contains("Floating tasks are:")){
 		    		line = reader.readLine();
-		    		markerDone = line.indexOf("@isDone");
-		    		markerImpor = line.indexOf("@isImpor");
-		    		FloatingTask someTask = new FloatingTask(line.substring(3,markerDone));
-		    		if (line.substring(markerDone,markerImpor-1).contains("true")){
-		    			someTask.complete();
+		    		while (!(line.contains("Deadline tasks are:"))){
+		    			readFloatingTask(line);
+		    			line = reader.readLine();
 		    		}
-		    		if (line.substring(markerImpor).contains("true")){
-		    			someTask.highlight();
-		    		}
-		    		taskList.add(someTask);
-		    		line = reader.readLine();
-		    		//System.out.println("floating task indentified");
 		    	} else if(line.contains("Deadline tasks are:")){
 		    		line = reader.readLine();
 		    		//System.out.println("deadline task indentified");
-		    		markerDone = line.indexOf("@isDone");
-		    		markerImpor = line.indexOf("@isImpor");
-		    		int markerDue = line.indexOf("@due");
-		    		DateTime time = dtf.parseDateTime(line.substring(markerDue+5));
-		    		DeadlineTask newTask = new DeadlineTask(line.substring(3,markerDone),time);
-		    		if (line.substring(markerDone,markerImpor-1).contains("true")){
-		    			newTask.complete();
+		    		while (!(line.contains("Timed tasks are:"))){
+		    			readDeadlineTask(dtf, line);
+		    			line = reader.readLine();
 		    		}
-		    		if (line.substring(markerImpor,markerDue-1).contains("true")){
-		    			newTask.highlight();
-		    		}
-		    		//System.out.println(newTask.toString(dtf));
-		    		taskList.add(newTask);
 		    	} else if (line.contains("Timed tasks are:")){
 		    		line = reader.readLine();
-		    		markerDone = line.indexOf("@isDone");
-		    		markerImpor = line.indexOf("@isImpor");
-		    		int markerFrom = line.indexOf("@from");
-		    		int markerTo = line.indexOf("@to");
-		    		DateTime tempStartTime = dtf.parseDateTime(line.substring(markerFrom+6,markerTo-1));
-		    		DateTime tempEndTime = dtf.parseDateTime(line.substring(markerTo+4));
-		    		TimedTask tempTask = new TimedTask(line.substring(3,markerDone),tempStartTime,tempEndTime);
-		    		if (line.substring(markerDone,markerImpor-1).contains("true")){
-		    			tempTask.complete();
+		    		while (line != null){
+		    			readTimedTask(dtf, line);
+		    			line = reader.readLine();
 		    		}
-		    		if (line.substring(markerImpor,markerFrom-1).contains("true")){
-		    			tempTask.highlight();
-		    		}
-		    		taskList.add(tempTask);
 		    	} else {
 			    	line = reader.readLine();
 		    	}
@@ -231,6 +225,64 @@ public class TaskList {
 		    }
 		}
 		return fileName + " is loaded.";
+	}
+
+	private void readTimedTask(DateTimeFormatter dtf, String line) {
+		int markerIndex = line.indexOf(".");
+		int markerDone = line.indexOf("@isDone");
+		int markerImpor = line.indexOf("@isImpor");
+		int markerFrom = line.indexOf("@from");
+		int markerTo = line.indexOf("@to");
+		DateTime tempStartTime = dtf.parseDateTime(line.substring(markerFrom+6,markerTo-1));
+		DateTime tempEndTime = dtf.parseDateTime(line.substring(markerTo+4));
+		TimedTask tempTask = new TimedTask(line.substring(markerIndex+2,markerDone-1),tempStartTime,tempEndTime);
+		if (line.substring(markerDone,markerImpor-1).contains("true")){
+			tempTask.complete();
+		}
+		if (line.substring(markerImpor,markerFrom-1).contains("true")){
+			tempTask.highlight();
+		}
+		taskList.add(tempTask);
+	}
+
+	private void readDeadlineTask(DateTimeFormatter dtf, String line) {
+		int markerIndex = line.indexOf(".");
+		int markerDone = line.indexOf("@isDone");
+		int markerImpor = line.indexOf("@isImpor");
+		int markerDue = line.indexOf("@due");
+		DateTime time = dtf.parseDateTime(line.substring(markerDue+5));
+		DeadlineTask newTask = new DeadlineTask(line.substring(markerIndex+2,markerDone-1),time);
+		if (line.substring(markerDone,markerImpor-1).contains("true")){
+			newTask.complete();
+		}
+		if (line.substring(markerImpor,markerDue-1).contains("true")){
+			newTask.highlight();
+		}
+		//System.out.println(newTask.toString(dtf));
+		taskList.add(newTask);
+	}
+
+	private void readFloatingTask(String line) {
+		int markerIndex = line.indexOf(".");
+		int markerDone = line.indexOf("@isDone");
+		int markerImpor = line.indexOf("@isImpor");
+		FloatingTask someTask = new FloatingTask(line.substring(markerIndex+2,markerDone-1));
+		if (line.substring(markerDone,markerImpor-1).contains("true")){
+			someTask.complete();
+		}
+		if (line.substring(markerImpor).contains("true")){
+			someTask.highlight();
+		}
+		taskList.add(someTask);
+		//System.out.println("floating task indentified");
+	}
+
+	public boolean complete(int index) {
+		return taskList.get(index).complete();
+	}
+
+	public FloatingTask get(int index) {
+		return taskList.get(index);
 	}
 
 }
