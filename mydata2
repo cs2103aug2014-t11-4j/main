@@ -1,0 +1,7 @@
+There are 3 of tasks listed:
+Floating tasks are:
+1. floating task.  @isDone false @isImpor false
+Deadline tasks are:
+1. deadline task.  @isDone false @isImpor false @due 十月, 2014
+Timed tasks are:
+1. timed task.  @isDone false @isImpor false @from 十月, 2014 @to 十月, 2014
