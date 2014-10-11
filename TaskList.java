@@ -296,5 +296,9 @@ public class TaskList {
 	public FloatingTask get(int index) {
 		return taskList.get(index-1);
 	}
+	
+	public ArrayList<FloatingTask> getList(){
+		return taskList;
+	}
 
 }

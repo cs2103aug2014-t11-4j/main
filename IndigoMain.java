@@ -134,12 +134,13 @@ public class IndigoMain {
 	}
 	
 	private static void create(){
-		ps.push(new Parser("delete 0"));
 		FloatingTask tt = new FloatingTask(parser.getCommand());
 		if (parser.getEditIndex() == null){
+			ps.push(new Parser("delete " + taskList.getList().size()));
 			taskList.addTask(tt);
 		} else {
 			taskList.addTask(parser.getEditIndex(),tt);
+			ps.push(new Parser("delete "+ parser.getEditIndex()));
 		}
 		//taskList.sort();
 	}
@@ -160,7 +161,7 @@ public class IndigoMain {
 	}
 	
 	private static void delete(int index){
-		ps.push(new Parser("add " + taskList.get(index).getDescription()));
+		ps.push(new Parser("add " + index + " " + taskList.get(index).getDescription()));
 		taskList.deleteTask(index);
 	}
 
@@ -172,7 +173,7 @@ public class IndigoMain {
 		COMMAND comm = getCommand(commandPre.getKeyCommand());
 		switch (comm){
 			case CREATE:
-				taskList.addTask(new FloatingTask(commandPre.getCommand()));
+				taskList.addTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
 				break;
 			case READ:
 				break;
@@ -180,7 +181,7 @@ public class IndigoMain {
 				taskList.editTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
 				break;
 			case DELETE:
-				taskList.deleteTask(commandPre.getEditIndex());
+				taskList.deleteTask(commandPre.getDelIndex());
 				break;
 			case UNDO:
 				undo();

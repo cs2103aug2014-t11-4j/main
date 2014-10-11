@@ -295,11 +295,17 @@ public class Parser {
 		return keyWord;
 	}
 	public int getDelIndex() { 
-		System.out.println("Delete index: " +delIndex); 
+		System.out.println("Delete index: " +delIndex);
+		if (delIndex == 0){
+			return 1;
+		}
 		return delIndex; 
 	}
 	public Integer getEditIndex() { 
 		System.out.println("Edit index: " +editIndex);
+		if (editIndex == null){
+			return 1;
+		}
 		return editIndex; 
 	}
 	public boolean checkValidDate() {
