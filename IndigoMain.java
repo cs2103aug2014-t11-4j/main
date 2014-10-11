@@ -146,7 +146,7 @@ public class IndigoMain {
 	}
 	
 	private static String read(String command){
-		if (command == null){
+		if (command.contains("-done")){
 			return viewDone();
 		} else if (command.contains("-undone")){
 			return viewUndone();

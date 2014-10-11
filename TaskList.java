@@ -142,6 +142,20 @@ public class TaskList {
 		StringBuilder result = new StringBuilder("There are " + taskList.size() + " tasks listed:" + newLine);
 		result.append(viewFloatingTask() + viewDeadlineTask(dtf) + viewTimedTask(dtf));
 		return result.toString();
+	} 
+	
+	public String viewNormal(DateTimeFormatter dtf){
+		StringBuilder result = new StringBuilder("A default view of tasks:");
+		for (int i=0,j=1;i<taskList.size();i++){
+			if (taskList.get(i).typeIndex == 2){
+				result.append(j++ + ". " + taskList.get(i).toString());
+			} else if (taskList.get(i).typeIndex == 1){
+				result.append(j++ + ". " + taskList.get(i).toDeadlineTask().toString());
+			} else {
+				result.append(j++ + ". " + taskList.get(i).toTimedTask().toString());
+			}
+		}
+		return result.toString();
 	}
 	
 	//sort
