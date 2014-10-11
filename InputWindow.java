@@ -65,7 +65,7 @@ public class InputWindow  extends JFrame implements ActionListener{
 //		textArea.setText(logic.dateLeft + "\n");
 //		textArea.append(logic.feedback + "\n");
 		textPane.setEditable(false);
-		textPane.setText(logic.dateLeft + "\n" + logic.feedback + "\n");
+		textPane.setText(logic.feedback + "\n");
 	}
 	public static void showTaskList(){
 		for (int i=0; i < inputs.size(); i++){

@@ -15,7 +15,7 @@ import org.joda.time.format.DateTimeFormatter;
  *
  */
 
-public class FloatingTask {
+public class FloatingTask implements Comparable<FloatingTask>{
 	
 	protected boolean isDone; // to indicate the status of task e.g is it done or due
 
@@ -24,6 +24,9 @@ public class FloatingTask {
 	protected String taskDetails; // details that can be stored
 
 	protected boolean isImportant; // a mark up to tell whether the task is important
+	
+	protected int typeIndex;
+	// Floating = 2, Deadline = 1; Timed = 0;
 	
 	public static void main(String[] args){
 		FloatingTask task = new FloatingTask();
@@ -40,6 +43,7 @@ public class FloatingTask {
 		isDone = false;
 		isImportant = false;
 		taskDetails = "";
+		typeIndex = 2;
 	}
 
 	// accessor
@@ -102,4 +106,33 @@ public class FloatingTask {
 		return isImportant;
 	}
 	
+	public DeadlineTask toDeadlineTask(){
+		if (this instanceof DeadlineTask){
+			DeadlineTask temp = (DeadlineTask)this;
+			return temp;
+		} else {
+			return null;
+		}
+	}
+	
+	public TimedTask toTimedTask(){
+		if (this instanceof TimedTask){
+			TimedTask temp = (TimedTask)this;
+			return temp;
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public int compareTo(FloatingTask aTask) {
+		if (this.typeIndex != aTask.typeIndex){
+			return this.typeIndex - aTask.typeIndex;
+		} else if (this.typeIndex == 2){
+			return this.taskDescription.compareTo(aTask.taskDescription);
+		} else {
+			return this.toDeadlineTask().endTime.compareTo(aTask.toDeadlineTask().endTime);
+		}
+	}
+
 }

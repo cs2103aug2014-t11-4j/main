@@ -4,7 +4,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.Collections;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -39,14 +39,17 @@ public class TaskList {
 		tasks.addTask(new FloatingTask("floating task."));
 		tasks.addTask(new FloatingTask("floating task."));
 		tasks.addTask(new TimedTask("timed task.", new DateTime(), new DateTime()));
-		tasks.addTask(new DeadlineTask("deadline task.", new DateTime()));
+		tasks.addTask(new DeadlineTask("deadline task1.", new DateTime(12,10,3,2,3)));
 		tasks.addTask(new TimedTask("timed task.", new DateTime(), new DateTime()));
-		tasks.addTask(new DeadlineTask("deadline task.", new DateTime()));
+		tasks.addTask(new DeadlineTask("deadline task3.", new DateTime(14,11,3,2,3)));
+		tasks.addTask(new DeadlineTask("deadline task2.", new DateTime(13,6,6,6,6)));
 		DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy");
 		System.out.println(tasks.write("mydata", dtf));
 		TaskList testTasks = new TaskList();
 		System.out.println(testTasks.read("mydata", dtf));
 		System.out.println(testTasks.write("mydata2",dtf));
+		tasks.sort();
+		System.out.println("after sorting:" + tasks.viewAll(dtf));
 	}
 	
 	// basic functions
@@ -56,7 +59,8 @@ public class TaskList {
 		return newFloatingTask;
 	}
 	public FloatingTask addTask(int index, FloatingTask newTask){
-		taskList.add(index, newTask);
+		System.out.println("index:" + index);
+		taskList.add(index-1, newTask);
 		return newTask;
 	}
 	
@@ -140,6 +144,13 @@ public class TaskList {
 		return result.toString();
 	}
 	
+	//sort
+	public String sort(){
+		Collections.sort(taskList);
+		return "tasklist is sorted.";
+	}
+	
+	// write and read
 	public String write(String fileName, DateTimeFormatter dtf){
 			String fileContent = "" + viewAll(dtf);
 			//System.out.print(fileContent);
@@ -165,11 +176,12 @@ public class TaskList {
 			    	return "IOException";
 			    }
 			}
-			return (fileContent);
+			return fileContent;
 	}
 	
 	public String read(String fileName, DateTimeFormatter dtf){
 		//String existingFileContent = "";
+		taskList = new ArrayList<FloatingTask>();
 		BufferedReader reader = null;
 		try
 		{
@@ -278,11 +290,11 @@ public class TaskList {
 	}
 
 	public boolean complete(int index) {
-		return taskList.get(index).complete();
+		return taskList.get(index-1).complete();
 	}
 
 	public FloatingTask get(int index) {
-		return taskList.get(index);
+		return taskList.get(index-1);
 	}
 
 }

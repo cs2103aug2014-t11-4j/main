@@ -4,8 +4,8 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 
-public class DeadlineTask extends FloatingTask {
-	protected static DateTime endTime;
+public class DeadlineTask extends FloatingTask{
+	protected DateTime endTime;
 	protected static DateTime currentTime;
 	
 	public static void main(String[] args){
@@ -17,6 +17,7 @@ public class DeadlineTask extends FloatingTask {
 	public DeadlineTask(String description, DateTime time) {
 		super(description);
 		endTime = time;
+		typeIndex = 1;
 	}
 
 	public DeadlineTask(String description) {

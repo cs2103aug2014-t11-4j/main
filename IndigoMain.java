@@ -136,12 +136,16 @@ public class IndigoMain {
 	private static void create(){
 		ps.push(new Parser("delete 0"));
 		FloatingTask tt = new FloatingTask(parser.getCommand());
-		taskList.addTask(tt);
+		if (parser.getEditIndex() == null){
+			taskList.addTask(tt);
+		} else {
+			taskList.addTask(parser.getEditIndex(),tt);
+		}
+		//taskList.sort();
 	}
 	
 	private static String read(String command){
 		if (command == null){
-		} else if (command.contains("-done")){
 			return viewDone();
 		} else if (command.contains("-undone")){
 			return viewUndone();

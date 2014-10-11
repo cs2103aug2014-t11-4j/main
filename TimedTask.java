@@ -6,9 +6,9 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class TimedTask extends DeadlineTask {
 	
-	protected static DateTime startTime;
+	protected DateTime startTime;
 	
-	protected static Interval interval;
+	protected Interval interval;
 	
 	public static void main(String[] args){
 		FloatingTask time = new TimedTask("timed task", new DateTime(2014,10,9,19,15,00), new DateTime());
@@ -20,6 +20,7 @@ public class TimedTask extends DeadlineTask {
 	public TimedTask(String description, DateTime startTime, DateTime endTime){
 		super(description, endTime);
 		interval = new Interval(startTime, endTime);
+		typeIndex = 0;
 	}
 	
 	public DateTime getStartTime(){

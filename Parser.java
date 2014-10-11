@@ -31,7 +31,7 @@ public class Parser {
 	int monthInt			  	= 0;
 	int yearInt      		  	= 0; 
 	int delIndex				= 0; 
-	int editIndex 				= 0; 
+	Integer editIndex 				= null; 
 	ArrayList<String> conjWords 		= new ArrayList<String>();
 	ArrayList<String> detailsList 		= new ArrayList<String>();
 	ArrayList<String> month      		= new ArrayList<String>();
@@ -67,6 +67,12 @@ public class Parser {
 			switch(keyWord) { 
 			case "add": 								// for instance add buy a cat on 23/12/2014
 				 details = commandWords.split(" ");
+				 try{
+					 editIndex = Integer.parseInt(details[0]);
+					 }
+				 catch(NumberFormatException er)
+				  { 					 
+				  }
 				 for(int i=0; i<details.length; i++) 
 					detailsList.add(details[i]);
 					 
@@ -82,8 +88,14 @@ public class Parser {
 					 break;  
 				 }	
 				 
-				 else{ 								// this is a floating task
-					for(int b=0; b<details.length; b++) { 
+				 else{ 	// this is a floating task
+					 int b; // to see if there is a index
+					 if (editIndex !=null){
+						 b=1;
+					 } else {
+						 b=0;
+					 }
+					 for(; b<details.length; b++) { 
 						toDo = toDo+ " " + details[b]; 
 					}
 				 }
@@ -286,7 +298,7 @@ public class Parser {
 		System.out.println("Delete index: " +delIndex); 
 		return delIndex; 
 	}
-	public int getEditIndex() { 
+	public Integer getEditIndex() { 
 		System.out.println("Edit index: " +editIndex);
 		return editIndex; 
 	}
