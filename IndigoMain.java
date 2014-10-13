@@ -1,5 +1,3 @@
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
@@ -113,12 +111,7 @@ public class IndigoMain {
 		ps.push(new Parser("UnComplete " + index));
 		taskList.get(index).complete();
 	}
-	
-	@Test
-	public void testGetCommand(){
-		assertEquals(getCommand("add"), COMMAND.CREATE);
-	}
-	
+
 	private static COMMAND getCommand(String hello){
 
 		switch (hello){
