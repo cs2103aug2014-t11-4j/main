@@ -113,48 +113,67 @@ public class Parser {
 			case "add": 								// for instance add buy a cat on 23/12/2014
 
 				defineTimePattern(); 
-				matcherTime = patternTime.matcher(testInput); 
+				try {
+				matcherTime = patternTime.matcher(userCommand); 
 				
 				while(matcherTime.find()) { 
 					toCheckTime = true; 
 					timeStartIndex = matcherTime.start(); 
 					timeEndIndex = matcherTime.end();
 				}
+				} catch (NullPointerException e){
+					System.out.println("Invalid match!");
+				}
 				
 				defineStartDatePattern();
-				matcherStartDate = patternStartDate.matcher(testInput); 
-							
+				try {
+				matcherStartDate = patternStartDate.matcher(userCommand); 
+				
 				while (matcherStartDate.find()) {
 					toCheckStartDate = true; 
 					dateStartStartIndex = matcherStartDate.start();
 					dateStartEndIndex = matcherStartDate.end(); 
 				}
+				} catch (NullPointerException e){
+					System.out.println("Invalid match!");
+				}
 				
 				defineEndDatePattern();
-				matcherEndDate = patternEndDate.matcher(testInput); 
+				try{
+				matcherEndDate = patternEndDate.matcher(userCommand); 
 				
 				while (matcherEndDate.find()) {
 					toCheckEndDate = true; 
 					dateEndStartIndex = matcherEndDate.start();
 					dateEndEndIndex = matcherEndDate.end(); 
 				}
+				} catch (NullPointerException e){
+					System.out.println("Invalid match!");
+				}
 				
 				details = commandWords.split(" ");
-				 
+				try{
+					 editIndex = Integer.parseInt(details[0]);
+					 }
+				 catch(NumberFormatException er)
+				  { 					 
+				  }
+				 for(int i=0; i<details.length; i++) 
+					detailsList.add(details[i]);				 
 
 				if(toCheckTime == true) { 						//time input found = timed task 
-					timeInfo = testInput.substring(timeStartIndex, timeEndIndex); 
-					System.out.println(timeInfo); 
+					timeInfo = userCommand.substring(timeStartIndex, timeEndIndex); 
+					System.out.println("time info:" + timeInfo); 
 					parseTime(timeInfo); 
-					dateStartInfo = testInput.substring(dateStartStartIndex, dateStartEndIndex); 
+					dateStartInfo = userCommand.substring(dateStartStartIndex, dateStartEndIndex); 
 					
-					System.out.println(dateStartInfo); 
+					System.out.println("dateStartInfo:" + dateStartInfo); 
 					
 					startDate = parseDate(dateStartInfo); 		
 					
 					
 					if(toCheckEndDate) {						//task spans over days 
-						dateEndInfo = testInput.substring(dateEndStartIndex, dateEndEndIndex); 
+						dateEndInfo = userCommand.substring(dateEndStartIndex, dateEndEndIndex); 
 						endDate = parseDate(dateEndInfo); 
 						System.out.println(dateEndInfo); 
 					}
@@ -162,7 +181,7 @@ public class Parser {
 				}
 				
 				else if(toCheckStartDate == true) {				//date input found = deadline task 
-					dateStartInfo = testInput.substring(dateStartStartIndex, dateStartEndIndex); 
+					dateStartInfo = userCommand.substring(dateStartStartIndex, dateStartEndIndex); 
 					System.out.println(dateStartInfo); 
 					dateOnly = parseDate(dateStartInfo); 
 					parseInfo(dateStartInfo, dateEndInfo, timeInfo); 
@@ -273,6 +292,7 @@ public class Parser {
 			String [] separateDate = new String[3];
 			String dateToSeparate = null; 
 			int [] separated = new int[3]; 
+			System.out.println("dateInfo" + dateInfo);
 			commandDate = dateInfo.split(" ", 2); 
 			dateToSeparate = commandDate[1];  
 			separateDate = dateToSeparate.split("/"); 
