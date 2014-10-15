@@ -64,6 +64,7 @@ public class Parser {
 	static int monthInt			= 0;
 	static int yearInt      	= 0; 
 	int delIndex				= 0; 
+
 	Integer editIndex 			= null; 
 	ArrayList<String> conjWords = new ArrayList<String>();
 	ArrayList<String> detailsList = new ArrayList<String>();
@@ -72,6 +73,7 @@ public class Parser {
 	ArrayList<String> daysList  = new ArrayList<String>();
 	String INVALID_MONTH_MESSAG	= "Month input is invalid.";
 	static String testInput 	= null;	
+
 	
 	public static void main(String args[]) { 
 		System.out.println("Enter command:");
@@ -109,6 +111,7 @@ public class Parser {
 			
 			switch(keyWord) { 
 			case "add": 								// for instance add buy a cat on 23/12/2014
+
 				defineTimePattern(); 
 				matcherTime = patternTime.matcher(testInput); 
 				
@@ -137,15 +140,8 @@ public class Parser {
 				}
 				
 				details = commandWords.split(" ");
-				 try{
-					 editIndex = Integer.parseInt(details[0]);
-					 }
-				 catch(NumberFormatException er)
-				  { 					 
-				  }
-				 for(int i=0; i<details.length; i++) 
-					detailsList.add(details[i]);
 				 
+
 				if(toCheckTime == true) { 						//time input found = timed task 
 					timeInfo = testInput.substring(timeStartIndex, timeEndIndex); 
 					System.out.println(timeInfo); 
@@ -174,6 +170,7 @@ public class Parser {
 				
 				else { 											//floating task
 					 int b; 									// to see if there is a index
+
 					 if (editIndex !=null){
 						 b=1;
 					 } else {

@@ -1,0 +1,10 @@
+There are 6 tasks listed:
+Floating tasks are:
+1. do revision @isDone false @isImpor false
+2. buy a fish @isDone false @isImpor false
+3. go to school @isDone false @isImpor false
+4. to school @isDone false @isImpor false
+5. revise @isDone false @isImpor false
+6. do homework @isDone false @isImpor false
+Deadline tasks are:
+Timed tasks are:
