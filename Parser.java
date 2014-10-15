@@ -15,6 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.*;
 
+import org.joda.time.DateTime;
+
 public class Parser {
 	private static Logger logger = Logger.getLogger("Parser");
 	String keyWord  			= null;  				//stores the key command "add"/"delete" to return to logic
@@ -84,15 +86,15 @@ public class Parser {
 		test.getKeyCommand(); 
 		test.getCommand();
 		if(ifTimedTaskOverDays()) { 
-			getStartTime();
-			getEndTime(); 
+			test.getStartTime();
+			test.getEndTime(); 
 		}
 		if(ifTimedTaskOneDay()) { 
-			getStartTime();
-			getEndTime(); 
+			test.getStartTime();
+			test.getEndTime(); 
 		}
 		if(ifDeadlineTask()) { 
-			getDateOnly(); 
+			test.getDateOnly(); 
 		}
 		sc.close(); 
 	}
@@ -453,40 +455,34 @@ public class Parser {
 		dateFormatEnd = "\\b(until|till)\\b (0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";  
 		patternEndDate = Pattern.compile(dateFormatEnd); 
 	}
-	public static Calendar getDateOnly() {
-		Calendar dateOnlyObj = Calendar.getInstance();
+	public DateTime getDateOnly() {
 		int startDateInt = dateOnly[0]; 
 		int startMonthInt = dateOnly[1]; 
 		int startYearInt = dateOnly[2]; 
-		dateOnlyObj.set(startYearInt, startMonthInt-1, startDateInt, 0, 0, 0);
-		System.out.println(dateOnlyObj.getTime()); 
+		DateTime dateOnlyObj = new DateTime(startYearInt, startMonthInt-1, startDateInt, 0, 0, 0);
 		return dateOnlyObj; 
 	}
-	public static Calendar getStartTime() {
-		Calendar startDateObj = Calendar.getInstance();
+	public DateTime getStartTime() {
 		int startDateInt = startDate[0]; 
 		int startMonthInt = startDate[1]; 
 		int startYearInt = startDate[2]; 
-		startDateObj.set(startYearInt, startMonthInt-1, startDateInt, startHoursInt, startMinutesInt, 0);
-		System.out.println(startDateObj.getTime()); 
+		DateTime startDateObj = new DateTime(startYearInt, startMonthInt-1, startDateInt, startHoursInt, startMinutesInt, 0); 
 		return startDateObj; 
 	}
-	public static Calendar getEndTime() { 
-		Calendar endDateObj = Calendar.getInstance(); 
+	public DateTime getEndTime() { 
+		DateTime endDateObj; 
 		if(dateEndInfo != "") {  //there is an end date indicated
 			int endDateInt = endDate[0]; 
 			int endMonthInt = endDate[1];
 			int endYearInt = endDate[2]; 
-			endDateObj.set(endYearInt, endMonthInt-1, endDateInt, endHoursInt, endMinutesInt, 0);
-			System.out.println(endDateObj.getTime());
+		endDateObj = new DateTime(endYearInt, endMonthInt-1, endDateInt, endHoursInt, endMinutesInt, 0);
 			return endDateObj; 
 		}
 		else {
 			int startDateInt = startDate[0]; 
 			int startMonthInt = startDate[1]; 
 			int startYearInt = startDate[2];  
-			endDateObj.set(startYearInt, startMonthInt-1, startDateInt, endHoursInt, endMinutesInt, 0);
-			System.out.println(endDateObj.getTime());
+			endDateObj = new DateTime(startYearInt, startMonthInt-1, startDateInt, endHoursInt, endMinutesInt, 0);
 			return endDateObj;
 		}
 	}

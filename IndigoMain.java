@@ -86,7 +86,7 @@ public class IndigoMain {
 		COMMAND comm = getCommand(command);
 		switch (comm){
 			case CREATE:
-				create();
+				create(parser.getCommand());
 				break;
 			case READ:
 				return read(parser.getCommand());
@@ -133,8 +133,16 @@ public class IndigoMain {
 		}
 	}
 	
-	private static void create(){
-		FloatingTask tt = new FloatingTask(parser.getCommand());
+	private static void create(String command){
+		FloatingTask tt;
+		if(parser.ifTimedTaskOverDays() || parser.ifTimedTaskOneDay()) { 
+			tt = new TimedTask(command, parser.getStartTime(), parser.getEndTime());
+		} else if(parser.ifDeadlineTask()) { 
+			tt = new DeadlineTask(command, parser.getDateOnly()); 
+		} else {
+			tt = new FloatingTask(command);
+		}
+		System.out.println("getCommand" + parser.getCommand());
 		if (parser.getEditIndex() == null){
 			ps.push(new Parser("delete " + taskList.getList().size()));
 			taskList.addTask(tt);
