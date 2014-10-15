@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
+import org.joda.time.DateTime;
+
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -23,9 +25,11 @@ public class IndigoMain {
 	
 	// Storage of our list of tasks
 	private static TaskList taskList = new TaskList();
+	
 	public enum COMMAND{
-		CREATE, READ, UPDATE, DELETE, UNDO, COMPLETE, UNCOMPLETE, REDO
+		CREATE, READ, UPDATE, DELETE, UNDO, COMPLETE, UNCOMPLETE
 	}
+	
 	public static void main(String[] args) {
 		/*
 		 * outline: 
@@ -84,7 +88,15 @@ public class IndigoMain {
 				update(parser.getEditIndex(), parser.getCommand());
 				break;
 			case DELETE:
-				delete(parser.getDelIndex());
+				String type = new String();
+				if (parser.getCommand().contains("-d")){
+					type = "-d";
+				} else if (parser.getCommand().contains("-t")){
+					type = "-t";
+				} else {
+					type = "-f";
+				}
+				delete(type, parser.getDelIndex());
 				break;
 			case UNDO:
 				undo();
@@ -125,6 +137,12 @@ public class IndigoMain {
 	
 	private static void create(){
 		FloatingTask tt = new FloatingTask(parser.getCommand());
+		int[] datey = parser.getDate();
+		if (datey!=null){
+			DeadlineTask dt = new DeadlineTask(tt.getDescription(), new DateTime(datey[2], datey[1], datey[0], 12, 00, 00));			
+			taskList.addTask(dt);
+			ps.push(new Parser("delete " + taskList.getList().size()));
+		}
 		if (parser.getEditIndex() == null){
 			ps.push(new Parser("delete " + taskList.getList().size()));
 			taskList.addTask(tt);
@@ -150,7 +168,22 @@ public class IndigoMain {
 		taskList.editTask(index, tt);
 	}
 	
-	private static void delete(int index){
+	private static void delete(String type, int index){
+		if(type.equals("-d")){
+			ArrayList<FloatingTask> arr = taskList.getList();
+			int i=0;
+			while(!(arr.get(i) instanceof DeadlineTask)){
+				i++;
+			}
+			index += i;
+		} else if(type.equals("-t")){
+			ArrayList<FloatingTask> arr = taskList.getList();
+			int i=0;
+			while(!(arr.get(i) instanceof TimedTask)){
+				i++;
+			}
+			index += i;
+		}
 		ps.push(new Parser("add " + index + " " + taskList.get(index).getDescription()));
 		taskList.deleteTask(index);
 	}

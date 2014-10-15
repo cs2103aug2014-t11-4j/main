@@ -102,7 +102,8 @@ public class Parser {
 				 break;
 				 			 
 			case "delete" : 
-				delIndex = Integer.parseInt(commandSentence[1]); 
+				String[] split2 = commandSentence[1].split(" ");
+				delIndex = Integer.parseInt(split2[0]); 
 				break;
 			
 			case "edit" : 								// edit 2 catch a cat

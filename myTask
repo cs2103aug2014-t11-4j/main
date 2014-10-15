@@ -1,0 +1,32 @@
+There are 28 tasks listed:
+Floating tasks are:
+1. do revision @isDone false @isImpor false
+2. buy a fish @isDone false @isImpor false
+3. go to school @isDone false @isImpor false
+4. do revision @isDone false @isImpor false
+5. buy a fish @isDone false @isImpor false
+6. go to school @isDone false @isImpor false
+7. do revision @isDone false @isImpor false
+8. buy a fish @isDone false @isImpor false
+9. go to school @isDone false @isImpor false
+10. do revision @isDone false @isImpor false
+11. buy a fish @isDone false @isImpor false
+12. go to school @isDone false @isImpor false
+13. do revision @isDone false @isImpor false
+14. buy a fish @isDone false @isImpor false
+15. go to school @isDone false @isImpor false
+16. do revision @isDone false @isImpor false
+17. buy a fish @isDone false @isImpor false
+18. go to school @isDone false @isImpor false
+19. do revision @isDone false @isImpor false
+20. buy a fish @isDone false @isImpor false
+21. go to school @isDone false @isImpor false
+22. do revision @isDone false @isImpor false
+23. buy a fish @isDone false @isImpor false
+24. go to school @isDone false @isImpor false
+25. do revision @isDone false @isImpor false
+Deadline tasks are:
+1. guitar @isDone false @isImpor false @due 23/11/14
+2. piano @isDone false @isImpor false @due 22/12/14
+3. piano @isDone false @isImpor false @due 22/12/14
+Timed tasks are:
