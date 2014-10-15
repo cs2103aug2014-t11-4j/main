@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Date;
-import java.text.DateFormat;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -13,58 +10,40 @@ import org.joda.time.format.DateTimeFormatter;
  * @author jjlu & Ken
  *
  */
-public class IndigoMain {
+
+public class IndigoLogic {
 	public String feedback;
 	public String dateLeft;
 	private static ParserList ps = new ParserList();
 	private static Parser parser;
 	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yy");
 	private static final String FILE_NAME = "myTask";
-	
-	// Storage of our list of tasks
 	private static TaskList taskList = new TaskList();
-	public enum COMMAND{
-		CREATE, READ, UPDATE, DELETE, UNDO, COMPLETE, UNCOMPLETE, REDO
-	}
-	public static void main(String[] args) {
-		/*
-		 * outline: 
-		 * 1.welcome message 
-		 * 2.check if there is local disk storage
-		 * -yes load data 
-		 * -no display beginner tutorial message 
-		 * 3.asks for user command 
-		 * 4.process user command 
-		 * 5.repeating 3-4 until exit
-		 */
-		IndigoMain test1 = new IndigoMain("add go to school");
-		IndigoMain test2 = new IndigoMain("add buy a fish");
-		IndigoMain test3 = new IndigoMain("add do revision");
-		System.out.println("test1: " + test1.feedback);
-		System.out.println("test2: " + test2.feedback);
-		System.out.println("test3: " + test3.feedback);
+	
+	//Default constructor
+	public IndigoLogic(){
+		this("view");
 	}
 	
-	public IndigoMain(String userCommand){
-		loadData();
-		feedback = readCommand(userCommand);
-//		Date dateCurrent = new Date();
-//		DateFormat dateForm = DateFormat.getDateInstance();
-//		dateLeft = dateForm.format(dateCurrent);
+	public IndigoLogic(String userInput){
+		//loadData();
+		feedback = readCommand(userInput);
 	}
 	
-	// TODO GUI for user inputs
-	private static String readCommand(String userCommand) {
+	private String readCommand(String userCommand) {
 		/*
 		 * TODO 
 		 * 1.read a command from user and process it 
 		 * 2.execute Command
 		 */ // TODO simple input for testing
 		parser = new Parser(userCommand);
-		return executeCommand(parser.getKeyCommand());
+		Command commandInput = new Command(parser.getKeyCommand());
+		Create classy = new Create(parser, ps, taskList);
+
+		return executeCommand(commandInput, classy);
 	}
 
-	private static String executeCommand(String command) {
+	private String executeCommand(Command commandInput, Create classy) {
 		/*
 		 * TODO 
 		 * 1.executeCommand 
@@ -72,13 +51,11 @@ public class IndigoMain {
 		 * 
 		 * A standardized command should have String systemMessage returned.
 		 */
-		String returnMessage = new String();
-		COMMAND comm = getCommand(command);
-		switch (comm){
+		switch (commandInput.getKey()){
 			case CREATE:
-				create();
+				classy.add();
 				break;
-			case READ:
+/*			case READ:
 				return read(parser.getCommand());
 			case UPDATE:
 				update(parser.getEditIndex(), parser.getCommand());
@@ -91,48 +68,20 @@ public class IndigoMain {
 				break;
 			case COMPLETE:
 				complete(parser.getEditIndex());
-				break;
+				break; */
 			default:
 				System.exit(0);
 		}
-		return returnMessage + saveTaskList();
+		return "Hello"; //returnMessage + saveTaskList();
 	}
-	
+/*	
 	private static void complete(int index) {
 		ps.push(new Parser("UnComplete " + index));
 		taskList.complete(index);
 	}
-
-	private static COMMAND getCommand(String hello){
-
-		switch (hello){
-			case "add":
-				return COMMAND.CREATE;
-			case "view":
-				return COMMAND.READ;
-			case "edit":
-				return COMMAND.UPDATE;
-			case "delete":
-				return COMMAND.DELETE;
-			case "undo":
-				return COMMAND.UNDO;
-			case "complete":
-				return COMMAND.COMPLETE;
-			default:
-				return COMMAND.READ;
-		}
-	}
 	
 	private static void create(){
-		FloatingTask tt = new FloatingTask(parser.getCommand());
-		if (parser.getEditIndex() == null){
-			ps.push(new Parser("delete " + taskList.getList().size()));
-			taskList.addTask(tt);
-		} else {
-			taskList.addTask(parser.getEditIndex(),tt);
-			ps.push(new Parser("delete "+ parser.getEditIndex()));
-		}
-		//taskList.sort();
+		Create classy = new Create()
 	}
 	
 	private static String read(String command){
@@ -201,5 +150,5 @@ public class IndigoMain {
 	public static String viewUndone(){
 		return taskList.viewUndone();
 	}
-
+*/
 }
