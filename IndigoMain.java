@@ -138,7 +138,6 @@ public class IndigoMain {
 	private static void create(){
 		FloatingTask tt = new FloatingTask(parser.getCommand());
 		int[] dateA = parser.getDate();
-		System.out.print(dateA[2] + dateA[1] + dateA[0]);
 		if (dateA!=null){
 			DeadlineTask dt = new DeadlineTask(tt.getDescription(), new DateTime(dateA[2], dateA[1], dateA[0], 12, 00, 00));			
 			taskList.addTask(dt);

@@ -175,6 +175,7 @@ public class Parser {
 			 	 yearInt = Integer.parseInt(date[2]);
 			 }
 		 }  
+		System.out.print(dateInt + " " + monthInt + " " + yearInt);
 	}  	
 	public void parseInfo() { 
 		int size1 = detailsList.size(); 
@@ -310,8 +311,22 @@ public class Parser {
 		return editIndex; 
 	}
 	public boolean checkValidDate() {
-		String validateDate = dateIntArr[1] + "/" + dateIntArr[0] + "/" + dateIntArr[2];
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyy"); 
+		String dayStr = new String();
+		String monthStr = new String();
+		if(dateIntArr[0] < 10){
+			dayStr = "0" + dateIntArr[0];
+		} else {
+			dayStr = dateIntArr[0] + "";
+		}
+		if(dateIntArr[1] < 10){
+			monthStr = "0" + dateIntArr[1];
+		} else {
+			monthStr = dateIntArr[1] + "";
+		}
+		String validateDate = monthStr + "/" + dayStr + "/" + dateIntArr[2];{
+			assert validateDate.length() == 10;
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); 
 		Date testDate = null;
 		try{
 			testDate = sdf.parse(validateDate); 		
