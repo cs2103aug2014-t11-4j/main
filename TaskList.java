@@ -69,7 +69,7 @@ public class TaskList {
 		taskList.remove(task);
 		return task;
 	}
-	public FloatingTask deleteTask(int index){
+	public FloatingTask deleteTask(int index){	
 		int indexComputing = index - 1;
 		FloatingTask tempFloatingTask = taskList.get(indexComputing);
 		taskList.remove(indexComputing);
@@ -289,6 +289,9 @@ public class TaskList {
 	}
 
 	private void readFloatingTask(String line) {
+		// assert the storage file is in the right format
+		assert line.contains("@isDone");
+		
 		int markerIndex = line.indexOf(".");
 		int markerDone = line.indexOf("@isDone");
 		int markerImpor = line.indexOf("@isImpor");
