@@ -11,7 +11,7 @@ public class Read extends ExecutionClass {
 	}
 	
 	public Read(Parser parsing, ParserList parseL, TaskList list){
-		parser = parsing;
+		parseris = parsing;
 		psl = parseL;
 		taskList = list;
 	}
@@ -23,9 +23,9 @@ public class Read extends ExecutionClass {
 	}
 	
 	public String view(){
-		if(parser.getCommand().contains("-done")){
+		if(parseris.getCommand().contains("-done")){
 			return viewDone();
-		} else if(parser.getCommand().contains("-undone")){
+		} else if(parseris.getCommand().contains("-undone")){
 			return viewUndone();
 		} else {
 			return "view all";

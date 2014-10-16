@@ -1,12 +1,11 @@
-There are 8 tasks listed:
+There are 7 tasks listed:
 Floating tasks are:
-1. tier @isDone false @isImpor false
-2. tier @isDone false @isImpor false
-3. tier @isDone false @isImpor false
-4. tier 3 nov 2014 @isDone false @isImpor false
-5. abc @isDone false @isImpor false
+1. recess @isDone false @isImpor false
+2. recess @isDone false @isImpor false
+3. abra @isDone false @isImpor false
+4. abra @isDone false @isImpor false
 Deadline tasks are:
-1. abc @isDone false @isImpor false @due 12/12/13
-2. def @isDone false @isImpor false @due 12/12/13
-3. tier @isDone false @isImpor false @due 12/11/14
+1. abra @isDone false @isImpor false @due 12/12/14
+2. recess @isDone false @isImpor false @due 15/12/14
+3. recess @isDone false @isImpor false @due 17/11/13
 Timed tasks are:

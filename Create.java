@@ -4,10 +4,10 @@ import org.junit.Test;
 
 public class Create extends ExecutionClass {
 	
-	FloatingTask to_Do = new FloatingTask(parser.getCommand());{
-		assert parser.getCommand() instanceof String;
+	FloatingTask to_Do = new FloatingTask(parseris.getCommand());{
+		assert parseris.getCommand() instanceof String;
 	}
-	Integer editIndex = parser.getEditIndex();{
+	Integer editIndex = parseris.getEditIndex();{
 		assert editIndex instanceof Integer;
 	}
 	
@@ -18,10 +18,10 @@ public class Create extends ExecutionClass {
 	}	
 	
 	public Create(Parser parsing, ParserList parseL, TaskList list){
-		parser = parsing;
+		parseris = parsing;
 		psl = parseL;
 		taskList = list;
-		to_Do = new FloatingTask(parser.getCommand());
+		to_Do = new FloatingTask(parseris.getCommand());
 	}
 	
 	@Test

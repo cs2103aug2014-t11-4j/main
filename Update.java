@@ -11,7 +11,7 @@ public class Update extends ExecutionClass {
 	}
 
 	public Update(Parser parsing, ParserList parseL, TaskList list){
-		parser = parsing;
+		parseris = parsing;
 		psl = parseL;
 		taskList = list;
 	}
@@ -23,8 +23,8 @@ public class Update extends ExecutionClass {
 	}
 	
 	public String edit() throws ArrayIndexOutOfBoundsException{
-		int index = parser.getEditIndex();
-		FloatingTask task = new FloatingTask(parser.getCommand());
+		int index = parseris.getEditIndex();
+		FloatingTask task = new FloatingTask(parseris.getCommand());
 		try{
 			psl.push(new Parser("edit " + index + " " + taskList.get(index).getDescription()));
 		} catch (ArrayIndexOutOfBoundsException err){

@@ -1,5 +1,5 @@
 public abstract class ExecutionClass {
-	protected static Parser parser;
+	protected static Parser parseris;
 	protected static ParserList psl = new ParserList();
 	protected static TaskList taskList = new TaskList();
 	
