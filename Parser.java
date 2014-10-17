@@ -53,6 +53,7 @@ public class Parser {
 	}
 	
 	public String getCommand() {
+		toDo = toDo.trim();
 		return toDo;
 	}
 

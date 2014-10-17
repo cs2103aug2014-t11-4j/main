@@ -145,7 +145,7 @@ public class IndigoMain {
 			tt = new FloatingTask(command);
 		}
 		System.out.println("getCommand" + parser.getCommand());
-			ps.push(new Parser("delete " + index + taskList.getList().size()));
+			ps.push(new Parser("delete " + index + " "+ parser.getCommand()));
 			taskList.addTask(index,tt);
 		//taskList.sort();
 	}
