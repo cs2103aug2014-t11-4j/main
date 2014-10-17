@@ -11,6 +11,7 @@
 import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.*;
@@ -19,180 +20,77 @@ import org.joda.time.DateTime;
 
 public class Parser {
 	private static Logger logger = Logger.getLogger("Parser");
+	private String sortedCommand;
 	String keyWord  			= null;  				//stores the key command "add"/"delete" to return to logic
 	String commandWords  		= null; 				//stores the remaining words excluding key command
 	String [] commandSentence 	= new String[2]; 		//to help store the splited string command
-	String [] commandTime		= new String[4]; 
-	String [] commandDate		= new String[3]; 
 	String [] details 		  	= null; 				//store the remaining words excluding key command individually
-	String toDo               	= ""; 					//stores the final command to return to logic
-	static int [] startDate = new int[3];
-	static int [] endDate = new int[3]; 
-	static int [] dateOnly = new int[3]; 
-	static boolean toCheckStartDate = false; 
-	static boolean toCheckEndDate = false; 
-	static boolean toCheckTime = false; 
-	String [] date 				= new String[3];		//stores the date in string array (deal with 23 dec 2014)
-	int [] dateIntArr 			= new int[3];			//stores the date to return to logic
-	String dateStr 			  	= null; 				//stores the date in string to eliminate "/" 		
-	String timeArr[] 			= new String [2]; 
-	String timeStr 				= null;
-	String startTimeStr 		= null;
-	String endTimeStr			= null;
-	String timeInfo 			= null;
-	String dateStartInfo 			= null; 
-	static String dateEndInfo = ""; 
-	int timeStartIndex 			= 0;
-	int timeEndIndex 			= 0;
-	int dateStartStartIndex 			= 0;
-	int dateStartEndIndex 			= 0; 
-	int dateEndStartIndex = 0;
-	int dateEndEndIndex = 0; 
-	static int startHoursInt 	= 0;
-	static int startMinutesInt	= 0; 
-	static int endHoursInt 	 	= 0;
-	static int endMinutesInt	= 0; 
-	static String timeFormat    = null; 
-	static String dateFormatStart= null;
-	static String dateFormatEnd = null; 
-	public static Pattern patternStartDate;
-	public static Pattern patternEndDate;
-	public static Pattern patternTime; 
-	public static Matcher matcherStartDate;
-	public static Matcher matcherEndDate; 
-	public static Matcher matcherTime; 
+	String toDo               	= "";//stores the final command to return to logic
+	private DateTime startTime;
+	private DateTime endTime;
 	boolean containConj 		= false;				//determine if it is a floating task
-	static int dateInt 			= 0;
-	static int monthInt			= 0;
-	static int yearInt      	= 0; 
-	int delIndex				= 0; 
-
-	Integer editIndex 			= null; 
-	ArrayList<String> conjWords = new ArrayList<String>();
+	int editIndex;
+	private boolean isFloatingTask;
+	private boolean isDeadLineTask;
+	private boolean isTimedTask;
 	ArrayList<String> detailsList = new ArrayList<String>();
-	ArrayList<String> month      = new ArrayList<String>();
-	ArrayList<String> monthWords = new ArrayList<String>();
-	ArrayList<String> daysList  = new ArrayList<String>();
-	String INVALID_MONTH_MESSAG	= "Month input is invalid.";
-	static String testInput 	= null;	
+	private final static Logger LOGGER = Logger.getLogger(Parser.class.getName());
 
 	
-	public static void main(String args[]) { 
+	public static void main(String args[]) {
+		ConsoleHandler handler = new ConsoleHandler();
+		LOGGER.setLevel(Level.FINER);
+		handler.setLevel(Level.FINER);
+		LOGGER.addHandler(handler);
+		
+		String testInput;
 		System.out.println("Enter command:");
 		Scanner sc = new Scanner(System.in);
 		testInput = sc.nextLine();
 		
 		Parser test = new Parser(testInput);
-		test.getKeyCommand(); 
-		test.getCommand();
-		if(ifTimedTaskOverDays()) { 
-			test.getStartTime();
-			test.getEndTime(); 
-		}
-		if(ifTimedTaskOneDay()) { 
-			test.getStartTime();
-			test.getEndTime(); 
-		}
-		if(ifDeadlineTask()) { 
-			test.getDateOnly(); 
-		}
 		sc.close(); 
 	}
 	
+	public String getCommand() {
+		return toDo;
+	}
+
 	public Parser(String userCommand) {
-		addDays(); 
 		
 		//conjWords.add("by"); 
 		//conjWords.add("on"); 							// words to filter out dates
+		editIndex = -1;
 		
-		userCommand = userCommand.trim().toLowerCase();
+		
 		if (userCommand.contains(" ")){
 			commandSentence = userCommand.split(" ", 2);
 			keyWord = commandSentence[0];
 			commandWords = commandSentence[1];
 			
 			switch(keyWord) { 
-			case "add": 								// for instance add buy a cat on 23/12/2014
-
-				defineTimePattern(); 
-				try {
-				matcherTime = patternTime.matcher(userCommand); 
-				
-				while(matcherTime.find()) { 
-					toCheckTime = true; 
-					timeStartIndex = matcherTime.start(); 
-					timeEndIndex = matcherTime.end();
-				}
-				} catch (NullPointerException e){
-					System.out.println("Invalid match!");
-				}
-				
-				defineStartDatePattern();
-				try {
-				matcherStartDate = patternStartDate.matcher(userCommand); 
-				
-				while (matcherStartDate.find()) {
-					toCheckStartDate = true; 
-					dateStartStartIndex = matcherStartDate.start();
-					dateStartEndIndex = matcherStartDate.end(); 
-				}
-				} catch (NullPointerException e){
-					System.out.println("Invalid match!");
-				}
-				
-				defineEndDatePattern();
-				try{
-				matcherEndDate = patternEndDate.matcher(userCommand); 
-				
-				while (matcherEndDate.find()) {
-					toCheckEndDate = true; 
-					dateEndStartIndex = matcherEndDate.start();
-					dateEndEndIndex = matcherEndDate.end(); 
-				}
-				} catch (NullPointerException e){
-					System.out.println("Invalid match!");
-				}
-				
+			case "add":// for instance add buy a cat on 23/12/2014
+			case "delete":
+			case "edit" :
+			case "complete":
+			case "uncomplete":
+			case "view":
 				details = commandWords.split(" ");
+				LOGGER.log(Level.FINE, "commandWords: " + commandWords);
 				try{
 					 editIndex = Integer.parseInt(details[0]);
 					 }
 				 catch(NumberFormatException er)
-				  { 					 
+				  {
+					 System.out.println("exception for editIndex.");
 				  }
 				 for(int i=0; i<details.length; i++) 
-					detailsList.add(details[i]);				 
-
-				if(toCheckTime == true) { 						//time input found = timed task 
-					timeInfo = userCommand.substring(timeStartIndex, timeEndIndex); 
-					System.out.println("time info:" + timeInfo); 
-					parseTime(timeInfo); 
-					dateStartInfo = userCommand.substring(dateStartStartIndex, dateStartEndIndex); 
-					
-					System.out.println("dateStartInfo:" + dateStartInfo); 
-					
-					startDate = parseDate(dateStartInfo); 		
-					
-					
-					if(toCheckEndDate) {						//task spans over days 
-						dateEndInfo = userCommand.substring(dateEndStartIndex, dateEndEndIndex); 
-						endDate = parseDate(dateEndInfo); 
-						System.out.println(dateEndInfo); 
-					}
-					parseInfo(dateStartInfo, dateEndInfo, timeInfo); 
-				}
-				
-				else if(toCheckStartDate == true) {				//date input found = deadline task 
-					dateStartInfo = userCommand.substring(dateStartStartIndex, dateStartEndIndex); 
-					System.out.println(dateStartInfo); 
-					dateOnly = parseDate(dateStartInfo); 
-					parseInfo(dateStartInfo, dateEndInfo, timeInfo); 
-				}
-				
-				else { 											//floating task
+					detailsList.add(details[i]);
+				 
+ 					//floating task
 					 int b; 									// to see if there is a index
 
-					 if (editIndex !=null){
+					 if (editIndex >= 0){
 						 b=1;
 					 } else {
 						 b=0;
@@ -200,42 +98,18 @@ public class Parser {
 					 for(; b<details.length; b++) { 
 						toDo = toDo+ " " + details[b]; 
 					}
-				 } 				 
-				 break;
-				 			 
-			case "delete" : 
-				delIndex = Integer.parseInt(commandSentence[1]); 
-				break;
-			
-			case "edit" : 								// edit 2 catch a cat
-				details = commandWords.split(" ");
-				editIndex = Integer.parseInt(details[0]);
-				for(int c=1; c<details.length; c++) { 
-					toDo = toDo + " " + details[c];
-				}
-				break;
-				
-			case "complete" :
-			case "uncomplete" :
-				details = commandWords.split(" ");
-				editIndex = Integer.parseInt(details[0]);
-				for(int c=1; c<details.length; c++) { 
-					toDo = toDo + " " + details[c];
-				}
-				break;
+			LOGGER.log(Level.FINE, "toDo: " + toDo);
+			LOGGER.log(Level.FINE, "editIndex " + editIndex);
+			break;
 			
 			case "undo" :
-				keyWord = "undo";
 				break;
-			case "view" :
+				
+			default:
 				keyWord = "view";
-				details = commandWords.split(" ");
-				for(int c=0; c<details.length; c++) { 
-					toDo = toDo + " " + details[c];
-				}
-				break;
 			} 
 		}	else {
+			assert editIndex < 0;
 			switch (userCommand){
 			case "delete":
 				keyWord = "delete";
@@ -246,268 +120,57 @@ public class Parser {
 			default:
 				keyWord = "view";
 			}
-		}			
-	}
-	public void parseTime(String timeInfo) { 
-		commandTime = timeInfo.split(" ");
-		startTimeStr = commandTime[1];
-		endTimeStr = commandTime[3];
-		int lengthStart = startTimeStr.length(); 
-		int lengthEnd = endTimeStr.length(); 
-		boolean shouldAddEndTime = false; 
-		boolean shouldAddStartTime = false; 
+		}
 		
-		if(startTimeStr.charAt(lengthStart-2) == 'p') { 
-			shouldAddStartTime = true;
-		}
-		String [] splitStartTime = new String [2]; 
-		splitStartTime = startTimeStr.split(":"); 
-		String startHours = splitStartTime[0]; 
-		String startMinutes = splitStartTime[1]; 
-		startMinutes = startMinutes.substring(0,2);  //to remove the am/pm 
-		startHoursInt = Integer.parseInt(startHours);
-		startMinutesInt = Integer.parseInt(startMinutes); 
-		if(shouldAddStartTime) { 
-			startHoursInt = startHoursInt + 12; 		
-		}
-		//System.out.println(startHoursInt);
-		//System.out.println(startMinutesInt); 
+		TimeParser timeParser = new TimeParser(userCommand);
+		sortedCommand = timeParser.getSortedCommand() + "";
 		
-		if(endTimeStr.charAt(lengthEnd-2) == 'p') { 
-			shouldAddEndTime = true;
+		if (timeParser.isTimedTask()){
+			startTime = timeParser.getStartTime();
+			endTime = timeParser.getEndTime();
+			isTimedTask = true;
+		} else if(timeParser.isDeadLineTask()){
+			endTime = timeParser.getEndTime();
+			isDeadLineTask = true;
+		} else {
+			assert timeParser.isFloatingTask();
+			isFloatingTask = true;
 		}
-		String [] splitEndTime = new String [2]; 
-		splitEndTime = endTimeStr.split(":"); 
-		String endHours = splitEndTime[0]; 
-		String endMinutes = splitEndTime[1]; 
-		endMinutes = endMinutes.substring(0,2);  //to remove the am/pm 
-		endHoursInt = Integer.parseInt(endHours);
-		endMinutesInt = Integer.parseInt(endMinutes); 
-		if(shouldAddEndTime) { 
-			endHoursInt = endHoursInt + 12; 		
-		}
-		//System.out.println(endHoursInt);
-		//System.out.println(endMinutesInt); 
+		assert keyWord !=null;
+		assert commandWords !=null;
 	}
-	public int[] parseDate(String dateInfo) {  
-			logger.log(Level.INFO, "going to start processing");
-			String [] separateDate = new String[3];
-			String dateToSeparate = null; 
-			int [] separated = new int[3]; 
-			System.out.println("dateInfo" + dateInfo);
-			commandDate = dateInfo.split(" ", 2); 
-			dateToSeparate = commandDate[1];  
-			separateDate = dateToSeparate.split("/"); 
-			separated[0] = Integer.parseInt(separateDate[0]);
-			separated[1] = Integer.parseInt(separateDate[1]); 
-			separated[2] = Integer.parseInt(separateDate[2]); 
-			logger.log(Level.INFO, "end of processing");
-			return separated; 
-	}   	
-	public void parseInfo(String dateStartInfo, String dateEndInfo, String timeInfo) { 
-		toDo = commandWords.replace(dateStartInfo, ""); 
-		if(timeInfo!=null) { 
-			toDo = toDo.replace(timeInfo, "");
-		} 
-		if(dateEndInfo!= "") { 
-			toDo = toDo.replace(dateEndInfo, ""); 
-		}
-		toDo = toDo.trim();
-	}
-	public boolean checkValidMonthWord() { 
-		monthWords.add("jan");
-		monthWords.add("feb"); 
-		monthWords.add("mar"); 
-		monthWords.add("apr");
-		monthWords.add("may");
-		monthWords.add("jun");
-		monthWords.add("jul");
-		monthWords.add("aug");
-		monthWords.add("sep");
-		monthWords.add("oct");
-		monthWords.add("nov");
-		monthWords.add("dec");  
-		
-		if(monthWords.contains(date[1])) { 
-			return true;
-		} 
-		else {  
-			return false;
-		} 
-	}
-	public boolean checkValidMonthNumber(){ 
-		date = dateStr.split("/");
-		int month = Integer.parseInt(date[1]); 
-		
-		if(month>0 && month<13)
-			return true;
-		else
-			return false; 
-	}
-	public void addDays() { 
-		daysList.add("monday");
-		daysList.add("tuesday");
-		daysList.add("wednesday");
-		daysList.add("thursday");
-		daysList.add("friday"); 
-	}
-	public int convertMonth() { 
-		switch(date[1]) { 
-			case "jan" : 
-				return 1;
-			case "feb" : 
-				return 2; 
-			case "mar" : 
-				return 3;
-			case "apr" :
-				return 4;
-			case "may" : 
-				return 5; 
-			case "jun" :
-				return 6; 
-			case "jul" : 
-				return 7; 
-			case "aug" : 
-				return 8; 
-			case "sep" : 
-				return 9;
-			case "oct" :
-				return 10;
-			case "nov" :
-				return 11; 
-			case "dec" : 
-				return 12; 
-			default : 
-				return 0; 
-		}
-	}
-	public int[] getDate() { 
-		dateIntArr[0] = dateInt;
-		dateIntArr[1] = monthInt;
-		dateIntArr[2] = yearInt; 
-		//if(checkValidDate()) { 
-		//	System.out.print("Date:");
-		//	for(int k=0; k<3; k++) { 
-		//		System.out.print(dateIntArr[k]);
-		//	}
-		//	System.out.println(); 
-		//	return dateIntArr; 
-		//}
-		//else { // date is not valid
-		//	System.out.println("Date input is invalid.");
-		//	return null;
-		//}
-		//System.out.println("Date is:" +dateInt); 
-		//System.out.println("Month is:" +monthInt);
-		//System.out.println("Year is:" +yearInt); 
-		return dateIntArr; 
-	}
-	public String getCommand() { 
-		toDo = toDo.trim();
-		System.out.println("Command instructions:" +toDo);
-		return toDo; 
-	}
+	
 	public String getKeyCommand() { 
 		System.out.println("Key command: " +keyWord);
 		return keyWord;
 	}
-	public int getDelIndex() { 
-		System.out.println("Delete index: " +delIndex);
-		if (delIndex == 0){
-			return 1;
-		}
-		return delIndex; 
-	}
+
 	public Integer getEditIndex() { 
 		System.out.println("Edit index: " +editIndex);
-		if (editIndex == null){
+		if (editIndex == -1){
 			return 1;
 		}
 		return editIndex; 
 	}
-	public boolean checkValidDate() {
-		String validateDate = dateIntArr[1] + "/" + dateIntArr[0] + "/" + dateIntArr[2];
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyy"); 
-		Date testDate = null;
-		try{
-			testDate = sdf.parse(validateDate); 		
-		}
-		catch(ParseException e)
-		{
-			System.out.println("Date input is in wrong format");
-			return false;
-		}
-		if(!sdf.format(testDate).equals(validateDate)) { 
-			System.out.println("Date input is invalid.");
-			return false; 
-		}
-		return true; 
+	
+	public DateTime getStartTime(){
+		return startTime;
 	}
-	public static void defineTimePattern() { 
-		timeFormat = "\\bfrom\\b (1[012]|[1-9]):[0-5][0-9](\\s)?(?i)(am|pm) \\bto\\b (1[012]|[1-9]):[0-5][0-9](\\s)?(?i)(am|pm)";
-		patternTime = Pattern.compile(timeFormat);
+	
+	public DateTime getEndTime(){
+		return endTime;
 	}
-	public static void defineStartDatePattern() { 
-		dateFormatStart = "\\b(on|by)\\b (0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";  
-		patternStartDate = Pattern.compile(dateFormatStart); 
+	
+	public boolean isDeadLineTask(){
+		return isDeadLineTask;
 	}
-	public static void defineEndDatePattern() { 
-		dateFormatEnd = "\\b(until|till)\\b (0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";  
-		patternEndDate = Pattern.compile(dateFormatEnd); 
+	
+	public boolean isFloatingTask(){
+		return isFloatingTask;
 	}
-	public DateTime getDateOnly() {
-		int startDateInt = dateOnly[0]; 
-		int startMonthInt = dateOnly[1]; 
-		int startYearInt = dateOnly[2]; 
-		DateTime dateOnlyObj = new DateTime(startYearInt, startMonthInt-1, startDateInt, 0, 0, 0);
-		return dateOnlyObj; 
+	
+	public boolean isTimedTask(){
+		return isTimedTask;
 	}
-	public DateTime getStartTime() {
-		int startDateInt = startDate[0]; 
-		int startMonthInt = startDate[1]; 
-		int startYearInt = startDate[2]; 
-		DateTime startDateObj = new DateTime(startYearInt, startMonthInt-1, startDateInt, startHoursInt, startMinutesInt, 0); 
-		return startDateObj; 
-	}
-	public DateTime getEndTime() { 
-		DateTime endDateObj; 
-		if(dateEndInfo != "") {  //there is an end date indicated
-			int endDateInt = endDate[0]; 
-			int endMonthInt = endDate[1];
-			int endYearInt = endDate[2]; 
-		endDateObj = new DateTime(endYearInt, endMonthInt-1, endDateInt, endHoursInt, endMinutesInt, 0);
-			return endDateObj; 
-		}
-		else {
-			int startDateInt = startDate[0]; 
-			int startMonthInt = startDate[1]; 
-			int startYearInt = startDate[2];  
-			endDateObj = new DateTime(startYearInt, startMonthInt-1, startDateInt, endHoursInt, endMinutesInt, 0);
-			return endDateObj;
-		}
-	}
-	public static boolean ifTimedTaskOneDay() {
-		if(toCheckTime && toCheckStartDate && !toCheckEndDate) {
-			return true;
-		}
-	return false;
-	}
-	public static boolean ifTimedTaskOverDays() {
-		if(toCheckTime && toCheckStartDate && toCheckEndDate) { 
-			return true; 
-		}
-	return false; 
-	}
-	public static boolean ifDeadlineTask() { 
-		if(!toCheckTime &&toCheckStartDate &&!toCheckEndDate) { 
-			return true; 
-		}
-	return false; 
-	}
-	public static boolean ifFloatingTask() { 
-		if(!toCheckTime &&!toCheckStartDate &&!toCheckEndDate) { 
-			return true; 
-		}
-	return false; 
-	}
+
 }

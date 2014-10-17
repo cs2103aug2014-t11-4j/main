@@ -22,7 +22,7 @@ public class TimeParser {
 	
 	private final static Logger LOGGER = Logger.getLogger(TimeParser.class.getName()); 
 
-	private int numDate;
+	private int numDate = -1;
 	
 	public TimeParser(String someCommand){
 		userCommand = someCommand.trim();
@@ -121,8 +121,33 @@ public class TimeParser {
 	public DateTime getStartTime(){
 		return startTime;
 	}
+	
 	public DateTime getEndTime(){
 		return endTime;
+	}
+	
+	public boolean isFloatingTask(){
+		if (numDate <1){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isDeadLineTask(){
+		if (numDate == 1){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isTimedTask(){
+		if (numDate > 1){
+			return true;
+		} else {
+			return false;
+		}
 	}
 		
 	}
