@@ -203,7 +203,7 @@ public class InputJavaNew  extends JFrame{
 
 
 	
-	public void showFeedback(IndigoMain logic){
+	public void showFeedback(IndigoLogic logic){
 
 		taskDisplay.setEditable(false);
 		taskDisplay.setText(logic.dateLeft + "\n" + logic.feedback + "\n");
@@ -221,7 +221,7 @@ public class InputJavaNew  extends JFrame{
 			String text = readInput.getText();
 	        readInput.selectAll();
 	        taskDisplay.setText("");
-	        IndigoMain controller = new IndigoMain(text);
+	        IndigoLogic controller = new IndigoLogic(text);
 	        showFeedback(controller);
 			
 		}
