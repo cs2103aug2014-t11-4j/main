@@ -41,9 +41,4 @@ public class Create extends CommandClass {
 		return to_Do.toString() + "is added to taskList!";
 	}
 
-	@Override
-	public String undo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

@@ -45,9 +45,4 @@ public class Read extends CommandClass{
 		return taskList.viewUndone();
 	}
 
-	@Override
-	public String undo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

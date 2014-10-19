@@ -35,9 +35,4 @@ public class Update extends CommandClass{
 		return "Task updated";
 	}
 
-	@Override
-	public String undo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

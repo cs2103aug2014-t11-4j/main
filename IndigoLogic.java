@@ -66,9 +66,10 @@ public class IndigoLogic {
 			case DELETE:
 				Delete classDelete = new Delete(parser, ps, taskList);
 				return classDelete.delete();
-/*			case UNDO:
-				undo();
-				break;
+			case UNDO:
+				Undo classUndo = new Undo(parser, ps, taskList);
+				return classUndo.execute();
+				/*
 			case COMPLETE:
 				complete(parser.getEditIndex());
 				break; */
@@ -82,59 +83,7 @@ public class IndigoLogic {
 		ps.push(new Parser("UnComplete " + index));
 		taskList.complete(index);
 	}
-	
-	private static void create(){
-		Create classy = new Create()
-	}
-	
-	private static String read(String command){
-		if (command.contains("-done")){
-			return viewDone();
-		} else if (command.contains("-undone")){
-			return viewUndone();
-		}
-		return saveTaskList();
-	}
-	
-	private static void update(int index, String task){
-		ps.push(new Parser("edit "+ index + " " + taskList.get(index).getDescription()));
-		FloatingTask tt = new FloatingTask(task);
-		taskList.editTask(index, tt);
-	}
-	
-	private static void delete(int index){
-		ps.push(new Parser("add " + index + " " + taskList.get(index).getDescription()));
-		taskList.deleteTask(index);
-	}
 
-	private static void undo(){
-		if (ps.isUndoAble() == false){
-			return;
-		}
-		Parser commandPre = ps.undo();
-		COMMAND comm = getCommand(commandPre.getKeyCommand());
-		switch (comm){
-			case CREATE:
-				taskList.addTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
-				break;
-			case READ:
-				break;
-			case UPDATE:
-				taskList.editTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
-				break;
-			case DELETE:
-				taskList.deleteTask(commandPre.getDelIndex());
-				break;
-			case UNDO:
-				undo();
-				break;
-			case UNCOMPLETE:
-				taskList.get(commandPre.getEditIndex()).unComplete();
-				break;
-			default:
-				;
-		}
-	}
 */
 	private static String saveTaskList() {
 		//  save taskList into TEXT file
@@ -145,13 +94,6 @@ public class IndigoLogic {
 		// load data from the local disk into memory
 		return taskList.read(FILE_NAME, DATE_FORMAT);
 	}
-	
-	public static String viewDone(){
-		return taskList.viewDone();
-	}
-	
-	public static String viewUndone(){
-		return taskList.viewUndone();
-	}
+
 */
 }

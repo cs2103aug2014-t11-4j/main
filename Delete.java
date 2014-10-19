@@ -33,10 +33,4 @@ public class Delete extends CommandClass{
 		return "Task deleted";
 	}
 
-	@Override
-	public String undo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
