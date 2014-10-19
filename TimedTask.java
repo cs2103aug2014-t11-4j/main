@@ -12,7 +12,7 @@ public class TimedTask extends DeadlineTask {
 	
 	public static void main(String[] args){
 		FloatingTask time = new TimedTask("timed task", new DateTime(2014,10,9,19,15,00), new DateTime());
-		DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy");
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
 		TimedTask newTask = (TimedTask)time;
 		System.out.println(newTask.toString(dtf));
 	}
@@ -20,7 +20,7 @@ public class TimedTask extends DeadlineTask {
 	public TimedTask(String description, DateTime startTime, DateTime endTime){
 		super(description, endTime);
 		interval = new Interval(startTime, endTime);
-		typeIndex = 0;
+		numDates = 2;
 	}
 	
 	public DateTime getStartTime(){
@@ -33,8 +33,9 @@ public class TimedTask extends DeadlineTask {
 	
 	public String toString(DateTimeFormatter dtf){
 		FloatingTask temp = this;
-		StringBuilder result = new StringBuilder(temp.toString());
-		return result.append(" @from " + dtf.print(startTime) + " @to " + dtf.print(endTime)).toString();
+		StringBuilder result = new StringBuilder("[" + dtf.print(startTime) + " - " + dtf.print(endTime) + "]: \n");
+		result.append(temp.toString());
+		return result.toString();
 	}
 
 }

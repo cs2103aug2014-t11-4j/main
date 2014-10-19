@@ -1,13 +1,26 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /** This class stores the task-list as an arrayList.
  *  The basic functions have been provided as a skeleton program.
@@ -37,19 +50,19 @@ public class TaskList {
 	public static void main(String[] args){
 		TaskList tasks = new TaskList();
 		tasks.addTask(new FloatingTask("floating task."));
-		tasks.addTask(new FloatingTask("floating task."));
+		FloatingTask task0 = new FloatingTask("completed floatingTask.");
+		task0.complete();
+		tasks.addTask(task0);
 		tasks.addTask(new TimedTask("timed task.", new DateTime(), new DateTime()));
 		tasks.addTask(new DeadlineTask("deadline task1.", new DateTime(12,10,3,2,3)));
 		tasks.addTask(new TimedTask("timed task.", new DateTime(), new DateTime()));
 		tasks.addTask(new DeadlineTask("deadline task3.", new DateTime(14,11,3,2,3)));
 		tasks.addTask(new DeadlineTask("deadline task2.", new DateTime(13,6,6,6,6)));
-		DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy");
-		System.out.println(tasks.write("mydata", dtf));
-		TaskList testTasks = new TaskList();
-		System.out.println(testTasks.read("mydata", dtf));
-		System.out.println(testTasks.write("mydata2",dtf));
-		tasks.sort();
-		System.out.println("after sorting:" + tasks.viewAll(dtf));
+		tasks.writeXMLDocument("NewFile");
+		TaskList tasks2 = new TaskList();
+		tasks2.readFromXML("NewFile");
+		tasks2.writeXMLDocument("AnotherFile");
+		
 	}
 	
 	// basic functions
@@ -147,9 +160,9 @@ public class TaskList {
 	public String viewNormal(DateTimeFormatter dtf){
 		StringBuilder result = new StringBuilder("A default view of tasks:");
 		for (int i=0,j=1;i<taskList.size();i++){
-			if (taskList.get(i).typeIndex == 2){
+			if (taskList.get(i).numDates == 2){
 				result.append(j++ + ". " + taskList.get(i).toString());
-			} else if (taskList.get(i).typeIndex == 1){
+			} else if (taskList.get(i).numDates == 1){
 				result.append(j++ + ". " + taskList.get(i).toDeadlineTask().toString());
 			} else {
 				result.append(j++ + ". " + taskList.get(i).toTimedTask().toString());
@@ -165,146 +178,113 @@ public class TaskList {
 	}
 	
 	// write and read
-	public String write(String fileName, DateTimeFormatter dtf){
-			String fileContent = "" + viewAll(dtf);
-			//System.out.print(fileContent);
-			BufferedWriter writer = null;
-			try
-			{
-			    writer = new BufferedWriter( new FileWriter(fileName));
-			    writer.write(fileContent);
+	public void writeXMLDocument(String fileName){
+		 DocumentBuilderFactory dFact = DocumentBuilderFactory.newInstance();
+	     DocumentBuilder build;
+		try {
+			build = dFact.newDocumentBuilder();
+		    Document doc = build.newDocument();
 
-			}
-			catch ( IOException e)
-			{
-			}
-			finally
-			{
-			    try
-			    {
-			        if ( writer != null)
-			        writer.close( );
-			    }
-			    catch ( IOException e)
-			    {
-			    	return "IOException";
-			    }
-			}
-			return fileContent;
+	        Element root = (Element) doc.createElement("rootTaskList");
+	        doc.appendChild(root);
+	        
+	        
+	        for (int i =0; i<taskList.size(); i++){
+	        	Element taskTag = doc.createElement("Task");
+	        	root.appendChild(taskTag);
+	        	
+	        	Element taskID = doc.createElement("TaskID");
+	        	taskID.appendChild(doc.createTextNode(i + ""));
+	        	taskTag.appendChild(taskID);
+	        	
+	        	Element taskDetail = doc.createElement("TaskDescription");
+	        	taskDetail.appendChild(doc.createTextNode(taskList.get(i).getDescription()));
+	        	taskTag.appendChild(taskDetail);
+	        	
+	        	switch (taskList.get(i).numDates){
+	        		case 0:
+	        			break;
+	        		case 1:
+	        			Element endTime = doc.createElement("DueDate");
+	        			endTime.appendChild(doc.createTextNode(taskList.get(i).toDeadlineTask().endTime.toString()));
+	        			taskTag.appendChild(endTime);
+	        			break;
+	        		case 2:
+	        			Element startDate = doc.createElement("From");
+	        			startDate.appendChild(doc.createTextNode(taskList.get(i).toDeadlineTask().endTime.toString()));
+	        			taskTag.appendChild(startDate);
+	        			
+	        			Element endDate = doc.createElement("To");
+	        			endDate.appendChild(doc.createTextNode(taskList.get(i).toDeadlineTask().endTime.toString()));
+	        			taskTag.appendChild(endDate);
+	        			break;
+	        		default:
+	        		assert false;
+	        	}
+	        	
+	        	Element numDates = doc.createElement("numDates");
+	        	numDates.appendChild(doc.createTextNode(taskList.get(i).numDates + ""));
+	        	taskTag.appendChild(numDates);
+	        	
+	        	Element isCompleted = doc.createElement("CompletionStatus");
+	        	isCompleted.appendChild(doc.createTextNode(taskList.get(i).isCompleted() + ""));
+	        	taskTag.appendChild(isCompleted);
+	        	
+	        	Element isImportant = doc.createElement("Importance");
+	        	isImportant.appendChild(doc.createTextNode(taskList.get(i).isImportant()+ ""));
+	        	taskTag.appendChild(isImportant);
+	        }
+	        
+	        
+	        
+	        writeToDisk(fileName, doc);
+	        
+		} catch (ParserConfigurationException e) {
+			System.out.println("Parser Exception found.");
+		}
+	        
 	}
 	
-	public String read(String fileName, DateTimeFormatter dtf){
-		//String existingFileContent = "";
-		taskList = new ArrayList<FloatingTask>();
-		BufferedReader reader = null;
-		try
-		{
-		    reader = new BufferedReader( new FileReader(fileName));
-		    String line = reader.readLine();
-		    while (line != null){
-		    	//System.out.println(line);
-		    	//existingFileContent = existingFileContent + line.substring(3) + System.lineSeparator();
-				//System.out.print(existingFileContent);
-		    	if (line.contains("tasks listed:")) {
-		    		line = reader.readLine();
-		    	} 
-		    	if (line.contains("Floating tasks are:")){
-		    		line = reader.readLine();
-		    		while (!(line.contains("Deadline tasks are:"))){
-		    			readFloatingTask(line);
-		    			line = reader.readLine();
-		    		}
-		    	} else if(line.contains("Deadline tasks are:")){
-		    		line = reader.readLine();
-		    		//System.out.println("deadline task indentified");
-		    		while (!(line.contains("Timed tasks are:"))){
-		    			readDeadlineTask(dtf, line);
-		    			line = reader.readLine();
-		    		}
-		    	} else if (line.contains("Timed tasks are:")){
-		    		line = reader.readLine();
-		    		while (line != null){
-		    			readTimedTask(dtf, line);
-		    			line = reader.readLine();
-		    		}
-		    	} else {
-			    	line = reader.readLine();
-		    	}
-		    	
-		    }
+	private void writeToDisk(String fileName, Document doc) {
+		try {
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer;
+			transformer = transformerFactory.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new File(fileName+".xml"));
+			
+			transformer.transform(source, result);
+			 
+			System.out.println("File saved!");
+		} catch (TransformerConfigurationException e) {
+			System.out.println("TransformerConfig Exception Found.");
+		} catch (TransformerException e) {
+			System.out.println("Transformer Exception Found.");
+		}
+		
+	}
 
-		}
-		catch ( IOException e)
-		{
-			return fileName + "is not found.";
-		}
-		finally
-		{
-		    try
-		    {
-		        if ( reader != null)
-		        reader.close( );
-		    }
-		    catch ( IOException e)
-		    {
-		    	return "IOException";
-		    }
+	public String readFromXML(String fileName){
+		//String existingFileContent = "";
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		try {
+			
+		    InputStream xmlInput  = new FileInputStream(fileName+".xml");
+		    SAXParser saxParser = factory.newSAXParser();
+
+		    SaxHandler handler   = new SaxHandler();
+		    saxParser.parse(xmlInput, handler);
+		    taskList = handler.getList();
+
+		} catch (Throwable err) {
+		    System.out.println("SAXparser Exception.");
+		    //writeXMLDocument(fileName);
 		}
 		return fileName + " is loaded.";
 	}
-
-	private void readTimedTask(DateTimeFormatter dtf, String line) {
-		int markerIndex = line.indexOf(".");
-		int markerDone = line.indexOf("@isDone");
-		int markerImpor = line.indexOf("@isImpor");
-		int markerFrom = line.indexOf("@from");
-		int markerTo = line.indexOf("@to");
-		DateTime tempStartTime = dtf.parseDateTime(line.substring(markerFrom+6,markerTo-1));
-		DateTime tempEndTime = dtf.parseDateTime(line.substring(markerTo+4));
-		TimedTask tempTask = new TimedTask(line.substring(markerIndex+2,markerDone-1),tempStartTime,tempEndTime);
-		if (line.substring(markerDone,markerImpor-1).contains("true")){
-			tempTask.complete();
-		}
-		if (line.substring(markerImpor,markerFrom-1).contains("true")){
-			tempTask.highlight();
-		}
-		taskList.add(tempTask);
-	}
-
-	private void readDeadlineTask(DateTimeFormatter dtf, String line) {
-		int markerIndex = line.indexOf(".");
-		int markerDone = line.indexOf("@isDone");
-		int markerImpor = line.indexOf("@isImpor");
-		int markerDue = line.indexOf("@due");
-		DateTime time = dtf.parseDateTime(line.substring(markerDue+5));
-		DeadlineTask newTask = new DeadlineTask(line.substring(markerIndex+2,markerDone-1),time);
-		if (line.substring(markerDone,markerImpor-1).contains("true")){
-			newTask.complete();
-		}
-		if (line.substring(markerImpor,markerDue-1).contains("true")){
-			newTask.highlight();
-		}
-		//System.out.println(newTask.toString(dtf));
-		taskList.add(newTask);
-	}
-
-	private void readFloatingTask(String line) {
-		// assert the storage file is in the right format
-		assert line.contains("@isDone");
-		
-		int markerIndex = line.indexOf(".");
-		int markerDone = line.indexOf("@isDone");
-		int markerImpor = line.indexOf("@isImpor");
-		FloatingTask someTask = new FloatingTask(line.substring(markerIndex+2,markerDone-1));
-		if (line.substring(markerDone,markerImpor-1).contains("true")){
-			someTask.complete();
-		}
-		if (line.substring(markerImpor).contains("true")){
-			someTask.highlight();
-		}
-		taskList.add(someTask);
-		//System.out.println("floating task indentified");
-	}
+	
 
 	public boolean complete(int index) {
 		return taskList.get(index-1).complete();

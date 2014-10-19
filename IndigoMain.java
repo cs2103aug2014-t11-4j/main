@@ -88,6 +88,7 @@ public class IndigoMain {
 				update(parser.getEditIndex(), parser.getCommand());
 				break;
 			case DELETE:
+<<<<<<< HEAD
 				String type = new String();
 				if (parser.getCommand().contains("-d")){
 					type = "-d";
@@ -97,6 +98,9 @@ public class IndigoMain {
 					type = "-f";
 				}
 				delete(type, parser.getDelIndex());
+=======
+				delete(parser.getEditIndex());
+>>>>>>> 90a2dd3a2abb1446c0ea9377a8c04d7d9fba36bc
 				break;
 			case UNDO:
 				undo();
@@ -138,14 +142,17 @@ public class IndigoMain {
 <<<<<<< HEAD
 	private static void create(String command){
 		FloatingTask tt;
-		if(parser.ifTimedTaskOverDays() || parser.ifTimedTaskOneDay()) { 
+		int index = parser.getEditIndex();
+		if(parser.isTimedTask()) { 
 			tt = new TimedTask(command, parser.getStartTime(), parser.getEndTime());
-		} else if(parser.ifDeadlineTask()) { 
-			tt = new DeadlineTask(command, parser.getDateOnly()); 
+		} else if(parser.isDeadLineTask()) { 
+			tt = new DeadlineTask(command, parser.getEndTime()); 
 		} else {
+			assert parser.isFloatingTask();
 			tt = new FloatingTask(command);
 		}
 		System.out.println("getCommand" + parser.getCommand());
+<<<<<<< HEAD
 =======
 	private static void create(){
 		FloatingTask tt = new FloatingTask(parser.getCommand());
@@ -163,6 +170,10 @@ public class IndigoMain {
 			taskList.addTask(parser.getEditIndex(),tt);
 			ps.push(new Parser("delete "+ parser.getEditIndex()));
 		}
+=======
+			ps.push(new Parser("delete " + index + " "+ parser.getCommand()));
+			taskList.addTask(index,tt);
+>>>>>>> 90a2dd3a2abb1446c0ea9377a8c04d7d9fba36bc
 		//taskList.sort();
 	}
 	
@@ -176,8 +187,16 @@ public class IndigoMain {
 	}
 	
 	private static void update(int index, String task){
+		FloatingTask tt;
+		if(parser.isTimedTask()) { 
+			tt = new TimedTask(task, parser.getStartTime(), parser.getEndTime());
+		} else if(parser.isDeadLineTask()) { 
+			tt = new DeadlineTask(task, parser.getEndTime()); 
+		} else {
+			assert parser.isFloatingTask();
+			tt = new FloatingTask(task);
+		}
 		ps.push(new Parser("edit "+ index + " " + taskList.get(index).getDescription()));
-		FloatingTask tt = new FloatingTask(task);
 		taskList.editTask(index, tt);
 	}
 	
@@ -217,7 +236,7 @@ public class IndigoMain {
 				taskList.editTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
 				break;
 			case DELETE:
-				taskList.deleteTask(commandPre.getDelIndex());
+				taskList.deleteTask(commandPre.getEditIndex());
 				break;
 			case UNDO:
 				undo();
@@ -231,13 +250,15 @@ public class IndigoMain {
 	}
 
 	private static String saveTaskList() {
-		//  save taskList into TEXT file
-		return taskList.write(FILE_NAME, DATE_FORMAT);
+		//  TODO save taskList into TEXT file
+		taskList.writeXMLDocument(FILE_NAME);
+		return "";
 	}
 
 	private static String loadData() {
-		// load data from the local disk into memory
-		return taskList.read(FILE_NAME, DATE_FORMAT);
+		// TODO load data from the local disk into memory
+		taskList.readFromXML(FILE_NAME);
+		return "";
 	}
 	
 	public static String viewDone(){
