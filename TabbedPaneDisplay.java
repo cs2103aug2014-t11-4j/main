@@ -29,7 +29,7 @@ public class TabbedPaneDisplay extends JPanel {
 		tabbedPaneDisplay.setMnemonicAt(2, KeyEvent.VK_3);
 		
 		JComponent floatingPanel = makeTextPanel("Tasks without deadlines displayed here.");
-		tabbedPaneDisplay.addTab("Weekly", null, floatingPanel, "Displays no-deadline tasks.");
+		tabbedPaneDisplay.addTab("Floating", null, floatingPanel, "Displays no-deadline tasks.");
 		tabbedPaneDisplay.setMnemonicAt(3, KeyEvent.VK_4);
 		
 		add(tabbedPaneDisplay);
