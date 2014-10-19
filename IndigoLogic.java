@@ -76,7 +76,8 @@ public class IndigoLogic {
 			default:
 				System.exit(0);
 		}
-		return  saveTaskList();
+		saveTaskList();
+		return "Saved";
 	}
 /*	
 	private static void complete(int index) {
@@ -85,9 +86,9 @@ public class IndigoLogic {
 	}
 
 */
-	private static String saveTaskList() {
+	private static void saveTaskList() {
 		//  save taskList into TEXT file
-		return taskList.write(FILE_NAME, DATE_FORMAT);
+		taskList.writeXMLDocument(FILE_NAME);
 	}
 /*
 	private static String loadData() {

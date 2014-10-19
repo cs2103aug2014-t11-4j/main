@@ -23,7 +23,7 @@ public class Delete extends CommandClass{
 	}
 	
 	public String delete() throws ArrayIndexOutOfBoundsException{
-		int index = parseris.getDelIndex();
+		int index = parseris.getEditIndex();
 		try{
 			psl.push(new Parser("add " + index + " " + taskList.get(index).getDescription()));
 		} catch (ArrayIndexOutOfBoundsException err){

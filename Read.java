@@ -21,19 +21,20 @@ public class Read extends CommandClass{
 		this.taskList = taskList;
 	}
 	
-	@Test
+/*	@Test
 	public void testRead(){
 		Parser testParse = new Parser("view");
-		assertEquals(view(), taskList.write(FILE_NAME, DATE_FORMAT));
+		//assertEquals(view(), taskList.writeXMLDocument(FILE_NAME));
 	}
-	
+	*/
 	public String view(){
 		if(parseris.getCommand().contains("-done")){
 			return viewDone();
 		} else if(parseris.getCommand().contains("-undone")){
 			return viewUndone();
 		} else {
-			return taskList.write(FILE_NAME, DATE_FORMAT);
+			taskList.writeXMLDocument(FILE_NAME);
+			return "Saved";
 		}
 	}
 	

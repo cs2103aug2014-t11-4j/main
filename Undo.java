@@ -35,7 +35,7 @@ public class Undo extends CommandClass {
 				taskList.editTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
 				return "Undo an Update";
 			case DELETE:
-				taskList.deleteTask(commandPre.getDelIndex());
+				taskList.deleteTask(commandPre.getEditIndex());
 				return "Undo a delete";
 			case UNDO:
 				return "Undo an undo?";

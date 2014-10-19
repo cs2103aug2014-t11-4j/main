@@ -92,22 +92,7 @@ public class InputWindow extends JFrame {
 		addReadInput(bottomPanel);
 		addLiveUserFeedback(bottomPanel);
 		mainPanel.add(bottomPanel, constraints);
-		
-		
-<<<<<<< HEAD
-		readInput.addActionListener(this);
-
-		setVisible(true);
-	}
 	
-	
-	public static void showFeedback(IndigoLogic logic){
-//		textArea.setText(logic.dateLeft + "\n");
-//		textArea.append(logic.feedback + "\n");
-		textPane.setEditable(false);
-		textPane.setText(logic.feedback + "\n");
-=======
->>>>>>> 90a2dd3a2abb1446c0ea9377a8c04d7d9fba36bc
 	}
 
 
@@ -132,21 +117,6 @@ public class InputWindow extends JFrame {
 		
 	}
 	
-<<<<<<< HEAD
-	
-	public void actionPerformed(ActionEvent evt) {
-		 	String text = readInput.getText();
-	        readInput.selectAll();
-	        setUserCommand(text);
-	        //textArea.setText("");
-	        textPane.setText("");
-	        IndigoLogic controller = new IndigoLogic(text);
-	        showFeedback(controller);
-	//        showTaskList();
-	        
-	    }
-=======
->>>>>>> 90a2dd3a2abb1446c0ea9377a8c04d7d9fba36bc
 
 public class readInputTextFieldListener implements ActionListener {
 
