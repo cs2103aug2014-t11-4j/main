@@ -10,7 +10,7 @@ public class DeadlineTask extends FloatingTask{
 	
 	public static void main(String[] args){
 		DeadlineTask time = new DeadlineTask("deadline task", new DateTime(2014,10,9,19,15,00));
-		DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy");
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
 		System.out.println(time.toString(dtf));
 	}
 
@@ -39,8 +39,8 @@ public class DeadlineTask extends FloatingTask{
 	
 	public String toString(DateTimeFormatter format){
 		FloatingTask temp = this;
-		StringBuilder result = new StringBuilder(temp.toString());
-		result.append(" @due " + format.print(endTime));
+		StringBuilder result = new StringBuilder("[" + format.print(endTime) + "]");
+		result.append(temp.toString());
 		return result.toString();
 	}
 	

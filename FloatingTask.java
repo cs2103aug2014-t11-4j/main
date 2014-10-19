@@ -75,8 +75,11 @@ public class FloatingTask implements Comparable<FloatingTask>{
 	}
 
 	public String toString() {
-		StringBuilder result = new StringBuilder(taskDescription);
-		result.append(" @isDone " + isDone + " @isImpor " + isImportant);
+		StringBuilder result = new StringBuilder("");
+		result.append(taskDescription);
+		if (isDone){
+			result.append(" [Completed] ");
+		}
 		return result.toString();
 	}
 
