@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
+import org.joda.time.DateTime;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -11,31 +12,24 @@ import org.joda.time.format.DateTimeFormatter;
  * audio reminder, auto-correction, and color-coded highlighting. Indigo takes
  * input from keyboard only. Indigo stores data on a local disk.
  * 
- * @author jjlu
+ * @author jjlu & Ken
  *
  */
 public class IndigoMain {
 	public String feedback;
-	
 	public String dateLeft;
-	
 	private static ParserList ps = new ParserList();
-	
 	private static Parser parser;
-	
 	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yy");
-
 	private static final String FILE_NAME = "myTask";
 	
 	// Storage of our list of tasks
 	private static TaskList taskList = new TaskList();
 	
-	//Enum class for commands
 	public enum COMMAND{
 		CREATE, READ, UPDATE, DELETE, UNDO, COMPLETE, UNCOMPLETE
 	}
 	
-
 	public static void main(String[] args) {
 		/*
 		 * outline: 
@@ -94,7 +88,15 @@ public class IndigoMain {
 				update(parser.getEditIndex(), parser.getCommand());
 				break;
 			case DELETE:
-				delete(parser.getDelIndex());
+				String type = new String();
+				if (parser.getCommand().contains("-d")){
+					type = "-d";
+				} else if (parser.getCommand().contains("-t")){
+					type = "-t";
+				} else {
+					type = "-f";
+				}
+				delete(type, parser.getDelIndex());
 				break;
 			case UNDO:
 				undo();
@@ -133,6 +135,7 @@ public class IndigoMain {
 		}
 	}
 	
+<<<<<<< HEAD
 	private static void create(String command){
 		FloatingTask tt;
 		if(parser.ifTimedTaskOverDays() || parser.ifTimedTaskOneDay()) { 
@@ -143,6 +146,16 @@ public class IndigoMain {
 			tt = new FloatingTask(command);
 		}
 		System.out.println("getCommand" + parser.getCommand());
+=======
+	private static void create(){
+		FloatingTask tt = new FloatingTask(parser.getCommand());
+		int[] dateA = parser.getDate();
+		if (dateA!=null){
+			DeadlineTask dt = new DeadlineTask(tt.getDescription(), new DateTime(dateA[2], dateA[1], dateA[0], 12, 00, 00));			
+			taskList.addTask(dt);
+			ps.push(new Parser("delete " + taskList.getList().size()));
+		}
+>>>>>>> origin/ObjectOrientedLogic
 		if (parser.getEditIndex() == null){
 			ps.push(new Parser("delete " + taskList.getList().size()));
 			taskList.addTask(tt);
@@ -168,7 +181,22 @@ public class IndigoMain {
 		taskList.editTask(index, tt);
 	}
 	
-	private static void delete(int index){
+	private static void delete(String type, int index){
+		if(type.equals("-d")){
+			ArrayList<FloatingTask> arr = taskList.getList();
+			int i=0;
+			while(!(arr.get(i) instanceof DeadlineTask)){
+				i++;
+			}
+			index += i;
+		} else if(type.equals("-t")){
+			ArrayList<FloatingTask> arr = taskList.getList();
+			int i=0;
+			while(!(arr.get(i) instanceof TimedTask)){
+				i++;
+			}
+			index += i;
+		}
 		ps.push(new Parser("add " + index + " " + taskList.get(index).getDescription()));
 		taskList.deleteTask(index);
 	}

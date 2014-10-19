@@ -22,6 +22,7 @@ public class Parser {
 	String keyWord  			= null;  				//stores the key command "add"/"delete" to return to logic
 	String commandWords  		= null; 				//stores the remaining words excluding key command
 	String [] commandSentence 	= new String[2]; 		//to help store the splited string command
+<<<<<<< HEAD
 	String [] commandTime		= new String[4]; 
 	String [] commandDate		= new String[3]; 
 	String [] details 		  	= null; 				//store the remaining words excluding key command individually
@@ -32,6 +33,10 @@ public class Parser {
 	static boolean toCheckStartDate = false; 
 	static boolean toCheckEndDate = false; 
 	static boolean toCheckTime = false; 
+=======
+	String [] details 		  	= null; 				//store the remaining words excluding key command individually
+	String toDo               	= ""; 					//stores the final command to return to logic
+>>>>>>> origin/ObjectOrientedLogic
 	String [] date 				= new String[3];		//stores the date in string array (deal with 23 dec 2014)
 	int [] dateIntArr 			= new int[3];			//stores the date to return to logic
 	String dateStr 			  	= null; 				//stores the date in string to eliminate "/" 		
@@ -97,6 +102,10 @@ public class Parser {
 			test.getDateOnly(); 
 		}
 		sc.close(); 
+	}
+	
+	public Parser(){
+		this("view");
 	}
 	
 	public Parser(String userCommand) {
@@ -204,7 +213,8 @@ public class Parser {
 				 break;
 				 			 
 			case "delete" : 
-				delIndex = Integer.parseInt(commandSentence[1]); 
+				String[] split2 = commandSentence[1].split(" ");
+				delIndex = Integer.parseInt(split2[0]); 
 				break;
 			
 			case "edit" : 								// edit 2 catch a cat
@@ -260,6 +270,7 @@ public class Parser {
 		if(startTimeStr.charAt(lengthStart-2) == 'p') { 
 			shouldAddStartTime = true;
 		}
+<<<<<<< HEAD
 		String [] splitStartTime = new String [2]; 
 		splitStartTime = startTimeStr.split(":"); 
 		String startHours = splitStartTime[0]; 
@@ -269,6 +280,31 @@ public class Parser {
 		startMinutesInt = Integer.parseInt(startMinutes); 
 		if(shouldAddStartTime) { 
 			startHoursInt = startHoursInt + 12; 		
+=======
+
+		 else{ 								// date is in the format of 23 Dec 2014
+			 for(int j=details.length-3; j<details.length; j++) {   
+				 date[p] = details[j]; 
+				 p++; 
+			 }
+			 if(!checkValidMonthWord()) {
+				 System.out.println("month word invalid."); 
+			 }
+			 else{
+				 dateInt = Integer.parseInt(date[0]);
+			 	 monthInt = convertMonth(); 
+			 	 yearInt = Integer.parseInt(date[2]);
+			 }
+		 }  
+		System.out.print(dateInt + " " + monthInt + " " + yearInt);
+	}  	
+	public void parseInfo() { 
+		int size1 = detailsList.size(); 
+		if(detailsList.get(size1-1).contains("/")) { 
+			for(int k=0; k<details.length-2; k++) {  
+		 		 toDo = toDo+ " " + details[k];
+			} 
+>>>>>>> origin/ObjectOrientedLogic
 		}
 		//System.out.println(startHoursInt);
 		//System.out.println(startMinutesInt); 
@@ -426,8 +462,22 @@ public class Parser {
 		return editIndex; 
 	}
 	public boolean checkValidDate() {
-		String validateDate = dateIntArr[1] + "/" + dateIntArr[0] + "/" + dateIntArr[2];
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyy"); 
+		String dayStr = new String();
+		String monthStr = new String();
+		if(dateIntArr[0] < 10){
+			dayStr = "0" + dateIntArr[0];
+		} else {
+			dayStr = dateIntArr[0] + "";
+		}
+		if(dateIntArr[1] < 10){
+			monthStr = "0" + dateIntArr[1];
+		} else {
+			monthStr = dateIntArr[1] + "";
+		}
+		String validateDate = monthStr + "/" + dayStr + "/" + dateIntArr[2];{
+			assert validateDate.length() == 10;
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); 
 		Date testDate = null;
 		try{
 			testDate = sdf.parse(validateDate); 		
