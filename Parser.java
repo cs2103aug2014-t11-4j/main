@@ -16,11 +16,11 @@ import java.text.SimpleDateFormat;
 public class Parser {
 	String keyWord  			= null;  				//stores the key command "add"/"delete" to return to logic
 	String commandWords  		= null; 				//stores the remaining words excluding key command
-	String [] commandSentence 	= new String[2]; 			//to help store the splited string command
+	String [] commandSentence 	= new String[2]; 		//to help store the splited string command
 	String [] details 		  	= null; 				//store the remaining words excluding key command individually
 	String toDo               	= ""; 					//stores the final command to return to logic
-	String [] date 				= new String[3];			//stores the date in string array (deal with 23 dec 2014)
-	int [] dateIntArr 			= new int[3];				//stores the date to return to logic
+	String [] date 				= new String[3];		//stores the date in string array (deal with 23 dec 2014)
+	int [] dateIntArr 			= new int[3];			//stores the date to return to logic
 	String dateStr 			  	= null; 				//stores the date in string to eliminate "/" 		
 	String timeArr[] 			= new String [2]; 
 	String timeStr 				= null;
@@ -51,6 +51,10 @@ public class Parser {
 		test.getDelIndex();
 		test.getEditIndex();
 		sc.close(); 
+	}
+	
+	public Parser(){
+		this("view");
 	}
 	
 	public Parser(String userCommand) {

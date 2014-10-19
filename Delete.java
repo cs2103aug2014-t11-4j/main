@@ -1,7 +1,8 @@
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
-public class Delete extends ExecutionClass {
+public class Delete extends CommandClass{
 
 	@Override
 	public String execute() {
@@ -9,10 +10,10 @@ public class Delete extends ExecutionClass {
 		return null;
 	}
 	
-	public Delete(Parser parsing, ParserList parseL, TaskList list){
+	public Delete(Parser parsing, ParserList parseL, TaskList taskList){
 		parseris = parsing;
 		psl = parseL;
-		taskList = list;
+		this.taskList = taskList;
 	}
 	
 	@Test
@@ -30,6 +31,12 @@ public class Delete extends ExecutionClass {
 		}
 		taskList.deleteTask(index);
 		return "Task deleted";
+	}
+
+	@Override
+	public String undo() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

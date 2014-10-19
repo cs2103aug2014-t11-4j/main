@@ -2,7 +2,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class Update extends ExecutionClass {
+public class Update extends CommandClass{
 
 	@Override
 	public String execute() {
@@ -10,10 +10,11 @@ public class Update extends ExecutionClass {
 		return edit();
 	}
 
-	public Update(Parser parsing, ParserList parseL, TaskList list){
+	public Update(Parser parsing, ParserList parseL, TaskList taskList){
 		parseris = parsing;
 		psl = parseL;
-		taskList = list;
+		this.taskList = taskList; 
+
 	}
 	
 	@Test
@@ -32,5 +33,11 @@ public class Update extends ExecutionClass {
 		}
 		taskList.editTask(index, task);
 		return "Task updated";
+	}
+
+	@Override
+	public String undo() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

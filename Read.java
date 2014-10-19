@@ -1,8 +1,13 @@
 import static org.junit.Assert.*;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
-public class Read extends ExecutionClass {
+public class Read extends CommandClass{
+	
+	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yy");
+	private static final String FILE_NAME = "myTask";
 
 	@Override
 	public String execute() {
@@ -10,16 +15,16 @@ public class Read extends ExecutionClass {
 		return view();
 	}
 	
-	public Read(Parser parsing, ParserList parseL, TaskList list){
+	public Read(Parser parsing, ParserList parseL, TaskList taskList){
 		parseris = parsing;
 		psl = parseL;
-		taskList = list;
+		this.taskList = taskList;
 	}
 	
 	@Test
 	public void testRead(){
 		Parser testParse = new Parser("view");
-		assertEquals(view(), "view all");
+		assertEquals(view(), taskList.write(FILE_NAME, DATE_FORMAT));
 	}
 	
 	public String view(){
@@ -28,7 +33,7 @@ public class Read extends ExecutionClass {
 		} else if(parseris.getCommand().contains("-undone")){
 			return viewUndone();
 		} else {
-			return "view all";
+			return taskList.write(FILE_NAME, DATE_FORMAT);
 		}
 	}
 	
@@ -38,5 +43,11 @@ public class Read extends ExecutionClass {
 	
 	public String viewUndone(){
 		return taskList.viewUndone();
+	}
+
+	@Override
+	public String undo() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

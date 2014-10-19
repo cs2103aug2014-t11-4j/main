@@ -2,8 +2,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class Create extends ExecutionClass {
-	
+public class Create extends CommandClass {
+
 	FloatingTask to_Do = new FloatingTask(parseris.getCommand());{
 		assert parseris.getCommand() instanceof String;
 	}
@@ -17,10 +17,10 @@ public class Create extends ExecutionClass {
 		return add();
 	}	
 	
-	public Create(Parser parsing, ParserList parseL, TaskList list){
+	public Create(Parser parsing, ParserList pslist, TaskList taskList){
 		parseris = parsing;
-		psl = parseL;
-		taskList = list;
+		psl = pslist;
+		this.taskList = taskList;
 		to_Do = new FloatingTask(parseris.getCommand());
 	}
 	
@@ -39,5 +39,11 @@ public class Create extends ExecutionClass {
 			psl.push(new Parser("delete" + editIndex));
 		}
 		return to_Do.toString() + "is added to taskList!";
+	}
+
+	@Override
+	public String undo() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

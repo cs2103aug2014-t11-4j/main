@@ -1,8 +1,6 @@
-There are 4 tasks listed:
+There are 2 tasks listed:
 Floating tasks are:
-1. car turn @isDone false @isImpor false
-2. car turn @isDone false @isImpor false
+1. time @isDone false @isImpor false
+2. hello potato @isDone false @isImpor false
 Deadline tasks are:
-1. car turn @isDone false @isImpor false @due 02/04/34
-2. car turn @isDone false @isImpor false @due 24/10/14
 Timed tasks are:

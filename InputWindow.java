@@ -61,7 +61,7 @@ public class InputWindow  extends JFrame implements ActionListener{
 	}
 	
 	
-	public static void showFeedback(IndigoMain logic){
+	public static void showFeedback(IndigoLogic logic){
 //		textArea.setText(logic.dateLeft + "\n");
 //		textArea.append(logic.feedback + "\n");
 		textPane.setEditable(false);
@@ -82,10 +82,10 @@ public class InputWindow  extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent evt) {
 		 	String text = readInput.getText();
 	        readInput.selectAll();
-	//        setUserCommand(text);
+	        setUserCommand(text);
 	        //textArea.setText("");
 	        textPane.setText("");
-	        IndigoMain controller = new IndigoMain(text);
+	        IndigoLogic controller = new IndigoLogic(text);
 	        showFeedback(controller);
 	//        showTaskList();
 	        
