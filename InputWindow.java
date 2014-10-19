@@ -100,7 +100,7 @@ public class InputWindow extends JFrame {
 	private void addReadInput(JPanel bottomPanel) {
 		GridBagConstraints constraints;
 		constraints = setConstraints(2);
-		JTextField readInput = new JTextField();
+		readInput = new JTextField();
 		bottomPanel.add(readInput, constraints);	
 		readInput.addActionListener(new readInputTextFieldListener());
 		
