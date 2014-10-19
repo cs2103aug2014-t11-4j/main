@@ -117,19 +117,29 @@ public class InputWindow extends JFrame {
 		
 	}
 	
-
-public class readInputTextFieldListener implements ActionListener {
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		String input = readInput.getText();
-        readInput.selectAll();
-
-        liveUserFeedback.setText("HELLO");
+	public void showFeedback(IndigoLogic logic){
+		taskDisplay.setEditable(false);
+		taskDisplay.setText(logic.dateLeft + "\n" + logic.feedback + "\n");
+	}
+	public void showTaskList(){
+		for (int i=0; i < inputs.size(); i++){
+		taskDisplay.setText(inputs.get(i) + '\n');
+		}
 	}
 
-}
+	
+	public class readInputTextFieldListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String text = readInput.getText();
+			readInput.selectAll();
+			taskDisplay.setText("");
+			IndigoLogic controller = new IndigoLogic(text);
+			showFeedback(controller);
+		}
+
+	}
 
 
 	private GridBagConstraints setConstraints(int componentIndex) {
