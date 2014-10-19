@@ -21,7 +21,13 @@ public class Create extends CommandClass {
 		parseris = parsing;
 		psl = pslist;
 		this.taskList = taskList;
-		to_Do = new FloatingTask(parseris.getCommand());
+		if (parseris.isDeadlineTask()){
+			to_Do = new DeadlineTask(parseris.getCommand(),parseris.getEndTime());
+		} else if (parseris.isTimedTask()){
+			to_Do = new TimedTask(parseris.getCommand(),parseris.getStartTime(),parseris.getEndTime());
+		} else {
+			to_Do = new FloatingTask(parseris.getCommand());
+		}
 	}
 	
 	@Test

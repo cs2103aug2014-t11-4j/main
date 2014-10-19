@@ -26,6 +26,7 @@ public class InputWindow extends JFrame {
 	private JLayeredPane displayLayers = new JLayeredPane();
 	private JTextField readInput;
 	private JTextArea liveUserFeedback;
+	TabbedPaneDisplay taskDisplay;
 	
 	@Override
 	public void setVisible(boolean value){
@@ -77,7 +78,8 @@ public class InputWindow extends JFrame {
 		GridBagConstraints constraints;
 		constraints = setConstraints(4);
 		
-		mainPanel.add(new TabbedPaneDisplay(), constraints);
+		taskDisplay = new TabbedPaneDisplay();
+		mainPanel.add(taskDisplay, constraints);
 		
 		
 	}
@@ -117,7 +119,7 @@ public class InputWindow extends JFrame {
 		
 	}
 	
-	public void showFeedback(IndigoLogic logic){
+/*	public void showFeedback(IndigoLogic logic){
 		taskDisplay.setEditable(false);
 		taskDisplay.setText(logic.dateLeft + "\n" + logic.feedback + "\n");
 	}
@@ -125,7 +127,7 @@ public class InputWindow extends JFrame {
 		for (int i=0; i < inputs.size(); i++){
 		taskDisplay.setText(inputs.get(i) + '\n');
 		}
-	}
+	}*/
 
 	
 	public class readInputTextFieldListener implements ActionListener {
@@ -134,9 +136,10 @@ public class InputWindow extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			String text = readInput.getText();
 			readInput.selectAll();
-			taskDisplay.setText("");
 			IndigoLogic controller = new IndigoLogic(text);
-			showFeedback(controller);
+			liveUserFeedback.setText(controller.feedback);
+			taskDisplay.update();
+			//showFeedback(controller);
 		}
 
 	}

@@ -103,7 +103,7 @@ public class TaskList {
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
 		for (int i=0,j=1;i<taskList.size();i++){
 			if (! (taskList.get(i) instanceof DeadlineTask)){
-				result.append(j++ + ". " + taskList.get(i).toString() + newLine);
+				result.append("[NO." + j++ + "]" + taskList.get(i).toString() + newLine);
 			}
 		}
 		return result.toString();
@@ -114,7 +114,7 @@ public class TaskList {
 		for (int i=0,j=1;i<taskList.size();i++){
 			if ((taskList.get(i) instanceof DeadlineTask) && !(taskList.get(i) instanceof TimedTask)){
 				DeadlineTask temp = (DeadlineTask) taskList.get(i);
-				result.append(j++ + ". " + temp.toString(dtf) + newLine);
+				result.append("[NO." + j++ + "]" + temp.toString(dtf) + newLine);
 			}
 		}
 		return result.toString();
@@ -125,7 +125,7 @@ public class TaskList {
 		for (int i=0,j=1;i<taskList.size();i++){
 			if (taskList.get(i) instanceof TimedTask){
 				TimedTask temp = (TimedTask) taskList.get(i);
-				result.append(j++ + ". " + temp.toString(dtf) + newLine);
+				result.append("[NO." + j++ + "]" + temp.toString(dtf) + newLine);
 			}
 		}
 		return result.toString();

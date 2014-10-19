@@ -11,12 +11,13 @@ import javax.swing.JTextPane;
 public class TabbedPaneDisplay extends JPanel {
 	
 	private JTabbedPane tabbedPaneDisplay;
+	private JTextPane textPaneToday; 
 	public TabbedPaneDisplay(){
 		super(new GridLayout(3,3));
 		
 		tabbedPaneDisplay = new JTabbedPane();
 		
-		JComponent dailyPanel = makeTextPanel("Tasks for today displayed here.");
+		JComponent dailyPanel = makeTextPanel(textPaneToday, "Tasks for today displayed here.");
 		tabbedPaneDisplay.addTab("Today", null, dailyPanel, "Displays daily tasks.");
 		tabbedPaneDisplay.setMnemonicAt(0, KeyEvent.VK_1);
 		
@@ -48,6 +49,26 @@ public class TabbedPaneDisplay extends JPanel {
 		
 		return panel;
 		
+	}
+	private JComponent makeTextPanel(JTextPane textPane, String text) {
+		//TODO
+		JPanel panel = new JPanel(false);
+		textPaneToday = new JTextPane();
+		
+		textPaneToday.setText(text);
+		//filler.setHorizontalAlignment(JLabel.CENTER);
+		panel.setLayout(new GridLayout(3,3));
+		panel.add(textPaneToday);
+		
+		
+		return panel;
+		
+	} 
+	
+	public void update(){
+		//TODO
+		IndigoLogic lc = new IndigoLogic();
+		textPaneToday.setText("updated!");
 	}
 	
 	/*	private void setTabbedTextPane(){

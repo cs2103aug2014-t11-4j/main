@@ -31,7 +31,7 @@ public class Parser {
 	boolean containConj 		= false;				//determine if it is a floating task
 	int editIndex;
 	private boolean isFloatingTask;
-	private boolean isDeadLineTask;
+	private boolean isDeadlineTask;
 	private boolean isTimedTask;
 	ArrayList<String> detailsList = new ArrayList<String>();
 	private final static Logger LOGGER = Logger.getLogger(Parser.class.getName());
@@ -132,7 +132,7 @@ public class Parser {
 			isTimedTask = true;
 		} else if(timeParser.isDeadLineTask()){
 			endTime = timeParser.getEndTime();
-			isDeadLineTask = true;
+			isDeadlineTask = true;
 		} else {
 			assert timeParser.isFloatingTask();
 			isFloatingTask = true;
@@ -162,8 +162,8 @@ public class Parser {
 		return endTime;
 	}
 	
-	public boolean isDeadLineTask(){
-		return isDeadLineTask;
+	public boolean isDeadlineTask(){
+		return isDeadlineTask;
 	}
 	
 	public boolean isFloatingTask(){

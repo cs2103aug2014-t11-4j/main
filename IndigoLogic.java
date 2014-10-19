@@ -16,8 +16,8 @@ public class IndigoLogic {
 	public String dateLeft;
 	private static ParserList ps = new ParserList();
 	private static Parser parser;
-	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yy");
-	private static final String FILE_NAME = "myTask";
+	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yy");
+	public static final String FILE_NAME = "myTask";
 	private static TaskList taskList = new TaskList();
 	
 	//Default constructor
@@ -26,8 +26,9 @@ public class IndigoLogic {
 	}
 	
 	public IndigoLogic(String userInput){
-		//loadData();
+		loadData();
 		feedback = readCommand(userInput);
+		saveData();
 	}
 	
 	private String readCommand(String userCommand) {
@@ -58,7 +59,8 @@ public class IndigoLogic {
 				Read classView = new Read(parser, ps, taskList);
 				if(!classView.view().equals("view all")){
 					assert !(classView.view().equals("view all"));
-				}{	return classView.view();
+				}{
+					return classView.view();
 				}
 			case UPDATE:
 				Update classEdit = new Update(parser, ps, taskList);
@@ -76,7 +78,6 @@ public class IndigoLogic {
 			default:
 				System.exit(0);
 		}
-		saveTaskList();
 		return "Saved";
 	}
 /*	
@@ -86,15 +87,15 @@ public class IndigoLogic {
 	}
 
 */
-	private static void saveTaskList() {
+	private static void saveData() {
 		//  save taskList into TEXT file
 		taskList.writeXMLDocument(FILE_NAME);
 	}
-/*
+
 	private static String loadData() {
 		// load data from the local disk into memory
-		return taskList.read(FILE_NAME, DATE_FORMAT);
+		return taskList.readFromXML(FILE_NAME);
 	}
 
-*/
+
 }

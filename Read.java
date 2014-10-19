@@ -6,7 +6,7 @@ import org.junit.Test;
 
 public class Read extends CommandClass{
 	
-	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yy");
+	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
 	private static final String FILE_NAME = "myTask";
 
 	@Override
@@ -32,9 +32,14 @@ public class Read extends CommandClass{
 			return viewDone();
 		} else if(parseris.getCommand().contains("-undone")){
 			return viewUndone();
-		} else {
-			taskList.writeXMLDocument(FILE_NAME);
-			return "Saved";
+		} else if (parseris.getCommand().contains("-f")){
+			return taskList.viewFloatingTask();
+		} else if (parseris.getCommand().contains("-d")){
+			return taskList.viewDeadlineTask(DATE_FORMAT);
+		} else if (parseris.getCommand().contains("-t")){
+			return taskList.viewTimedTask(DATE_FORMAT);
+		} else{
+			return taskList.viewAll(DATE_FORMAT);
 		}
 	}
 	
