@@ -50,13 +50,18 @@ public class TaskList {
 	public static void main(String[] args){
 		TaskList tasks = new TaskList();
 		tasks.addTask(new FloatingTask("floating task."));
-		tasks.addTask(new FloatingTask("floating task."));
+		FloatingTask task0 = new FloatingTask("completed floatingTask.");
+		task0.complete();
+		tasks.addTask(task0);
 		tasks.addTask(new TimedTask("timed task.", new DateTime(), new DateTime()));
 		tasks.addTask(new DeadlineTask("deadline task1.", new DateTime(12,10,3,2,3)));
 		tasks.addTask(new TimedTask("timed task.", new DateTime(), new DateTime()));
 		tasks.addTask(new DeadlineTask("deadline task3.", new DateTime(14,11,3,2,3)));
 		tasks.addTask(new DeadlineTask("deadline task2.", new DateTime(13,6,6,6,6)));
 		tasks.writeXMLDocument("NewFile");
+		TaskList tasks2 = new TaskList();
+		tasks2.readFromXML("NewFile");
+		tasks2.writeXMLDocument("AnotherFile");
 		
 	}
 	
@@ -192,21 +197,9 @@ public class TaskList {
 	        	taskID.appendChild(doc.createTextNode(i + ""));
 	        	taskTag.appendChild(taskID);
 	        	
-	        	Element numDates = doc.createElement("numDates:");
-	        	numDates.appendChild(doc.createTextNode(taskList.get(i).numDates + ""));
-	        	taskTag.appendChild(numDates);
-	        	
 	        	Element taskDetail = doc.createElement("TaskDescription");
 	        	taskDetail.appendChild(doc.createTextNode(taskList.get(i).getDescription()));
 	        	taskTag.appendChild(taskDetail);
-	        	
-	        	Element isCompleted = doc.createElement("CompletionStatus");
-	        	isCompleted.appendChild(doc.createTextNode(taskList.get(i).isCompleted() + ""));
-	        	taskTag.appendChild(isCompleted);
-	        	
-	        	Element isImportant = doc.createElement("Importance");
-	        	isImportant.appendChild(doc.createTextNode(taskList.get(i).isImportant()+ ""));
-	        	taskTag.appendChild(isImportant);
 	        	
 	        	switch (taskList.get(i).numDates){
 	        		case 0:
@@ -228,7 +221,21 @@ public class TaskList {
 	        		default:
 	        		assert false;
 	        	}
+	        	
+	        	Element numDates = doc.createElement("numDates");
+	        	numDates.appendChild(doc.createTextNode(taskList.get(i).numDates + ""));
+	        	taskTag.appendChild(numDates);
+	        	
+	        	Element isCompleted = doc.createElement("CompletionStatus");
+	        	isCompleted.appendChild(doc.createTextNode(taskList.get(i).isCompleted() + ""));
+	        	taskTag.appendChild(isCompleted);
+	        	
+	        	Element isImportant = doc.createElement("Importance");
+	        	isImportant.appendChild(doc.createTextNode(taskList.get(i).isImportant()+ ""));
+	        	taskTag.appendChild(isImportant);
 	        }
+	        
+	        
 	        
 	        writeToDisk(fileName, doc);
 	        
@@ -274,64 +281,11 @@ public class TaskList {
 
 		} catch (Throwable err) {
 		    System.out.println("SAXparser Exception.");
-		    writeXMLDocument(fileName);
+		    //writeXMLDocument(fileName);
 		}
 		return fileName + " is loaded.";
 	}
 	
-
-	private void readTimedTask(DateTimeFormatter dtf, String line) {
-		int markerIndex = line.indexOf(".");
-		int markerDone = line.indexOf("@isDone");
-		int markerImpor = line.indexOf("@isImpor");
-		int markerFrom = line.indexOf("@from");
-		int markerTo = line.indexOf("@to");
-		DateTime tempStartTime = dtf.parseDateTime(line.substring(markerFrom+6,markerTo-1));
-		DateTime tempEndTime = dtf.parseDateTime(line.substring(markerTo+4));
-		TimedTask tempTask = new TimedTask(line.substring(markerIndex+2,markerDone-1),tempStartTime,tempEndTime);
-		if (line.substring(markerDone,markerImpor-1).contains("true")){
-			tempTask.complete();
-		}
-		if (line.substring(markerImpor,markerFrom-1).contains("true")){
-			tempTask.highlight();
-		}
-		taskList.add(tempTask);
-	}
-
-	private void readDeadlineTask(DateTimeFormatter dtf, String line) {
-		int markerIndex = line.indexOf(".");
-		int markerDone = line.indexOf("@isDone");
-		int markerImpor = line.indexOf("@isImpor");
-		int markerDue = line.indexOf("@due");
-		DateTime time = dtf.parseDateTime(line.substring(markerDue+5));
-		DeadlineTask newTask = new DeadlineTask(line.substring(markerIndex+2,markerDone-1),time);
-		if (line.substring(markerDone,markerImpor-1).contains("true")){
-			newTask.complete();
-		}
-		if (line.substring(markerImpor,markerDue-1).contains("true")){
-			newTask.highlight();
-		}
-		//System.out.println(newTask.toString(dtf));
-		taskList.add(newTask);
-	}
-
-	private void readFloatingTask(String line) {
-		// assert the storage file is in the right format
-		assert line.contains("@isDone");
-		
-		int markerIndex = line.indexOf(".");
-		int markerDone = line.indexOf("@isDone");
-		int markerImpor = line.indexOf("@isImpor");
-		FloatingTask someTask = new FloatingTask(line.substring(markerIndex+2,markerDone-1));
-		if (line.substring(markerDone,markerImpor-1).contains("true")){
-			someTask.complete();
-		}
-		if (line.substring(markerImpor).contains("true")){
-			someTask.highlight();
-		}
-		taskList.add(someTask);
-		//System.out.println("floating task indentified");
-	}
 
 	public boolean complete(int index) {
 		return taskList.get(index-1).complete();
