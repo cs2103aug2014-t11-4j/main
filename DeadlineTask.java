@@ -17,7 +17,7 @@ public class DeadlineTask extends FloatingTask{
 	public DeadlineTask(String description, DateTime time) {
 		super(description);
 		endTime = time;
-		typeIndex = 1;
+		numDates = 1;
 	}
 
 	public DeadlineTask(String description) {

@@ -20,7 +20,7 @@ public class TimedTask extends DeadlineTask {
 	public TimedTask(String description, DateTime startTime, DateTime endTime){
 		super(description, endTime);
 		interval = new Interval(startTime, endTime);
-		typeIndex = 0;
+		numDates = 2;
 	}
 	
 	public DateTime getStartTime(){
