@@ -24,7 +24,7 @@ public class Create extends CommandClass {
 		to_Do = new FloatingTask(parseris.getCommand());
 	}
 	
-	@Test
+	//@Test
 	public void testCreate(){
 		Parser testParse = new Parser("add code finish v0.2");
 		assertEquals(add(), to_Do.toString() + "is added to taskList!");
