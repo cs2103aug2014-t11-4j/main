@@ -251,10 +251,9 @@ public class TaskList {
 			Transformer transformer;
 			transformer = transformerFactory.newTransformer();
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
 			
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(fileName));
+			StreamResult result = new StreamResult(new File(fileName+".xml"));
 			
 			transformer.transform(source, result);
 			 
@@ -272,7 +271,7 @@ public class TaskList {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		try {
 			
-		    InputStream xmlInput  = new FileInputStream(fileName);
+		    InputStream xmlInput  = new FileInputStream(fileName+".xml");
 		    SAXParser saxParser = factory.newSAXParser();
 
 		    SaxHandler handler   = new SaxHandler();

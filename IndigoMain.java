@@ -208,13 +208,15 @@ public class IndigoMain {
 	}
 
 	private static String saveTaskList() {
-		//  save taskList into TEXT file
-		return taskList.write(FILE_NAME, DATE_FORMAT);
+		//  TODO save taskList into TEXT file
+		taskList.writeXMLDocument(FILE_NAME);
+		return "";
 	}
 
 	private static String loadData() {
-		// load data from the local disk into memory
-		return taskList.read(FILE_NAME, DATE_FORMAT);
+		// TODO load data from the local disk into memory
+		taskList.readFromXML(FILE_NAME);
+		return "";
 	}
 	
 	public static String viewDone(){
