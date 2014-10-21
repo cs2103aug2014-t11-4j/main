@@ -1,6 +1,3 @@
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 /**
  * A floating task is a task with the following 4 fields
@@ -85,7 +82,12 @@ public class FloatingTask implements Comparable<FloatingTask>{
 	@Override
 	public boolean equals(Object anotherTask) {
 		// TODO Auto-generated method stub
-		return false;
+		if (anotherTask instanceof FloatingTask){
+			FloatingTask myTask = (FloatingTask) anotherTask;
+			return this.getDescription().equals(myTask.getDescription());
+		} else {
+			return false;
+		}
 	}
 	
 	public boolean complete(){
@@ -127,9 +129,13 @@ public class FloatingTask implements Comparable<FloatingTask>{
 	}
 
 	@Override
+	/* compare the two floating task
+		by default: deadlinetask and timedtask will be placed at the front, follow a chronological order
+		then it is arranged by taskDescription alphabetically
+		*/
 	public int compareTo(FloatingTask aTask) {
 		if (this.numDates != aTask.numDates){
-			return this.numDates - aTask.numDates;
+			return  aTask.numDates - this.numDates;
 		} else if (this.numDates == 2){
 			return this.taskDescription.compareTo(aTask.taskDescription);
 		} else {
