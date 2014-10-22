@@ -294,6 +294,10 @@ public class TaskList {
 		return taskList.get(index-1);
 	}
 	
+	public int getSize(){
+		return taskList.size();
+	}
+	
 	public ArrayList<FloatingTask> getList(){
 		return taskList;
 	}
