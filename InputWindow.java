@@ -67,20 +67,29 @@ public class InputWindow extends JFrame {
 		
 		
 		createUserInputPanel(mainPanel);
-		createTabbedOutputPanel(mainPanel);
+		createOutputPanel(mainPanel);
 		
 		displayLayers.add(mainPanel); 
 	}
 	
-	private void createTabbedOutputPanel(Container mainPanel) {
+	private void createOutputPanel(Container mainPanel) {
 		JPanel topPanel = new JPanel(new GridBagLayout());
-		topPanel.setPreferredSize(new Dimension(540,225));
+		topPanel.setPreferredSize(new Dimension(600,200));
+		GridBagConstraints constraints;
+		constraints = setConstraints(5);
+		
+		addTabbedPane(topPanel);
+		
+		mainPanel.add(topPanel, constraints);
+		
+		
+	}
+
+	private void addTabbedPane(JPanel topPanel) {
 		GridBagConstraints constraints;
 		constraints = setConstraints(4);
-		
 		taskDisplay = new TabbedPaneDisplay();
-		mainPanel.add(taskDisplay, constraints);
-		
+		topPanel.add(taskDisplay, constraints);	
 		
 	}
 
@@ -148,27 +157,34 @@ public class InputWindow extends JFrame {
 	private GridBagConstraints setConstraints(int componentIndex) {
 		GridBagConstraints constraints;
 		Insets bottomPanel = new Insets(0,0,0,0);
+		Insets topPanel = new Insets(0,0,0,0);
 		Insets tabbedPaneDisplayInsets = new Insets(5,20,0,20);
 		Insets readInputInsets = new Insets(5,20,5,20);
 		Insets liveUserFeedbackInsets = new Insets(5,20,30,20);
 		
-		if(componentIndex == 1){
+		if(componentIndex == 5){
+			constraints = new GridBagConstraints(0,0,3,3,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,topPanel,0,0);
+			return constraints;
+		}
+		else if(componentIndex == 4){
+			constraints = new GridBagConstraints(0,3,3,3,0.1,0.0,GridBagConstraints.NORTH,GridBagConstraints.BOTH,tabbedPaneDisplayInsets,0,0);
+			return constraints;
+		}
+		else if(componentIndex == 1){
 			constraints = new GridBagConstraints(0,3,3,1,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,bottomPanel,0,0);
 			return constraints;
 		}
 		else if(componentIndex == 2){
-			constraints = new GridBagConstraints(0,2,3,1,0.1,0.0,GridBagConstraints.NORTH,GridBagConstraints.BOTH,readInputInsets,0,0);
+			constraints = new GridBagConstraints(0,0,3,1,0.1,0.0,GridBagConstraints.NORTH,GridBagConstraints.BOTH,readInputInsets,0,0);
 			
 			return constraints;
 		}
 		else if(componentIndex == 3){
-			constraints = new GridBagConstraints(0,3,3,1,0.0,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,liveUserFeedbackInsets,0,0);
+			constraints = new GridBagConstraints(0,1,3,1,0.0,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,liveUserFeedbackInsets,0,0);
 			return constraints;
 		}
-		else if(componentIndex == 4){
-			constraints = new GridBagConstraints(0,0,3,3,0.1,0.0,GridBagConstraints.NORTH,GridBagConstraints.BOTH,tabbedPaneDisplayInsets,0,0);
-			return constraints;
-		}
+		
+		
 		return null;
 	}
 }
