@@ -159,14 +159,14 @@ public class TaskList {
 	} 
 	
 	public String viewNormal(DateTimeFormatter dtf){
-		StringBuilder result = new StringBuilder("A default view of tasks:");
+		StringBuilder result = new StringBuilder("A default view of tasks:" + newLine);
 		for (int i=0,j=1;i<taskList.size();i++){
-			if (taskList.get(i).numDates == 2){
-				result.append(j++ + ". " + taskList.get(i).toString());
+			if (taskList.get(i).numDates == 0){
+				result.append(j++ + ". " + taskList.get(i).toString() + newLine);
 			} else if (taskList.get(i).numDates == 1){
-				result.append(j++ + ". " + taskList.get(i).toDeadlineTask().toString());
+				result.append(j++ + ". " + taskList.get(i).toDeadlineTask().toString() + newLine);
 			} else {
-				result.append(j++ + ". " + taskList.get(i).toTimedTask().toString());
+				result.append(j++ + ". " + taskList.get(i).toTimedTask().toString() + newLine);
 			}
 		}
 		return result.toString();
@@ -286,11 +286,12 @@ public class TaskList {
 		return fileName + " is loaded.";
 	}
 	
-
+	// index start from 1
 	public boolean complete(int index) {
 		return taskList.get(index-1).complete();
 	}
 
+	// index start from 1
 	public FloatingTask get(int index) {
 		return taskList.get(index-1);
 	}

@@ -3,6 +3,7 @@ package test;
 import static org.junit.Assert.*;
 import indigoSrc.DeadlineTask;
 import indigoSrc.FloatingTask;
+import indigoSrc.IndigoLogic;
 import indigoSrc.TaskList;
 import indigoSrc.TimedTask;
 
@@ -17,7 +18,7 @@ public class testTaskList {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		String[] strs = {"",
+		String[] strs = {"kk",
 				" pr         oje ct        meeti    ng",
 				"p@@r$$$oj##e ct meetin#$g        ",
 				"preject meeting",
@@ -33,6 +34,7 @@ public class testTaskList {
 			FloatingTask testTask = new FloatingTask(str);
 			testList.addTask(testTask);
 		}
+		testList.get(2).complete();
 		//add 3 deadlineTask, 3 timedTask
 		for (int i=0;i<testDates.length-1;i++){
 			DeadlineTask testTask1 = new DeadlineTask(testStr[0],testDates[i]);
@@ -40,6 +42,7 @@ public class testTaskList {
 			testList.addTask(testTask1);
 			testList.addTask(testTask2);
 		}
+		testList.get(8).complete();
 		
 	}
 
@@ -47,9 +50,13 @@ public class testTaskList {
 	public void test() {
 		TaskList list1 = new TaskList();
 		testList.writeXMLDocument("testStorage1");
-		list1.readFromXML("testStroage");
-		for (int i=0;i<list1.getList().size();i++){
-			assertEquals(list1.get(i),testList.get(i));
+		list1.readFromXML("testStorage1");
+		list1.writeXMLDocument("testStorage2");
+		for (int i=1;i<list1.getList().size()+1;i++){
+			assertEquals(list1.viewFloatingTask(),testList.viewFloatingTask());
+			assertEquals(list1.viewDeadlineTask(IndigoLogic.DATE_FORMAT),testList.viewDeadlineTask(IndigoLogic.DATE_FORMAT));
+			assertEquals(list1.viewTimedTask(IndigoLogic.DATE_FORMAT),testList.viewTimedTask(IndigoLogic.DATE_FORMAT));
+			assertEquals(list1.viewNormal(IndigoLogic.DATE_FORMAT),testList.viewNormal(IndigoLogic.DATE_FORMAT));
 		}
 	}
 
