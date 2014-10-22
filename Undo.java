@@ -13,9 +13,9 @@ public class Undo extends CommandClass {
 	}
 
 	public Undo(Parser parsing, ParserList parseL, TaskList taskList){
-		parseris = parsing;
+		parserVar = parsing;
 		psl = parseL;
-		this.taskList = taskList;
+		this.taskListVar = taskList;
 	}
 	
 	private static String undo(){
@@ -27,20 +27,20 @@ public class Undo extends CommandClass {
 		COMMAND_KEY comm = commandInput.getKey();
 		switch (comm){
 			case CREATE:
-				taskList.addTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
+				taskListVar.addTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
 				return "Undo a create";
 			case READ:
 				return "Cannot undo a read";
 			case UPDATE:
-				taskList.editTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
+				taskListVar.editTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
 				return "Undo an Update";
 			case DELETE:
-				taskList.deleteTask(commandPre.getEditIndex());
+				taskListVar.deleteTask(commandPre.getEditIndex());
 				return "Undo a delete";
 			case UNDO:
 				return "Undo an undo?";
 			case UNCOMPLETE:
-				taskList.get(commandPre.getEditIndex()).unComplete();
+				taskListVar.get(commandPre.getEditIndex()).unComplete();
 				return "undo an uncomplete";
 			default: 
 				return "WalauEh";

@@ -11,9 +11,9 @@ public class Update extends CommandClass{
 	}
 
 	public Update(Parser parsing, ParserList parseL, TaskList taskList){
-		parseris = parsing;
+		parserVar = parsing;
 		psl = parseL;
-		this.taskList = taskList; 
+		this.taskListVar = taskList; 
 
 	}
 	
@@ -24,14 +24,14 @@ public class Update extends CommandClass{
 	}
 	
 	public String edit() throws ArrayIndexOutOfBoundsException{
-		int index = parseris.getEditIndex();
-		FloatingTask task = new FloatingTask(parseris.getCommand());
+		int index = parserVar.getEditIndex();
+		FloatingTask task = new FloatingTask(parserVar.getCommand());
 		try{
-			psl.push(new Parser("edit " + index + " " + taskList.get(index).getDescription()));
+			psl.push(new Parser("edit " + index + " " + taskListVar.get(index).getDescription()));
 		} catch (ArrayIndexOutOfBoundsException err){
 			return "index is not within the number of tasks in taskList";
 		}
-		taskList.editTask(index, task);
+		taskListVar.editTask(index, task);
 		return "Task updated";
 	}
 

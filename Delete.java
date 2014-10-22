@@ -11,9 +11,9 @@ public class Delete extends CommandClass{
 	}
 	
 	public Delete(Parser parsing, ParserList parseL, TaskList taskList){
-		parseris = parsing;
+		parserVar = parsing;
 		psl = parseL;
-		this.taskList = taskList;
+		this.taskListVar = taskList;
 	}
 	
 	@Test
@@ -23,13 +23,13 @@ public class Delete extends CommandClass{
 	}
 	
 	public String delete() throws ArrayIndexOutOfBoundsException{
-		int index = parseris.getEditIndex();
+		int index = parserVar.getEditIndex();
 		try{
-			psl.push(new Parser("add " + index + " " + taskList.get(index).getDescription()));
+			psl.push(new Parser("add " + index + " " + taskListVar.get(index).getDescription()));
 		} catch (ArrayIndexOutOfBoundsException err){
 			return "index is not within the number of tasks in taskList";
 		}
-		taskList.deleteTask(index);
+		taskListVar.deleteTask(index);
 		return "Task deleted";
 	}
 

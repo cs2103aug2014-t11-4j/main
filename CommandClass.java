@@ -3,9 +3,9 @@
 //@Ken
 
 public abstract class CommandClass {
-	protected static Parser parseris; 
+	protected static Parser parserVar; 
 	protected static ParserList psl = new ParserList();
-	protected static TaskList taskList = new TaskList();
+	protected static TaskList taskListVar = new TaskList();
 	
 	public abstract String execute();
 	

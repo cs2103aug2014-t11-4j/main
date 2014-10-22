@@ -16,9 +16,9 @@ public class Read extends CommandClass{
 	}
 	
 	public Read(Parser parsing, ParserList parseL, TaskList taskList){
-		parseris = parsing;
+		parserVar = parsing;
 		psl = parseL;
-		this.taskList = taskList;
+		this.taskListVar = taskList;
 	}
 	
 /*	@Test
@@ -28,27 +28,27 @@ public class Read extends CommandClass{
 	}
 	*/
 	public String view(){
-		if(parseris.getCommand().contains("-done")){
+		if(parserVar.getCommand().contains("-done")){
 			return viewDone();
-		} else if(parseris.getCommand().contains("-undone")){
+		} else if(parserVar.getCommand().contains("-undone")){
 			return viewUndone();
-		} else if (parseris.getCommand().contains("-f")){
-			return taskList.viewFloatingTask();
-		} else if (parseris.getCommand().contains("-d")){
-			return taskList.viewDeadlineTask(DATE_FORMAT);
-		} else if (parseris.getCommand().contains("-t")){
-			return taskList.viewTimedTask(DATE_FORMAT);
+		} else if (parserVar.getCommand().contains("-f")){
+			return taskListVar.viewFloatingTask();
+		} else if (parserVar.getCommand().contains("-d")){
+			return taskListVar.viewDeadlineTask(DATE_FORMAT);
+		} else if (parserVar.getCommand().contains("-t")){
+			return taskListVar.viewTimedTask(DATE_FORMAT);
 		} else{
-			return taskList.viewAll(DATE_FORMAT);
+			return taskListVar.viewAll(DATE_FORMAT);
 		}
 	}
 	
 	public String viewDone(){
-		return taskList.viewDone();
+		return taskListVar.viewDone();
 	}
 	
 	public String viewUndone(){
-		return taskList.viewUndone();
+		return taskListVar.viewUndone();
 	}
 
 }

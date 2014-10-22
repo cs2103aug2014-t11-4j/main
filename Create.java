@@ -4,10 +4,10 @@ import org.junit.Test;
 
 public class Create extends CommandClass {
 
-	FloatingTask to_Do = new FloatingTask(parseris.getCommand());{
-		assert parseris.getCommand() instanceof String;
+	FloatingTask to_Do = new FloatingTask(parserVar.getCommand());{
+		assert parserVar.getCommand() instanceof String;
 	}
-	Integer editIndex = parseris.getEditIndex();{
+	Integer editIndex = parserVar.getEditIndex();{
 		assert editIndex instanceof Integer;
 	}
 	
@@ -18,15 +18,15 @@ public class Create extends CommandClass {
 	}	
 	
 	public Create(Parser parsing, ParserList pslist, TaskList taskList){
-		parseris = parsing;
+		parserVar = parsing;
 		psl = pslist;
-		this.taskList = taskList;
-		if (parseris.isDeadlineTask()){
-			to_Do = new DeadlineTask(parseris.getCommand(),parseris.getEndTime());
-		} else if (parseris.isTimedTask()){
-			to_Do = new TimedTask(parseris.getCommand(),parseris.getStartTime(),parseris.getEndTime());
+		this.taskListVar = taskList;
+		if (parserVar.isDeadlineTask()){
+			to_Do = new DeadlineTask(parserVar.getCommand(),parserVar.getEndTime());
+		} else if (parserVar.isTimedTask()){
+			to_Do = new TimedTask(parserVar.getCommand(),parserVar.getStartTime(),parserVar.getEndTime());
 		} else {
-			to_Do = new FloatingTask(parseris.getCommand());
+			to_Do = new FloatingTask(parserVar.getCommand());
 		}
 	}
 	
@@ -38,10 +38,10 @@ public class Create extends CommandClass {
 	
 	public String add() {
 		if(editIndex==null){
-			psl.push(new Parser("delete" + taskList.getList().size()));
-			taskList.addTask(to_Do);
+			psl.push(new Parser("delete" + taskListVar.getList().size()));
+			taskListVar.addTask(to_Do);
 		} else {
-			taskList.addTask(editIndex, to_Do);
+			taskListVar.addTask(editIndex, to_Do);
 			psl.push(new Parser("delete" + editIndex));
 		}
 		return to_Do.toString() + "is added to taskList!";
