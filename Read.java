@@ -74,15 +74,11 @@ public class Read extends CommandClass{
 		DateTime now = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
-
-		System.out.println(now.getYear());
-		System.out.println(now.getDayOfYear());
 		
 		String newLine = System.getProperty("line.separator");
 		StringBuilder result = new StringBuilder("Today's tasks are:" + newLine);
-		int ntlsize = taskListVar.getSize();
-		System.out.println(ntlsize);
-		for (int i=0, j=1; i<ntlsize; i++){
+		int tlSize = taskListVar.getSize();
+		for (int i=0, j=1; i<tlSize; i++){
 			if ((taskListVar.get(i+1) instanceof DeadlineTask) && !(taskListVar.get(i+1) instanceof TimedTask)){
 				DeadlineTask temp = (DeadlineTask) taskListVar.get(i+1);
 				if((temp.getTime().getYear() == yearNow) && (temp.getTime().getDayOfYear() == dayNow)){
@@ -98,6 +94,29 @@ public class Read extends CommandClass{
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
 		int day7 = dayNow + 1;
+		
+		String newLine = System.getProperty("line.separator");
+		StringBuilder result = new StringBuilder("Today's tasks are:" + newLine);
+		int tlSize = taskListVar.getSize();
+		for (int i=0, j=1; i<tlSize; i++){
+			if ((taskListVar.get(i+1) instanceof DeadlineTask) && 
+				!(taskListVar.get(i+1) instanceof TimedTask)){
+				DeadlineTask temp = (DeadlineTask) taskListVar.get(i+1);
+				DateTime tempDate = temp.getTime();
+				int tempDateDay = tempDate.getDayOfYear();
+				if((tempDate.getYear() == yearNow) && 
+					((tempDateDay >= dayNow) && (tempDateDay <= day7))){
+					result.append("[NO." + j++ + "]" + temp.toString(DATE_FORMAT) + newLine);
+				}
+			}
+		}
+		return result.toString();
+	}
+	
+	public static String viewOverDue(){
+		DateTime now = new DateTime();
+		int yearNow = now.getYear();
+		int dayNow = now.getDayOfYear();
 
 		System.out.println(now.getYear());
 		System.out.println(now.getDayOfYear());
@@ -107,13 +126,13 @@ public class Read extends CommandClass{
 		int ntlsize = taskListVar.getSize();
 		System.out.println(ntlsize);
 		for (int i=0, j=1; i<ntlsize; i++){
-			if ((taskListVar.get(i+1) instanceof DeadlineTask) && 
-				!(taskListVar.get(i+1) instanceof TimedTask)){
+			if ((taskListVar.get(i+1) instanceof DeadlineTask) && !(taskListVar.get(i+1) instanceof TimedTask)){
 				DeadlineTask temp = (DeadlineTask) taskListVar.get(i+1);
 				DateTime tempDate = temp.getTime();
 				int tempDateDay = tempDate.getDayOfYear();
-				if((tempDate.getYear() == yearNow) && 
-					((tempDateDay >= dayNow) && (tempDateDay <= day7))){
+				int tempDateYear = tempDate.getYear();
+				if((tempDateYear < yearNow) || 
+						((tempDateDay < dayNow) && (tempDateYear <= yearNow))){
 					result.append("[NO." + j++ + "]" + temp.toString(DATE_FORMAT) + newLine);
 				}
 			}
