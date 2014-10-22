@@ -1,3 +1,4 @@
+package indigoSrc;
 /** this class is meant to read in the command line from the user in the form of a string
  * and parse it so that the logic can access it simply. 
  * currently implemented: 

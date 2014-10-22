@@ -1,3 +1,4 @@
+package indigoSrc;
 public class Command{
 	private COMMAND_KEY key;
 	

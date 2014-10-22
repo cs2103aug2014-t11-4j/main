@@ -1,3 +1,4 @@
+package indigoSrc;
 
 /**
  * A floating task is a task with the following 4 fields
@@ -65,10 +66,6 @@ public class FloatingTask implements Comparable<FloatingTask>{
 		return taskDescription;
 	}
 
-	public boolean editImportance(boolean newImportance) {
-		isImportant = newImportance;
-		return isImportant;
-	}
 
 	public String toString() {
 		StringBuilder result = new StringBuilder("");

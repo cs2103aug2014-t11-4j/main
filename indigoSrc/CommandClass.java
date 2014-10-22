@@ -1,3 +1,4 @@
+package indigoSrc;
 //This is the Command abstract class used in the Logic component implementing the 
 //Command Pattern. The methods return String because they are used for testing.
 //@Ken

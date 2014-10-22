@@ -1,3 +1,4 @@
+package indigoSrc;
 public enum COMMAND_KEY {
 	CREATE, READ, UPDATE, DELETE, UNDO, COMPLETE, UNCOMPLETE, REDO
 }
