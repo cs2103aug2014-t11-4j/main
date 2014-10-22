@@ -54,7 +54,8 @@ public class InputWindow extends JFrame {
 
 	public void initialize(JFrame mainWindow){	
 		mainWindow.setBounds(300, 150, 700, 400);
-		mainWindow.setResizable(false);
+		//TODO
+		mainWindow.setResizable(true);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
