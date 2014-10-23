@@ -14,7 +14,6 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class IndigoLogic {
 	public String feedback;
-	public String dateLeft;
 	private static ParserList ps = new ParserList();
 	private static Parser parser;
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yy");
@@ -57,7 +56,7 @@ public class IndigoLogic {
 				Create classAdd = new Create(parser, ps, taskList);
 				return classAdd.add();
 			case READ:
-				Read classView = new Read(parser, ps, taskList);
+				Read classView = new Read(parser, taskList);
 				if(!classView.view().equals("view all")){
 					assert !(classView.view().equals("view all"));
 				}{

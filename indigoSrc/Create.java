@@ -5,10 +5,10 @@ import org.junit.Test;
 
 public class Create extends CommandClass {
 
-	FloatingTask toDo = new FloatingTask(parserVar.getCommand());{
+	FloatingTask toDo;{
 		assert parserVar.getCommand() instanceof String;
 	}
-	Integer editIndex = parserVar.getEditIndex();{
+	Integer editIndex;{
 		assert editIndex instanceof Integer;
 	}
 	
@@ -22,6 +22,7 @@ public class Create extends CommandClass {
 		parserVar = parsing;
 		psl = pslist;
 		taskListVar = taskList;
+		editIndex = parserVar.getEditIndex();
 		if (parserVar.isDeadlineTask()){
 			toDo = new DeadlineTask(parserVar.getCommand(),parserVar.getEndTime());
 		} else if (parserVar.isTimedTask()){
@@ -38,14 +39,9 @@ public class Create extends CommandClass {
 	}
 	
 	public String add() {
-		if(editIndex==null){
-			psl.push(new Parser("delete" + taskListVar.getList().size()));
-			taskListVar.addTask(toDo);
-		} else {
-			taskListVar.addTask(editIndex, toDo);
-			psl.push(new Parser("delete" + editIndex));
-		}
-		return toDo.toString() + "is added to taskList!";
+		taskListVar.addTask(editIndex, toDo);
+		psl.push(new Parser("delete " + editIndex));
+		return toDo.toString() + " is added to taskList!";
 	}
 
 }

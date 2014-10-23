@@ -18,9 +18,8 @@ public class Read extends CommandClass{
 		return view();
 	}
 	
-	public Read(Parser parsing, ParserList parseL, TaskList taskList){
+	public Read(Parser parsing, TaskList taskList){
 		parserVar = parsing;
-		psl = parseL;
 		this.taskListVar = taskList;
 	}
 	
@@ -41,7 +40,7 @@ public class Read extends CommandClass{
 			return taskListVar.viewDeadlineTask(DATE_FORMAT);
 		} else if (parserVar.getCommand().contains("-t")){
 			return taskListVar.viewTimedTask(DATE_FORMAT);
-		} else if (parserVar.getCommand().contains("today")){
+		} else if (parserVar.getCommand().contains("-today")){
 			return viewToday(taskListVar);
 		} else
 			return taskListVar.viewAll(DATE_FORMAT);
@@ -92,7 +91,7 @@ public class Read extends CommandClass{
 			if ((test.get(i+1) instanceof DeadlineTask) && !(test.get(i+1) instanceof TimedTask)){
 				DeadlineTask temp = (DeadlineTask) test.get(i+1);
 				if((temp.getTime().getYear() == yearNow) && (temp.getTime().getDayOfYear() == dayNow)){
-					result.append("[NO." + j++ + "]" + temp.toString(DATE_FORMAT) + newLine);
+					result.append("[No." + j++ + "]" + temp.toString(DATE_FORMAT) + newLine);
 				}
 			}
 		}

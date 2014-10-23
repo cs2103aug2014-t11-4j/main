@@ -22,10 +22,10 @@ import org.joda.time.DateTime;
 public class Parser {
 	private static Logger logger = Logger.getLogger("Parser");
 	private String sortedCommand;
-	String keyWord  			= null;  				//stores the key command "add"/"delete" to return to logic
-	String commandWords  		= null; 				//stores the remaining words excluding key command
+	String keyWord  			;  				//stores the key command "add"/"delete" to return to logic
+	String commandWords  		; 				//stores the remaining words excluding key command
 	String [] commandSentence 	= new String[2]; 		//to help store the splited string command
-	String [] details 		  	= null; 				//store the remaining words excluding key command individually
+	String [] details 		  	; 				//store the remaining words excluding key command individually
 	String toDo               	= "";//stores the final command to return to logic
 	private DateTime startTime;
 	private DateTime endTime;
@@ -50,7 +50,6 @@ public class Parser {
 		testInput = sc.nextLine();
 		
 		Parser test = new Parser(testInput);
-		sc.close(); 
 	}
 	
 	public String getCommand() {
@@ -116,12 +115,15 @@ public class Parser {
 			case "delete":
 				keyWord = "delete";
 				break;
+				
 			case "undo":
 				keyWord = "undo";
 				break;
+				
 			default:
 				keyWord = "view";
 			}
+			toDo = userCommand + "";
 		}
 		
 		TimeParser timeParser = new TimeParser(userCommand);

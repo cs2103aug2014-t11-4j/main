@@ -25,11 +25,7 @@ public class Delete extends CommandClass{
 	
 	public String delete() throws ArrayIndexOutOfBoundsException{
 		int index = parserVar.getEditIndex();
-		try{
-			psl.push(new Parser("add " + index + " " + taskListVar.get(index).getDescription()));
-		} catch (ArrayIndexOutOfBoundsException err){
-			return "index is not within the number of tasks in taskList";
-		}
+		psl.push(new Parser("add " + index + " " + taskListVar.get(index).getDescription()));
 		taskListVar.deleteTask(index);
 		return "Task deleted";
 	}
