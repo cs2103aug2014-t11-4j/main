@@ -23,6 +23,7 @@ public class testTaskList {
 				"p@@r$$$oj##e ct meetin#$g        ",
 				"preject meeting",
 				"project meeting"};
+		// boundary case for string with spaces, special chars
 		testStr = strs;
 		DateTime[] dates = {new DateTime(2010,10,10,18,0,0),
 				new DateTime(2011,9,1,22,22,22),

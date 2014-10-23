@@ -54,7 +54,7 @@ public class InputWindow extends JFrame {
 	}
 
 	public void initialize(JFrame mainWindow){	
-		mainWindow.setBounds(300, 150, 700, 400);
+		mainWindow.setBounds(300, 150, 700, 600);
 		mainWindow.setResizable(true);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -96,7 +96,7 @@ public class InputWindow extends JFrame {
 
 	private void createUserInputPanel(Container mainPanel){
 		JPanel bottomPanel = new JPanel(new GridBagLayout());
-		bottomPanel.setPreferredSize(new Dimension(600,100));
+		bottomPanel.setPreferredSize(new Dimension(600,200));
 		GridBagConstraints constraints;
 		
 		constraints = setConstraints(1);
@@ -161,7 +161,7 @@ public class InputWindow extends JFrame {
 		Insets topPanel = new Insets(0,0,0,0);
 		Insets tabbedPaneDisplayInsets = new Insets(5,20,0,20);
 		Insets readInputInsets = new Insets(5,20,5,20);
-		Insets liveUserFeedbackInsets = new Insets(5,20,30,20);
+		Insets liveUserFeedbackInsets = new Insets(0,20,10,20);
 		
 		if(componentIndex == 5){
 			constraints = new GridBagConstraints(0,0,3,3,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,topPanel,0,0);
@@ -172,7 +172,7 @@ public class InputWindow extends JFrame {
 			return constraints;
 		}
 		else if(componentIndex == 1){
-			constraints = new GridBagConstraints(0,3,3,1,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,bottomPanel,0,0);
+			constraints = new GridBagConstraints(0,3,3,2,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,bottomPanel,0,0);
 			return constraints;
 		}
 		else if(componentIndex == 2){
@@ -181,7 +181,7 @@ public class InputWindow extends JFrame {
 			return constraints;
 		}
 		else if(componentIndex == 3){
-			constraints = new GridBagConstraints(0,1,3,1,0.0,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,liveUserFeedbackInsets,0,0);
+			constraints = new GridBagConstraints(0,2,3,1,0.0,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,liveUserFeedbackInsets,0,0);
 			return constraints;
 		}
 		

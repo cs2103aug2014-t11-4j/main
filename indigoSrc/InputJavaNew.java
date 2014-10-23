@@ -207,7 +207,7 @@ public class InputJavaNew  extends JFrame{
 	public void showFeedback(IndigoLogic logic){
 
 		taskDisplay.setEditable(false);
-		taskDisplay.setText(logic.dateLeft + "\n" + logic.feedback + "\n");
+		taskDisplay.setText(logic.feedback + "\n");
 	}
 	public void showTaskList(){
 		for (int i=0; i < inputs.size(); i++){

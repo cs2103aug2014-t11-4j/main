@@ -4,7 +4,7 @@ package indigoSrc;
 //@Ken
 
 public abstract class CommandClass {
-	protected static Parser parserVar; 
+	protected Parser parserVar; 
 	protected static ParserList psl = new ParserList();
 	protected static TaskList taskListVar = new TaskList();
 	
