@@ -1,6 +1,8 @@
 package indigoSrc;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -57,6 +59,9 @@ public class Read extends CommandClass{
 	
 	public static void main(String args[]){
 		TaskList test = new TaskList();
+		ArrayList<DeadlineTask> today = new ArrayList<DeadlineTask>();
+		ArrayList<DeadlineTask> thisWeek = new ArrayList<DeadlineTask>();
+		ArrayList<DeadlineTask> overDue = new ArrayList<DeadlineTask>();
 		DeadlineTask time0 = new DeadlineTask("buy book", new DateTime(2014,10,23,11,00,00));
 		DeadlineTask time1 = new DeadlineTask("read book", new DateTime(2014,10,24,19,15,00));
 		DeadlineTask time2 = new DeadlineTask("buy bread", new DateTime(2014,10,22,19,15,00));
@@ -73,15 +78,18 @@ public class Read extends CommandClass{
 		test.addTask(time6);
 		
 		//Test the viewToday method. Only "buy book" should appear.
-		System.out.println(viewToday(test));
+		System.out.println(viewToday(test, today));
+		assertEquals(1, today.size());
 		//Test the viewThisWeek method. "buy book" and "read book" only should appear.
-		System.out.println(viewThisWeek(test));
+		System.out.println(viewThisWeek(test, thisWeek));
+		assertEquals(2, thisWeek.size());
 		//Test overdue view. "buy bread", "eat bread", "buy movie ticket" should appear.
-		System.out.println(viewOverDue(test));
+		System.out.println(viewOverDue(test, overDue));
+		assertEquals(3, overDue.size());
 	}
 	
 	//This method is to find tasks which are due today.
-	public static String viewToday(TaskList test){
+	public static String viewToday(TaskList test, ArrayList<DeadlineTask> today){
 		DateTime now = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
@@ -93,6 +101,7 @@ public class Read extends CommandClass{
 				DeadlineTask temp = (DeadlineTask) test.get(i+1);
 				if((temp.getTime().getYear() == yearNow) && (temp.getTime().getDayOfYear() == dayNow)){
 					result.append("[NO." + j++ + "]" + temp.toString(DATE_FORMAT) + newLine);
+					today.add(temp);
 				}
 			}
 		}
@@ -102,7 +111,7 @@ public class Read extends CommandClass{
 	//This method is to find tasks which are due this week. 
 	//It does not follow the pattern on Monday to Sunday. It takes tasks of
 	//the next seven days.
-	public static String viewThisWeek(TaskList test){
+	public static String viewThisWeek(TaskList test, ArrayList<DeadlineTask> today){
 		DateTime now = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
@@ -119,6 +128,7 @@ public class Read extends CommandClass{
 				if((tempDate.getYear() == yearNow) && 
 					((tempDateDay >= dayNow) && (tempDateDay <= day7))){
 					result.append("[NO." + j++ + "]" + temp.toString(DATE_FORMAT) + newLine);
+					today.add(temp);
 				}
 			}
 		}
@@ -126,7 +136,7 @@ public class Read extends CommandClass{
 	}
 	
 	//This method lets user see tasks which are overdue but not done
-	public static String viewOverDue(TaskList test){
+	public static String viewOverDue(TaskList test, ArrayList<DeadlineTask> today){
 		DateTime now = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
@@ -142,6 +152,7 @@ public class Read extends CommandClass{
 				if((tempDateYear < yearNow) || 
 						((tempDateDay < dayNow) && (tempDateYear <= yearNow))){
 					result.append("[NO." + j++ + "]" + temp.toString(DATE_FORMAT) + newLine);
+					today.add(temp);
 				}
 			}
 		}

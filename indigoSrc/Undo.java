@@ -44,7 +44,7 @@ public class Undo extends CommandClass {
 				taskListVar.get(commandPre.getEditIndex()).unComplete();
 				return "undo an uncomplete";
 			default: 
-				return "WalauEh";
+				return "view";
 		}
 	}
 	
