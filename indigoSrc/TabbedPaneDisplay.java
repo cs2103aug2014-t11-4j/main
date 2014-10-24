@@ -1,4 +1,5 @@
 package indigoSrc;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 
@@ -14,23 +15,24 @@ public class TabbedPaneDisplay extends JPanel {
 	private JTabbedPane tabbedPaneDisplay;
 	private JTextPane textPaneToday; 
 	public TabbedPaneDisplay(){
-		super(new GridLayout(3,3));
+		super(new GridLayout(1,1));
 		
 		tabbedPaneDisplay = new JTabbedPane();
+	//	tabbedPaneDisplay.setMinimumSize(new Dimension(600,200)));
 		
 		JComponent dailyPanel = makeTextPanel(textPaneToday, "Tasks for today displayed here.");
 		tabbedPaneDisplay.addTab("Today", null, dailyPanel, "Displays daily tasks.");
 		tabbedPaneDisplay.setMnemonicAt(0, KeyEvent.VK_1);
 		
-		JComponent weeklyPanel = makeTextPanel("Tasks for the week displayed here.");
+		JComponent weeklyPanel = makeTextPanel(textPaneToday, "Tasks for the week displayed here.");
 		tabbedPaneDisplay.addTab("This Week", null, weeklyPanel, "Displays weekly tasks.");
 		tabbedPaneDisplay.setMnemonicAt(1, KeyEvent.VK_2);
 		
-		JComponent monthlyPanel = makeTextPanel("Tasks for the month displayed here.");
+		JComponent monthlyPanel = makeTextPanel(textPaneToday, "Tasks for the month displayed here.");
 		tabbedPaneDisplay.addTab("This Month", null, monthlyPanel, "Displays monthly tasks.");
 		tabbedPaneDisplay.setMnemonicAt(2, KeyEvent.VK_3);
 		
-		JComponent floatingPanel = makeTextPanel("Tasks without deadlines displayed here.");
+		JComponent floatingPanel = makeTextPanel(textPaneToday, "Tasks without deadlines displayed here.");
 		tabbedPaneDisplay.addTab("Floating", null, floatingPanel, "Displays no-deadline tasks.");
 		tabbedPaneDisplay.setMnemonicAt(3, KeyEvent.VK_4);
 		
@@ -38,19 +40,7 @@ public class TabbedPaneDisplay extends JPanel {
 		
 		tabbedPaneDisplay.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 	}
-	private JComponent makeTextPanel(String text) {
-		JPanel panel = new JPanel(false);
-		JTextPane textPane = new JTextPane();
-		
-		textPane.setText(text);
-		//filler.setHorizontalAlignment(JLabel.CENTER);
-		panel.setLayout(new GridLayout(3,3));
-		panel.add(textPane);
-		
-		
-		return panel;
-		
-	}
+
 	private JComponent makeTextPanel(JTextPane textPane, String text) {
 		//TODO
 		JPanel panel = new JPanel(false);
@@ -58,7 +48,7 @@ public class TabbedPaneDisplay extends JPanel {
 		
 		textPaneToday.setText(text);
 		//filler.setHorizontalAlignment(JLabel.CENTER);
-		panel.setLayout(new GridLayout(3,3));
+		panel.setLayout(new GridLayout(1,1));
 		panel.add(textPaneToday);
 		
 		
