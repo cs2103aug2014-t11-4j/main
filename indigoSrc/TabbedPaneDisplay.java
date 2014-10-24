@@ -14,13 +14,14 @@ public class TabbedPaneDisplay extends JPanel {
 	
 	private JTabbedPane tabbedPaneDisplay;
 	private JTextPane textPaneToday; 
+	public IndigoLogic id = new IndigoLogic();
 	public TabbedPaneDisplay(){
 		super(new GridLayout(1,1));
 		
 		tabbedPaneDisplay = new JTabbedPane();
 	//	tabbedPaneDisplay.setMinimumSize(new Dimension(600,200)));
 		
-		JComponent dailyPanel = makeTextPanel(textPaneToday, "Tasks for today displayed here.");
+		JComponent dailyPanel = makeTextPanel(textPaneToday, id.feedback);
 		tabbedPaneDisplay.addTab("Today", null, dailyPanel, "Displays daily tasks.");
 		tabbedPaneDisplay.setMnemonicAt(0, KeyEvent.VK_1);
 		

@@ -35,7 +35,7 @@ public class Create extends CommandClass {
 	@Test
 	public void testCreate(){
 		Parser testParse = new Parser("add code finish v0.2");
-		assertEquals(add(), toDo.toString() + "is added to taskList!");
+		add();
 	}
 	
 	public String add() {
