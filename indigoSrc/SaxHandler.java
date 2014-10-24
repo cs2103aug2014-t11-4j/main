@@ -11,18 +11,24 @@ public class SaxHandler extends DefaultHandler {
 	private DateTime tempStartTime;
 	private DateTime tempEndTime;
 	private String tempTaskName;
-	private ArrayList<FloatingTask> tasks;
+	private ArrayList<FloatingTask> timedList;
+	private ArrayList<FloatingTask> floatingList;
 	private FloatingTask tempTask;
 	private String tempValue;
     
-    public ArrayList<FloatingTask> getList(){
-    	return tasks;
+    public ArrayList<FloatingTask> getFloatingList(){
+    	return floatingList;
+    }
+    
+    public ArrayList<FloatingTask> getTimedList(){
+    	return timedList;
     }
     
     public void startElement(String s, String s1, String tagName, Attributes attributes) 
     		throws SAXException {
     	if (tagName.equalsIgnoreCase("rootTaskList")){
-    		tasks = new ArrayList<FloatingTask>();
+    		floatingList = new ArrayList<FloatingTask>();
+    		timedList = new ArrayList<FloatingTask>();
     	}
     	
     	if (tagName.equalsIgnoreCase("Task")){
@@ -33,10 +39,6 @@ public class SaxHandler extends DefaultHandler {
 
     public void endElement(String uri, String localName, String tagName)
     throws SAXException {
-    	if (tagName.equalsIgnoreCase("Task")){
-    		//System.out.println("A Task detected");
-    		tasks.add(tempTask);
-    	}
     	if (tagName.equalsIgnoreCase("TaskDescription")){
     		tempTaskName = tempValue;
     	}
@@ -52,14 +54,14 @@ public class SaxHandler extends DefaultHandler {
     	
     	if (tagName.equalsIgnoreCase("numDates")){
     		if (Integer.parseInt(tempValue)== 0){
-    			System.out.println("numDates detected");
     			tempTask= new FloatingTask(tempTaskName);
+    			floatingList.add(tempTask);
     		} else if (Integer.parseInt(tempValue) == 1){
-    			System.out.println("A deadlineTask detected");
     			tempTask = new DeadlineTask(tempTaskName, tempEndTime);
+    			timedList.add(tempTask);
     		} else if (Integer.parseInt(tempValue) == 2){
-    			System.out.println("A timedTask detected");
     			tempTask = new TimedTask(tempTaskName, tempStartTime, tempEndTime);
+    			timedList.add(tempTask);
     		}
     	}
     	

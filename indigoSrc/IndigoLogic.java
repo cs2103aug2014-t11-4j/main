@@ -16,7 +16,7 @@ public class IndigoLogic {
 	public String feedback;
 	private static ParserList ps = new ParserList();
 	private static Parser parser;
-	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yy");
+	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yy-MM-dd, kk:mm:ss");
 	public static final String FILE_NAME = "myTask";
 	private static TaskList taskList = new TaskList();
 	

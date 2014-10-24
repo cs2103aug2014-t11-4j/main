@@ -29,7 +29,15 @@ public class FloatingTask implements Comparable<FloatingTask>{
 		FloatingTask task = new FloatingTask();
 		System.out.println(task.toString());
 	}
-
+	
+	public FloatingTask(FloatingTask another){
+		this.taskDescription = another.taskDescription;
+		this.isDone = another.isDone;
+		this.isImportant = another.isImportant;
+		this.taskDetails = another.taskDetails;
+		this.numDates = another.numDates;
+	}
+	
 	public FloatingTask() {
 		// a stub default value for default constructor
 		this("default task.");
@@ -69,11 +77,17 @@ public class FloatingTask implements Comparable<FloatingTask>{
 
 	public String toString() {
 		StringBuilder result = new StringBuilder("");
-		result.append(taskDescription);
-		if (isDone){
+		if (toTimedTask()!=null){
+			result.append(toTimedTask().toString(IndigoLogic.DATE_FORMAT));
+		} else if	(toDeadlineTask()!=null){
+			result.append(toDeadlineTask().toString(IndigoLogic.DATE_FORMAT));
+		} else {
+			result.append(taskDescription);
+			if (isDone){
 			result.append(" [Completed] ");
+			}
 		}
-		return result.toString();
+		return result.toString().trim();
 	}
 
 	@Override
