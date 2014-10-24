@@ -78,7 +78,7 @@ public class Read extends CommandClass{
 		test.addTask(time6);
 		
 		//Test the viewToday method. Only "buy book" should appear.
-		System.out.println(viewToday(test, today));
+		System.out.println(viewToday(test));
 		assertEquals(1, today.size());
 		//Test the viewThisWeek method. "buy book" and "read book" only should appear.
 		System.out.println(viewThisWeek(test, thisWeek));
@@ -89,7 +89,7 @@ public class Read extends CommandClass{
 	}
 	
 	//This method is to find tasks which are due today.
-	public static String viewToday(TaskList test, ArrayList<DeadlineTask> today){
+	public static String viewToday(TaskList test){
 		DateTime now = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
@@ -101,7 +101,6 @@ public class Read extends CommandClass{
 				DeadlineTask temp = (DeadlineTask) test.get(i+1);
 				if((temp.getTime().getYear() == yearNow) && (temp.getTime().getDayOfYear() == dayNow)){
 					result.append("[NO." + j++ + "]" + temp.toString(DATE_FORMAT) + newLine);
-					today.add(temp);
 				}
 			}
 		}

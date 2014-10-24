@@ -56,7 +56,7 @@ public class IndigoLogic {
 				Create classAdd = new Create(parser, ps, taskList);
 				return classAdd.add();
 			case READ:
-				Read classView = new Read(parser, taskList);
+				Read classView = new Read(parser, ps, taskList);
 				if(!classView.view().equals("view all")){
 					assert !(classView.view().equals("view all"));
 				}{
