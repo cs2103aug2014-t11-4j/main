@@ -41,9 +41,7 @@ public class Read extends CommandClass{
 			return taskListVar.viewFloatingTask();
 		} else if (parserVar.getCommand().contains("-d")){
 			return taskListVar.viewDeadlineTask(DATE_FORMAT);
-		} else if (parserVar.getCommand().contains("-t")){
-			return taskListVar.viewTimedTask(DATE_FORMAT);
-		} else if (parserVar.getCommand().contains("today")){
+		}  else if (parserVar.getCommand().contains("today")){
 			return viewToday(taskListVar);
 		} else
 			return taskListVar.viewAll(DATE_FORMAT);
@@ -95,13 +93,11 @@ public class Read extends CommandClass{
 		int dayNow = now.getDayOfYear();
 		
 		StringBuilder result = new StringBuilder("Today's tasks are:" + newLine);
-		int tlSize = test.getSize();
+		int tlSize = test.getTimedList().size();
 		for (int i=0, j=1; i<tlSize; i++){
-			if ((test.get(i+1) instanceof DeadlineTask) && !(test.get(i+1) instanceof TimedTask)){
 				DeadlineTask temp = (DeadlineTask) test.get(i+1);
-				if((temp.getTime().getYear() == yearNow) && (temp.getTime().getDayOfYear() == dayNow)){
+				if((temp.getKeyTime().getYear() == yearNow) && (temp.getKeyTime().getDayOfYear() == dayNow)){
 					result.append("[NO." + j++ + "]" + temp.toString(DATE_FORMAT) + newLine);
-				}
 			}
 		}
 		return result.toString();
@@ -117,10 +113,9 @@ public class Read extends CommandClass{
 		int day7 = dayNow + 1;
 		
 		StringBuilder result = new StringBuilder("This week's tasks are:" + newLine);
-		int tlSize = test.getSize();
+		int tlSize = test.getTimedList().size();
 		for (int i=0, j=1; i<tlSize; i++){
-			if ((test.get(i+1) instanceof DeadlineTask) && 
-				!(test.get(i+1) instanceof TimedTask)){
+			
 				DeadlineTask temp = (DeadlineTask) test.get(i+1);
 				DateTime tempDate = temp.getTime();
 				int tempDateDay = tempDate.getDayOfYear();
@@ -129,7 +124,6 @@ public class Read extends CommandClass{
 					result.append("[NO." + j++ + "]" + temp.toString(DATE_FORMAT) + newLine);
 					today.add(temp);
 				}
-			}
 		}
 		return result.toString();
 	}
@@ -141,9 +135,8 @@ public class Read extends CommandClass{
 		int dayNow = now.getDayOfYear();
 		
 		StringBuilder result = new StringBuilder("Tasks overdue are:" + newLine);
-		int ntlsize = test.getSize();
+		int ntlsize = test.getTimedList().size();
 		for (int i=0, j=1; i<ntlsize; i++){
-			if ((test.get(i+1) instanceof DeadlineTask) && !(test.get(i+1) instanceof TimedTask)){
 				DeadlineTask temp = (DeadlineTask) test.get(i+1);
 				DateTime tempDate = temp.getTime();
 				int tempDateDay = tempDate.getDayOfYear();
@@ -153,7 +146,6 @@ public class Read extends CommandClass{
 					result.append("[NO." + j++ + "]" + temp.toString(DATE_FORMAT) + newLine);
 					today.add(temp);
 				}
-			}
 		}
 		return result.toString();
 	}
