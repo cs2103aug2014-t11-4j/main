@@ -153,7 +153,7 @@ public class InputWindow extends JFrame {
 		}
 
 	}
-
+	//hello again
 
 	private GridBagConstraints setConstraints(int componentIndex) {
 		GridBagConstraints constraints;
@@ -172,7 +172,7 @@ public class InputWindow extends JFrame {
 			return constraints;
 		}
 		else if(componentIndex == 1){
-			constraints = new GridBagConstraints(0,3,3,1,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,bottomPanel,0,0);
+			constraints = new GridBagConstraints(0,3,3,2,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,bottomPanel,0,0);
 			return constraints;
 		}
 		else if(componentIndex == 2){
