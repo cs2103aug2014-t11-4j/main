@@ -11,7 +11,10 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -21,6 +24,9 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class InputWindow extends JFrame {
 	
@@ -62,8 +68,9 @@ public class InputWindow extends JFrame {
 	}
 
 	public void initialize(JFrame mainWindow){	
-		mainWindow.setBounds(300, 150, 700, 450);
-		mainWindow.setResizable(true);
+		mainWindow.setTitle("Indigo");
+		mainWindow.setBounds(300, 150, 700, 500);
+		mainWindow.setResizable(false);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
@@ -71,19 +78,35 @@ public class InputWindow extends JFrame {
 		Container contentPane = mainWindow.getContentPane();
 		contentPane.add(displayLayers);
 		JPanel mainPanel = new JPanel();
-		mainPanel.setBounds(0, 0, 700, 450);
+		mainPanel.setBounds(0, 0, 700, 500);
 		mainPanel.setLayout(new GridBagLayout());
+		mainPanel.setOpaque(false);
 		
-		
+		setBackGroundImage();
 		createUserInputPanel(mainPanel);
 		createOutputPanel(mainPanel);
 		
-		displayLayers.add(mainPanel); 
+		displayLayers.add(mainPanel,new Integer(1)); 
 	}
 	
+	private void setBackGroundImage() {
+		BufferedImage img;
+		try {
+			img = ImageIO.read(new File("src/wood.jpg"));
+			JLabel background = new JLabel(new ImageIcon(img));
+			background.setBounds(0,0,700, 500);
+			displayLayers.add(background,new Integer(0));
+		} catch (IOException e) {
+			//TODO some notifying
+			liveUserFeedback.setText("Cannot load image");
+		}
+		
+	}
+
 	private void createOutputPanel(Container mainPanel) {
 		JPanel topPanel = new JPanel(new GridBagLayout());
 		topPanel.setPreferredSize(new Dimension(600,200));
+		topPanel.setOpaque(false);
 		GridBagConstraints constraints;
 		constraints = setConstraints(TOP_PANEL_INDEX);
 		
@@ -101,16 +124,13 @@ public class InputWindow extends JFrame {
 		
 		topPanel.add(taskDisplay, constraints);	
 	
-	
-	//	test.setMaximumSize(test.getSize());
-	//	test.setBorder(testBorder);
-	//	test.setLineWrap(true);
-	//	topPanel.add(test, constraints);
+
 	}
 
 	private void createUserInputPanel(Container mainPanel){
 		JPanel bottomPanel = new JPanel(new GridBagLayout());
-		bottomPanel.setPreferredSize(new Dimension(600,150));
+		bottomPanel.setPreferredSize(new Dimension(600,100));
+		bottomPanel.setOpaque(false);
 		GridBagConstraints constraints;
 		
 		constraints = setConstraints(BOTTOM_PANEL_INDEX);
@@ -138,6 +158,7 @@ public class InputWindow extends JFrame {
 		liveUserFeedback.setMaximumSize(liveUserFeedback.getSize());
 		liveUserFeedback.setBorder(liveUserFeedbackBorder);
 		liveUserFeedback.setLineWrap(true);
+		liveUserFeedback.setEditable(false);
 		bottomPanel.add(liveUserFeedback, constraints);
 		
 		
@@ -171,14 +192,14 @@ public class InputWindow extends JFrame {
 
 	private GridBagConstraints setConstraints(int componentIndex) {
 		GridBagConstraints constraints;
-		Insets bottomPanel = new Insets(0,0,20,10);
-		Insets topPanel = new Insets(10,0,0,10);
+		Insets bottomPanel = new Insets(10,0,0,10);
+		Insets topPanel = new Insets(0,0,70,10);
 		Insets tabbedPaneDisplayInsets = new Insets(10,20,0,20);
-		Insets readInputInsets = new Insets(0,20,10,20);
-		Insets liveUserFeedbackInsets = new Insets(10,20,10,20);
+		Insets readInputInsets = new Insets(0,20,0,20);
+		Insets liveUserFeedbackInsets = new Insets(0,20,10,20);
 		
 		if(componentIndex == TOP_PANEL_INDEX){
-			constraints = new GridBagConstraints(0,0,3,3,0.0,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,topPanel,0,0);
+			constraints = new GridBagConstraints(0,1,3,3,0.0,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,topPanel,0,0);
 			return constraints;
 		}
 		else if(componentIndex == TABBED_PANE_INDEX){
@@ -186,7 +207,7 @@ public class InputWindow extends JFrame {
 			return constraints;
 		}
 		else if(componentIndex == BOTTOM_PANEL_INDEX){
-			constraints = new GridBagConstraints(0,3,3,2,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,bottomPanel,0,0);
+			constraints = new GridBagConstraints(0,0,3,1,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,bottomPanel,0,0);
 			return constraints;
 		}
 		else if(componentIndex == INPUT_FIELD_INDEX){
