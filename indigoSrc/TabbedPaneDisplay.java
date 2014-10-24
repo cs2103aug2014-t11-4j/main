@@ -68,8 +68,8 @@ public class TabbedPaneDisplay extends JPanel {
 	
 	public void update(){
 		//TODO
-		IndigoLogic lc = new IndigoLogic();
-		textPaneToday.setText("updated!");
+		IndigoLogic lc = new IndigoLogic("view -today");
+		textPaneToday.setText(lc.feedback);
 	}
 	
 	/*	private void setTabbedTextPane(){
