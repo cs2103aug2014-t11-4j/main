@@ -98,7 +98,7 @@ public class InputWindow extends JFrame {
 			displayLayers.add(background,new Integer(0));
 		} catch (IOException e) {
 			//TODO some notifying
-			liveUserFeedback.setText("Cannot load image");
+			//liveUserFeedback.setText("Cannot load image");
 		}
 		
 	}
@@ -188,7 +188,6 @@ public class InputWindow extends JFrame {
 		}
 
 	}
-	//hello again
 
 	private GridBagConstraints setConstraints(int componentIndex) {
 		GridBagConstraints constraints;

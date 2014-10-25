@@ -13,6 +13,7 @@ import org.joda.time.format.DateTimeFormatter;
  */
 
 public class IndigoLogic {
+	public String display;
 	public String feedback;
 	private static ParserList ps = new ParserList();
 	private static Parser parser;
@@ -27,7 +28,7 @@ public class IndigoLogic {
 	
 	public IndigoLogic(String userInput){
 		loadData();
-		feedback = readCommand(userInput);
+		display = readCommand(userInput);
 		saveData();
 	}
 	
@@ -56,12 +57,8 @@ public class IndigoLogic {
 				Create classAdd = new Create(parser, ps, taskList);
 				return classAdd.execute();
 			case READ:
-				Read classView = new Read(parser, ps, taskList);
-				if(!classView.view().equals("view all")){
-					assert !(classView.execute().equals("view all"));
-				}{
-					return classView.execute();
-				}
+				Read classView = new Read(parser, taskList);
+				return classView.execute();
 			case UPDATE:
 				Update classEdit = new Update(parser, ps, taskList);
 				return classEdit.execute();
