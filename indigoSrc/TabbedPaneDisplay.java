@@ -4,12 +4,14 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.Component;
+
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
 
 
 public class TabbedPaneDisplay extends JPanel {
@@ -49,18 +51,17 @@ public class TabbedPaneDisplay extends JPanel {
 	}
 
 	private JComponent makeTextPanel(JTextPane textPane, String text) {
-		//TODO
-		JPanel panel = new JPanel(false);
+		
+		JPanel tabbedPanel = new JPanel();
 		textPaneToday = new JTextPane();
 
-		JScrollPane jsp = new JScrollPane(textPaneToday);
+		JScrollPane scroll = new JScrollPane(textPaneToday);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		textPaneToday.setText(text);
-		//filler.setHorizontalAlignment(JLabel.CENTER);
-		panel.setLayout(new GridLayout(1,1));
-		panel.add(jsp);
+		tabbedPanel.setLayout(new GridLayout(1,1));
+		tabbedPanel.add(scroll);
 		
-		
-		return panel;
+		return tabbedPanel;
 		
 	} 
 	
