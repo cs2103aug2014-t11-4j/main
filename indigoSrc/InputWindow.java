@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
@@ -52,6 +53,7 @@ public class InputWindow extends JFrame {
 		EventQueue.invokeLater(new Runnable(){
 			public void run(){
 				try {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 					InputWindow mainWindow = new InputWindow();
 					mainWindow.setVisible(true);
 				}
@@ -92,7 +94,7 @@ public class InputWindow extends JFrame {
 	private void setBackGroundImage() {
 		BufferedImage img;
 		try {
-			img = ImageIO.read(new File("wood.jpg"));
+			img = ImageIO.read(new File("src/wood.jpg"));
 			JLabel background = new JLabel(new ImageIcon(img));
 			background.setBounds(0,0,700, 500);
 			displayLayers.add(background,new Integer(0));
