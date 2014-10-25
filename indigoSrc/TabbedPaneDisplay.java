@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
 
@@ -45,11 +46,12 @@ public class TabbedPaneDisplay extends JPanel {
 		//TODO
 		JPanel panel = new JPanel(false);
 		textPaneToday = new JTextPane();
-		
+
+		JScrollPane jsp = new JScrollPane(textPaneToday);
 		textPaneToday.setText(text);
 		//filler.setHorizontalAlignment(JLabel.CENTER);
 		panel.setLayout(new GridLayout(1,1));
-		panel.add(textPaneToday);
+		panel.add(jsp);
 		
 		
 		return panel;
