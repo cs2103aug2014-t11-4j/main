@@ -35,13 +35,18 @@ public class Create extends CommandClass {
 	@Test
 	public void testCreate(){
 		Parser testParse = new Parser("add code finish v0.2");
-		assertEquals(add(), toDo.toString() + "is added to taskList!");
+		add();
 	}
 	
 	public String add() {
+		int totalSize = taskListVar.getFloatingList().size() + taskListVar.getTimedList().size();
+		if (editIndex > totalSize || editIndex < 1){
+			return "Invalid index";
+		} else {
 		taskListVar.addTask(editIndex, toDo);
 		psl.push(new Parser("delete " + editIndex));
 		return toDo.toString() + " is added to taskList!";
+		}
 	}
 
 }

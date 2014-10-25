@@ -28,155 +28,124 @@ import org.w3c.dom.Element;
  * @author jjlu
  *
  *
- * API:
- * FloatingTask addFloatingTask(FloatingTask)
- * FloatingTask deleteFloatingTask(FloatingTask)
- * FloatingTask deleteFloatingTask(int)
- * FloatingTask viewFloatingTask(int)
- * FloatingTask editFloatingTask(int, FloatingTask)
- * return the original task before editing.
  */
 
 
 public class TaskList {
 	
-	private ArrayList<FloatingTask> taskList;
+	private ArrayList<FloatingTask> floatingTaskList;
+	private ArrayList<FloatingTask> timedTaskList;
 	
 	public String newLine = System.getProperty("line.separator");
 
 	public TaskList() {
-		taskList = new ArrayList<FloatingTask>();
+		floatingTaskList = new ArrayList<FloatingTask>();
+		timedTaskList = new ArrayList<FloatingTask>();
 	}	
-	
-	public static void main(String[] args){
-		TaskList tasks = new TaskList();
-		tasks.addTask(new FloatingTask("floating task."));
-		FloatingTask task0 = new FloatingTask("completed floatingTask.");
-		task0.complete();
-		tasks.addTask(task0);
-		tasks.addTask(new TimedTask("timed task.", new DateTime(), new DateTime()));
-		tasks.addTask(new DeadlineTask("deadline task1.", new DateTime(12,10,3,2,3)));
-		tasks.addTask(new TimedTask("timed task.", new DateTime(), new DateTime()));
-		tasks.addTask(new DeadlineTask("deadline task3.", new DateTime(14,11,3,2,3)));
-		tasks.addTask(new DeadlineTask("deadline task2.", new DateTime(13,6,6,6,6)));
-		tasks.writeXMLDocument("NewFile");
-		TaskList tasks2 = new TaskList();
-		tasks2.readFromXML("NewFile");
-		tasks2.writeXMLDocument("AnotherFile");
-		
-	}
 	
 	// basic functions
 	// add
-	public FloatingTask addTask(FloatingTask newFloatingTask){
-		taskList.add(newFloatingTask);
-		return newFloatingTask;
+	public FloatingTask addTask(FloatingTask newTask){
+		return addTask(1,newTask);
 	}
+	
 	public FloatingTask addTask(int index, FloatingTask newTask){
-		System.out.println("index:" + index);
-		taskList.add(index-1, newTask);
+		if (newTask.numDates==0 && index > timedTaskList.size()){
+			floatingTaskList.add(index-timedTaskList.size()-1,newTask);
+		} else {
+			// a timedtask should place at a position according to key time
+			for (int i=0; i<timedTaskList.size();){
+				DateTime timeToBeAdded = newTask.toDeadlineTask().getKeyTime();
+				DateTime timeInList = timedTaskList.get(i).toDeadlineTask().getKeyTime();
+				if (timeToBeAdded.isBefore(timeInList)){
+					timedTaskList.add(i,newTask);
+					return newTask;
+				} else {
+					i++;
+				}
+			}
+			timedTaskList.add(timedTaskList.size(),newTask);
+			return newTask;
+		}
 		return newTask;
 	}
 	
 	// delete
-	public FloatingTask deleteTask(FloatingTask task){
-		taskList.remove(task);
-		return task;
-	}
-	public FloatingTask deleteTask(int index){	
-		int indexComputing = index - 1;
-		FloatingTask tempFloatingTask = taskList.get(indexComputing);
-		taskList.remove(indexComputing);
+	public FloatingTask deleteTask(int index){
+		FloatingTask tempFloatingTask;
+		if (index>timedTaskList.size()){
+			tempFloatingTask = floatingTaskList.remove(index-timedTaskList.size()-1);
+		} else {
+			tempFloatingTask = timedTaskList.remove(index-1);
+		}
 		return tempFloatingTask;
 	}
 	
 	// edit
-	public FloatingTask editTask(int index, FloatingTask newFloatingTask){
-		int indexComputing = index - 1;
-		FloatingTask tempFloatingTask = taskList.get(indexComputing);
-		taskList.add(indexComputing, newFloatingTask);
-		taskList.remove(index);
+	public FloatingTask editTask(int index,  FloatingTask newTask){
+		FloatingTask tempFloatingTask = deleteTask(index);
+		addTask(index,newTask);
 		return tempFloatingTask;
 	}
 	
 	// view the taskList in a particular format
 	public String viewFloatingTask(){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
-		for (int i=0,j=1;i<taskList.size();i++){
-			if (! (taskList.get(i) instanceof DeadlineTask)){
-				result.append("[No." + j++ + "]" + taskList.get(i).toString() + newLine);
-			}
+		for (int i=0,j=1;i<floatingTaskList.size();i++){
+			assert floatingTaskList.get(i).toDeadlineTask()==null;
+			result.append("[No." + j++ + "]" + floatingTaskList.get(i).toString() + newLine);
 		}
 		return result.toString();
 	}
 	
 	public String viewDeadlineTask(DateTimeFormatter dtf){
 		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
-		for (int i=0,j=1;i<taskList.size();i++){
-			if ((taskList.get(i) instanceof DeadlineTask) && !(taskList.get(i) instanceof TimedTask)){
-				DeadlineTask temp = (DeadlineTask) taskList.get(i);
-				result.append("[No." + j++ + "]" + temp.toString(dtf) + newLine);
-			}
-		}
-		return result.toString();
-	}
-	
-	public String viewTimedTask(DateTimeFormatter dtf){
-		StringBuilder result = new StringBuilder("Timed tasks are:" + newLine);
-		for (int i=0,j=1;i<taskList.size();i++){
-			if (taskList.get(i) instanceof TimedTask){
-				TimedTask temp = (TimedTask) taskList.get(i);
-				result.append("[No." + j++ + "]" + temp.toString(dtf) + newLine);
-			}
+		for (int i=0,j=1;i<timedTaskList.size();i++){
+			DeadlineTask temp = (DeadlineTask) timedTaskList.get(i);
+			result.append("[No." + j++ + "]" + temp.toString(dtf) + newLine);
 		}
 		return result.toString();
 	}
 	
 	public String viewDone(){
-		StringBuilder str = new StringBuilder("FloatingTasks Completed: \n");
-		for (int i=0,j=1; i<taskList.size();i++){
-			if (taskList.get(i).isCompleted()){
-				str.append( j++ + ". " + taskList.get(i).getDescription() + "\n");
+		StringBuilder str = new StringBuilder("Tasks Completed: " + newLine);
+		int j=1; // for indexing
+		for (int i=0; i<timedTaskList.size();i++){
+			if (timedTaskList.get(i).isCompleted()){
+				str.append( j++ + ". " + timedTaskList.get(i).toString() + newLine);
+			}
+		}
+		for (int i=0; i<floatingTaskList.size();i++){
+			if (floatingTaskList.get(i).isCompleted()){
+				str.append( j++ + ". " + floatingTaskList.get(i).toString() + newLine);
 			}
 		}
 		return str.toString();
 	}
 	
 	public String viewUndone(){
-		StringBuilder str = new StringBuilder("FloatingTasks Due: \n");
-		for (int i=0,j=1; i<taskList.size();i++){
-			if (!taskList.get(i).isCompleted()){
-				str.append( j++ + ". " + taskList.get(i).getDescription() + "\n");
+		StringBuilder str = new StringBuilder("FloatingTasks Due: " + newLine);
+		int j = 1;
+		for (int i=0; i<timedTaskList.size();i++){
+			if (!timedTaskList.get(i).isCompleted()){
+				str.append( j++ + ". " + timedTaskList.get(i).toString() + newLine);
+			}
+		}
+		for (int i=0; i<floatingTaskList.size();i++){
+			if (!floatingTaskList.get(i).isCompleted()){
+				str.append( j++ + ". " + floatingTaskList.get(i).toString() + newLine);
 			}
 		}
 		return str.toString();
 	}
 	
 	public String viewAll(DateTimeFormatter dtf){
-		StringBuilder result = new StringBuilder("There are " + taskList.size() + " tasks listed:" + newLine);
-		result.append(viewFloatingTask() + viewDeadlineTask(dtf) + viewTimedTask(dtf));
+		int sum = floatingTaskList.size() + timedTaskList.size();
+		StringBuilder result = new StringBuilder("There are " + sum + " tasks listed:" + newLine);
+		result.append(viewDeadlineTask(dtf) + viewFloatingTask());
 		return result.toString();
 	} 
 	
-	public String viewNormal(DateTimeFormatter dtf){
-		StringBuilder result = new StringBuilder("A default view of tasks:" + newLine);
-		for (int i=0,j=1;i<taskList.size();i++){
-			if (taskList.get(i).numDates == 0){
-				result.append(j++ + ". " + taskList.get(i).toString() + newLine);
-			} else if (taskList.get(i).numDates == 1){
-				result.append(j++ + ". " + taskList.get(i).toDeadlineTask().toString() + newLine);
-			} else {
-				result.append(j++ + ". " + taskList.get(i).toTimedTask().toString() + newLine);
-			}
-		}
-		return result.toString();
-	}
-	
-	//sort
-	public String sort(){
-		Collections.sort(taskList);
-		return "tasklist is sorted.";
-	}
 	
 	// write and read
 	public void writeXMLDocument(String fileName){
@@ -190,33 +159,33 @@ public class TaskList {
 	        doc.appendChild(root);
 	        
 	        
-	        for (int i =0; i<taskList.size(); i++){
-	        	Element taskTag = doc.createElement("Task");
-	        	root.appendChild(taskTag);
+	        for (int i =0; i<timedTaskList.size(); i++){
+	        	Element timedTask = doc.createElement("TimedTasks");
+	        	root.appendChild(timedTask);
 	        	
-	        	Element taskID = doc.createElement("TaskID");
-	        	taskID.appendChild(doc.createTextNode(i + ""));
-	        	taskTag.appendChild(taskID);
+	        	Element taskTag = doc.createElement("Task");
+	         	timedTask.appendChild(taskTag);
 	        	
 	        	Element taskDetail = doc.createElement("TaskDescription");
-	        	taskDetail.appendChild(doc.createTextNode(taskList.get(i).getDescription()));
+	        	taskDetail.appendChild(doc.createTextNode(timedTaskList.get(i).getDescription()));
 	        	taskTag.appendChild(taskDetail);
 	        	
-	        	switch (taskList.get(i).numDates){
+	        	switch (timedTaskList.get(i).numDates){
 	        		case 0:
+	        			assert false;
 	        			break;
 	        		case 1:
 	        			Element endTime = doc.createElement("DueDate");
-	        			endTime.appendChild(doc.createTextNode(taskList.get(i).toDeadlineTask().endTime.toString()));
+	        			endTime.appendChild(doc.createTextNode(timedTaskList.get(i).toDeadlineTask().endTime.toString()));
 	        			taskTag.appendChild(endTime);
 	        			break;
 	        		case 2:
 	        			Element startDate = doc.createElement("From");
-	        			startDate.appendChild(doc.createTextNode(taskList.get(i).toDeadlineTask().endTime.toString()));
+	        			startDate.appendChild(doc.createTextNode(timedTaskList.get(i).toTimedTask().startTime.toString()));
 	        			taskTag.appendChild(startDate);
 	        			
 	        			Element endDate = doc.createElement("To");
-	        			endDate.appendChild(doc.createTextNode(taskList.get(i).toDeadlineTask().endTime.toString()));
+	        			endDate.appendChild(doc.createTextNode(timedTaskList.get(i).toDeadlineTask().endTime.toString()));
 	        			taskTag.appendChild(endDate);
 	        			break;
 	        		default:
@@ -224,19 +193,42 @@ public class TaskList {
 	        	}
 	        	
 	        	Element numDates = doc.createElement("numDates");
-	        	numDates.appendChild(doc.createTextNode(taskList.get(i).numDates + ""));
+	        	numDates.appendChild(doc.createTextNode(timedTaskList.get(i).numDates + ""));
 	        	taskTag.appendChild(numDates);
 	        	
 	        	Element isCompleted = doc.createElement("CompletionStatus");
-	        	isCompleted.appendChild(doc.createTextNode(taskList.get(i).isCompleted() + ""));
+	        	isCompleted.appendChild(doc.createTextNode(timedTaskList.get(i).isCompleted() + ""));
 	        	taskTag.appendChild(isCompleted);
 	        	
 	        	Element isImportant = doc.createElement("Importance");
-	        	isImportant.appendChild(doc.createTextNode(taskList.get(i).isImportant()+ ""));
+	        	isImportant.appendChild(doc.createTextNode(timedTaskList.get(i).isImportant()+ ""));
 	        	taskTag.appendChild(isImportant);
 	        }
 	        
-	        
+	        for (int i=0;i<floatingTaskList.size();i++){
+
+	        	Element floatingTask = doc.createElement("FloatingTasks");
+	        	root.appendChild(floatingTask);
+	        	
+	        	Element taskTag = doc.createElement("Task");
+	         	floatingTask.appendChild(taskTag);
+	        	
+	        	Element taskDetail = doc.createElement("TaskDescription");
+	        	taskDetail.appendChild(doc.createTextNode(floatingTaskList.get(i).getDescription()));
+	        	taskTag.appendChild(taskDetail);
+	        	
+	        	Element numDates = doc.createElement("numDates");
+	        	numDates.appendChild(doc.createTextNode(floatingTaskList.get(i).numDates + ""));
+	        	taskTag.appendChild(numDates);
+	        	
+	        	Element isCompleted = doc.createElement("CompletionStatus");
+	        	isCompleted.appendChild(doc.createTextNode(floatingTaskList.get(i).isCompleted() + ""));
+	        	taskTag.appendChild(isCompleted);
+	        	
+	        	Element isImportant = doc.createElement("Importance");
+	        	isImportant.appendChild(doc.createTextNode(floatingTaskList.get(i).isImportant()+ ""));
+	        	taskTag.appendChild(isImportant);
+	        }
 	        
 	        writeToDisk(fileName, doc);
 	        
@@ -277,10 +269,12 @@ public class TaskList {
 
 		    SaxHandler handler   = new SaxHandler();
 		    saxParser.parse(xmlInput, handler);
-		    taskList = handler.getList();
+		    floatingTaskList = handler.getFloatingList();
+		    timedTaskList = handler.getTimedList();
 
 		} catch (Throwable err) {
 		    System.out.println("SAXparser Exception.");
+		    return fileName + " is corrupted.";
 		    //writeXMLDocument(fileName);
 		}
 		return fileName + " is loaded.";
@@ -288,20 +282,28 @@ public class TaskList {
 	
 	// index start from 1
 	public boolean complete(int index) {
-		return taskList.get(index-1).complete();
+		if (index>timedTaskList.size()){
+			return floatingTaskList.get(index-1-timedTaskList.size()).complete();
+		} else {
+			return timedTaskList.get(index-1).complete();
+		}
 	}
 
 	// index start from 1
 	public FloatingTask get(int index) {
-		return taskList.get(index-1);
+		if (index>timedTaskList.size()){
+			return floatingTaskList.get(index-1-timedTaskList.size());
+		} else {
+			return timedTaskList.get(index-1);
+		}
 	}
 	
-	public int getSize(){
-		return taskList.size();
+	public ArrayList<FloatingTask> getTimedList(){
+		return timedTaskList;
 	}
 	
-	public ArrayList<FloatingTask> getList(){
-		return taskList;
+	public ArrayList<FloatingTask> getFloatingList(){
+		return floatingTaskList;
 	}
 
 }

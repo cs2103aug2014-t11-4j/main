@@ -92,13 +92,13 @@ public class InputWindow extends JFrame {
 	private void setBackGroundImage() {
 		BufferedImage img;
 		try {
-			img = ImageIO.read(new File("src/wood.jpg"));
+			img = ImageIO.read(new File("wood.jpg"));
 			JLabel background = new JLabel(new ImageIcon(img));
 			background.setBounds(0,0,700, 500);
 			displayLayers.add(background,new Integer(0));
 		} catch (IOException e) {
 			//TODO some notifying
-			liveUserFeedback.setText("Cannot load image");
+			//liveUserFeedback.setText("Cannot load image");
 		}
 		
 	}
@@ -188,7 +188,6 @@ public class InputWindow extends JFrame {
 		}
 
 	}
-	//hello again
 
 	private GridBagConstraints setConstraints(int componentIndex) {
 		GridBagConstraints constraints;

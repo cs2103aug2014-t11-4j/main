@@ -7,7 +7,8 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class DeadlineTask extends FloatingTask{
 	protected DateTime endTime;
-	protected static DateTime currentTime;
+	protected DateTime currentTime = DateTime.now();
+	protected DateTime keyTime;
 	
 	public static void main(String[] args){
 		DeadlineTask time = new DeadlineTask("deadline task", new DateTime(2014,10,9,19,15,00));
@@ -19,10 +20,7 @@ public class DeadlineTask extends FloatingTask{
 		super(description);
 		endTime = time;
 		numDates = 1;
-	}
-
-	public DeadlineTask(String description) {
-		super(description);
+		keyTime = endTime;
 	}
 	
 	public DateTime editTime(DateTime newTime){
@@ -39,7 +37,7 @@ public class DeadlineTask extends FloatingTask{
 	}
 	
 	public String toString(DateTimeFormatter format){
-		FloatingTask temp = this;
+		FloatingTask temp = new FloatingTask(this);
 		StringBuilder result = new StringBuilder("[" + format.print(endTime) + "]");
 		result.append(temp.toString());
 		return result.toString();
@@ -60,6 +58,10 @@ public class DeadlineTask extends FloatingTask{
 	
 	public int evaluateHours(){
 		return evaluateDuration().toStandardHours().getHours();
+	}
+	
+	public DateTime getKeyTime(){
+		return keyTime;
 	}
 
 }
