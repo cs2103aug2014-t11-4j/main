@@ -28,10 +28,12 @@ public class IndigoLogic {
 	
 	public IndigoLogic(String userInput){
 		loadData();
-		display = readCommand(userInput);
+		feedback = readCommand(userInput);
+		Read rc = new Read(parser, taskList);
+		display = rc.view();
 		saveData();
 	}
-	
+
 	private String readCommand(String userCommand) {
 		/*
 		 * TODO 
@@ -58,6 +60,9 @@ public class IndigoLogic {
 				return classAdd.execute();
 			case READ:
 				Read classView = new Read(parser, taskList);
+				if(parser.getCommand().equals("view")){
+					return classView.viewToday();
+				}
 				return classView.execute();
 			case UPDATE:
 				Update classEdit = new Update(parser, ps, taskList);

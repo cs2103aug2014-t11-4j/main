@@ -17,7 +17,7 @@ public class Read extends CommandClass{
 	@Override
 	public String execute() {
 		// TODO Auto-generated method stub
-		return view();
+		return "display below";
 	}
 	
 	public Read(Parser parsing, TaskList taskList){
