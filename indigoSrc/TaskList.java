@@ -50,8 +50,12 @@ public class TaskList {
 	}
 	
 	public FloatingTask addTask(int index, FloatingTask newTask){
-		if (newTask.numDates==0 && index > timedTaskList.size()){
-			floatingTaskList.add(index-timedTaskList.size()-1,newTask);
+		if (newTask.numDates==0){
+			if ( index > timedTaskList.size()){
+				floatingTaskList.add(index-timedTaskList.size()-1,newTask);
+			}	else {
+				floatingTaskList.add(0,newTask);
+			}
 		} else {
 			// a timedtask should place at a position according to key time
 			for (int i=0; i<timedTaskList.size();){

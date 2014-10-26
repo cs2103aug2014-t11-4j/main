@@ -149,7 +149,7 @@ public class Parser {
 		return keyWord;
 	}
 
-	public Integer getEditIndex() { 
+	public int getEditIndex() { 
 		System.out.println("Edit index: " +editIndex);
 		if (editIndex == -1){
 			return 1;

@@ -7,8 +7,7 @@ public class Delete extends CommandClass{
 
 	@Override
 	public String execute() {
-		// TODO Auto-generated method stub
-		return null;
+		return delete();
 	}
 	
 	public Delete(Parser parsing, ParserList parseL, TaskList taskList){
