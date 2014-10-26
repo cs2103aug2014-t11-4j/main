@@ -8,6 +8,14 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
+/* This class is the read class which will display the list that user
+ * would want to see. This class has different types of views that user
+ * can choose from. The Tabbed Pane Display will have some default view
+ * type implemented like viewToday() and viewThisWeek().
+ * 
+ * @author Ken
+ */
+
 public class Read extends CommandClass{
 	
 	//private static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
@@ -91,39 +99,6 @@ public class Read extends CommandClass{
 	
 	public String viewUndone(){
 		return taskListVar.viewUndone();
-	}
-	
-	public static void main(String args[]){
-		DateTime now = DateTime.now();
-		//TaskList test = new TaskList();
-		DeadlineTask time0 = new DeadlineTask("buy book", new DateTime(2014,10,24,11,00,00));
-		DeadlineTask time1 = new DeadlineTask("read book", new DateTime(2014,10,26,19,15,00));
-		DeadlineTask time2 = new DeadlineTask("buy bread", new DateTime(2014,10,22,19,15,00));
-		DeadlineTask time3 = new DeadlineTask("eat bread", new DateTime(2013,5,22,19,15,00));
-		DeadlineTask time4 = new DeadlineTask("buy movie ticket", new DateTime(2013,11,21,19,15,00));
-		DeadlineTask time5 = new DeadlineTask("watch movie", new DateTime(2015,1,22,19,15,00));
-		DeadlineTask time6 = new DeadlineTask("go shopping", new DateTime(2015,11,23,19,15,00));
-		DeadlineTask time7 = new DeadlineTask("go shopping", new DateTime(2014,10,28,23,59,00));
-		DeadlineTask time8 = new DeadlineTask("go shopping", new DateTime(2014,11,2,00,1,00));
-		
-		System.out.println(dayLeft(now, now)); //Today
-		System.out.println(dayLeft(now, time0.endTime)); //Due 
-		System.out.println(dayLeft(now, time1.endTime)); //future
-		System.out.println(dayLeft(now, time3.endTime)); //due before today
-		System.out.println(dayLeft(now, time4.endTime)); //due after today
-		System.out.println(dayLeft(now, time5.endTime)); //future before today
-		System.out.println(dayLeft(now, time6.endTime)); //future after today
-		System.out.println(dayLeft(now, time7.endTime));
-		System.out.println(dayLeft(now, time8.endTime));
-		
-		//test.addTask(time0);
-		//test.addTask(time1);
-		//test.addTask(time2);
-		//test.addTask(time3);
-		//test.addTask(time4);
-		//test.addTask(time5);
-		//test.addTask(time6);
-		
 	}
 	
 	//This method is to find tasks which are due today.
