@@ -68,7 +68,7 @@ public class TabbedPaneDisplay extends JPanel {
 	
 	public void update(String text){
 		//TODO
-		if(text.contains("view")){
+		if(text.contains("view")|| text.contains("search")){
 			PaneArray.get(0).setText(new IndigoLogic(text).display);
 		}
 		else{

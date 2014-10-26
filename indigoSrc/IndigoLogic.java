@@ -1,4 +1,6 @@
 package indigoSrc;
+import java.util.ArrayList;
+
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -15,7 +17,7 @@ import org.joda.time.format.DateTimeFormatter;
 public class IndigoLogic {
 	public String display;
 	public String feedback;
-	private static ParserList ps = new ParserList();
+	private static ParserList ps = new ParserList();;
 	private static Parser parser;
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yy, HH:mm");
 	public static final String FILE_NAME = "myTask";
@@ -80,10 +82,24 @@ public class IndigoLogic {
 			case UNDO:
 				Undo classUndo = new Undo(parser, ps, taskList);
 				return classUndo.execute();
-				/*
+			case REDO:
+				Undo classRedo = new Undo(parser, ps, taskList);
+				return classRedo.rexecute();
 			case COMPLETE:
-				complete(parser.getEditIndex());
-				break; */
+				int indexC = parser.getEditIndex();
+				taskList.get(indexC).complete();
+				return "Task marked as complete";
+			case UNCOMPLETE:
+				int indexU = parser.getEditIndex();
+				taskList.get(indexU).unComplete();
+				return "Task marked as uncoplete";	
+			case SEARCH:
+				String keyWords = parser.getCommand();
+				ArrayList<Integer> indices = new ArrayList<Integer>();
+				indices = taskList.search(keyWords);
+				Read classView2 = new Read(parser, taskList);
+				display = classView2.viewSearch(indices);
+				return "Search has found";
 			default:
 				System.exit(0);
 		}

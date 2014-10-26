@@ -52,7 +52,7 @@ public class ParserList {
 	
 	public Parser undo(){
 		currentPos--;
-		return parserList.get(currentPos+1);
+		return parserList.get(currentPos + 1);
 	}
 	
 	public Parser redo(){

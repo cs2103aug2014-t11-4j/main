@@ -310,4 +310,23 @@ public class TaskList {
 		return floatingTaskList;
 	}
 
+	public ArrayList<Integer> search(String keyWords) {
+		// TODO Searches keyWords in the TaskList. Returns a list of Strings.
+		ArrayList<Integer> indices = new ArrayList<Integer>();
+		int floatSize = floatingTaskList.size();
+		int timeSize = timedTaskList.size();
+		for(int i=0; i<timeSize; i++){
+			if(timedTaskList.get(i).getDescription().contains(keyWords)){
+				indices.add(i + 1);
+			}
+		}
+		for(int j=0; j<floatSize; j++){
+			if(timedTaskList.get(j).getDescription().contains(keyWords)){
+				indices.add(j + timeSize);
+			}
+		}
+		
+		return indices;
+	}
+
 }

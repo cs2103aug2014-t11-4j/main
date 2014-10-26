@@ -22,6 +22,8 @@ public class Command{
 				return COMMAND_KEY.DELETE;
 			case "undo":
 				return COMMAND_KEY.UNDO;
+			case "redo":
+				return COMMAND_KEY.REDO;
 			case "complete":
 				return COMMAND_KEY.COMPLETE;
 			case "uncomplete":
