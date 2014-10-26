@@ -178,7 +178,7 @@ public class InputWindow extends JFrame {
 			readInput.selectAll();
 			IndigoLogic controller = new IndigoLogic(text);
 			liveUserFeedback2.setText(controller.feedback);
-			taskDisplay.update();
+			taskDisplay.update(text);
 			//showFeedback(controller);
 			readInput.requestFocusInWindow();
 		}

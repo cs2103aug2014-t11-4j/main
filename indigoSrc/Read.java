@@ -10,41 +10,80 @@ import org.junit.Test;
 
 public class Read extends CommandClass{
 	
-	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
+	//private static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
 	private static final String FILE_NAME = "myTask";
 	static final String newLine = System.getProperty("line.separator");
+	String feedback = "ViewClass";
+	String resulting = new String();
 
 	@Override
 	public String execute() {
 		// TODO Auto-generated method stub
-		return "display below";
+		view();
+		return feedback;
 	}
 	
 	public Read(Parser parsing, TaskList taskList){
 		parserVar = parsing;
 		this.taskListVar = taskList;
+		resulting = this.view();
 	}
 	
 	public String view(){
-		if(parserVar.getCommand().contains("-done")){
+		if(parserVar.getCommand().contains("done")){
+			feedback = "Done tasks are shown. Good Job!";
 			return viewDone();
-		} else if(parserVar.getCommand().contains("-undone")){
+		} else if(parserVar.getCommand().contains("undone")){
+			feedback = "These are your undone tasks. You can do it!";
 			return viewUndone();
 		} else if (parserVar.getCommand().contains("-f")){
-			return taskListVar.viewFloatingTask();
+			feedback = "All the floating tasks are shown";
+			return viewFloatingTask();
 		} else if (parserVar.getCommand().contains("-d")){
-			return taskListVar.viewDeadlineTask(DATE_FORMAT);
+			feedback = "All the deadline tasks are shown";
+			return viewDeadlineTask();
 		}  else if (parserVar.getCommand().contains("today")){
-			return viewOverDue() + viewToday();
+			feedback = "Today's tasks are shown";
+			return viewOverDue() + newLine + viewToday();
 		}  else if (parserVar.getCommand().contains("this week")){
-			return viewOverDue() + viewThisWeek();
+			feedback = "This week's tasks are shown";
+			return viewOverDue() + newLine + viewThisWeek();
 		}  else if (parserVar.getCommand().contains("this month")){
-			return viewOverDue() + viewThisMonth();
+			feedback = "This month's tasks are shown";
+			return viewThisMonth();
 		}  else if (parserVar.getCommand().contains("overdue")){
-			return viewOverDue();
+			feedback = "All tasks overdue are shown";
+			return viewOverDue().trim();
 		} else
-			return taskListVar.viewAll(DATE_FORMAT);
+			feedback = "All the tasks are shown!";
+			return viewAll();
 	}
+	
+	public String viewFloatingTask(){
+		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
+		for (int i=0,j=1;i<taskListVar.getFloatingList().size();i++){
+			assert taskListVar.getFloatingList().get(i).toDeadlineTask()==null;
+			result.append(j++ + ". " + 
+					taskListVar.getFloatingList().get(i).toString() + newLine);
+		}
+		return result.toString().trim();
+	}
+	
+	public String viewDeadlineTask(){
+		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
+		for (int i=0,j=1;i<taskListVar.getTimedList().size();i++){
+			DeadlineTask temp = (DeadlineTask) taskListVar.getTimedList().get(i);
+			result.append(j++ + ". " + temp.toString() + newLine);
+		}
+		return result.toString().trim();
+	}
+	
+	public String viewAll(){
+		int sum = taskListVar.getFloatingList().size() + taskListVar.getTimedList().size();
+		StringBuilder result = new StringBuilder("There are " + sum + " tasks listed:" + newLine);
+		result.append(viewDeadlineTask() + newLine + newLine + viewFloatingTask());
+		return result.toString();
+	} 
 	
 	public String viewDone(){
 		return taskListVar.viewDone();
@@ -93,15 +132,15 @@ public class Read extends CommandClass{
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
 		
-		StringBuilder result = new StringBuilder();
+		StringBuilder result = new StringBuilder("Today's tasks are: " + newLine);
 		int tlSize = taskListVar.getTimedList().size();
-		for (int i=0, j=1; i<tlSize; i++){
-				DeadlineTask temp = (DeadlineTask) taskListVar.get(i+1);
+		for (int i=1; i<=tlSize; i++){
+				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
 				if((temp.getKeyTime().getYear() == yearNow) && (temp.getKeyTime().getDayOfYear() == dayNow)){
-					result.append("[NO." + j++ + "]" + temp.toString(DATE_FORMAT) + newLine);
+					result.append(temp.toStringWODate() + newLine);
 			}
 		}
-		return result.toString();
+		return result.toString().trim();
 	}
 	
 	//This method is to find tasks which are due this week. 
@@ -111,23 +150,27 @@ public class Read extends CommandClass{
 		DateTime now = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
-		int day7 = dayNow + 1;
+		int day7 = dayNow + 7;
 		
 		StringBuilder result = new StringBuilder();
 		int tlSize = taskListVar.getTimedList().size();
-		for (int i=0, j=1; i<tlSize; i++){
-			
-				DeadlineTask temp = (DeadlineTask) taskListVar.get(i+1);
+		String timeKeeperCompare = dayLeft(now, now);
+		result.append(timeKeeperCompare + newLine);
+		for (int i=1; i<=tlSize; i++){
+				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
 				DateTime tempDate = temp.getTime();
-				String daisy = dayLeft(now, tempDate);
+				String timeKeeper = dayLeft(now, tempDate);
 				int tempDateDay = tempDate.getDayOfYear();
 				if((tempDate.getYear() == yearNow) && 
 					((tempDateDay >= dayNow) && (tempDateDay <= day7))){
-					result.append(daisy + newLine);
-					result.append("[NO." + j++ + "]" + temp.toString(DATE_FORMAT) + newLine);
+					if(!timeKeeperCompare.equals(timeKeeper)){
+						result.append(newLine + timeKeeper + newLine);
+						timeKeeperCompare = timeKeeper;
+					}
+						result.append(temp.toStringWODate() + newLine);
 				}
 		}
-		return result.toString();
+		return result.toString().trim();
 	}
 	
 	//This method is to find the tasks which are due this current month. Taking Overdue tasks 
@@ -139,15 +182,21 @@ public class Read extends CommandClass{
 		
 		StringBuilder result = new StringBuilder();
 		int tlSize = taskListVar.getTimedList().size();
-		for (int i=0, j=1; i<tlSize; i++){
-				DeadlineTask temp = (DeadlineTask) taskListVar.get(i+1);
+		String timeKeeperCompare = dayLeft(now, now);
+		for (int i=1; i<=tlSize; i++){
+				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
 				DateTime tempDate = temp.getTime();
+				String timeKeeper = dayLeft(now, tempDate);
 				int tempMonth = tempDate.getMonthOfYear();
 				if((tempDate.getYear() == yearNow) && (tempMonth == monthNow)){
-					result.append("[NO." + j++ + "]" + temp.toString(DATE_FORMAT) + newLine);
+					if(!timeKeeperCompare.equals(timeKeeper)){
+						result.append(newLine + timeKeeper + newLine);
+						timeKeeperCompare = timeKeeper;
+					}
+					result.append(temp.toStringWODate() + newLine);
 				}
 		}
-		return result.toString();
+		return result.toString().trim();
 	}
 	
 	//This method lets user see tasks which are overdue but not done
@@ -158,19 +207,23 @@ public class Read extends CommandClass{
 		
 		StringBuilder result = new StringBuilder();
 		int ntlsize = taskListVar.getTimedList().size();
-		for (int i=0, j=1; i<ntlsize; i++){
-			DeadlineTask temp = (DeadlineTask) taskListVar.get(i+1);
+		String timeKeeperCompare = dayLeft(now, now);
+		for (int i=1; i<=ntlsize; i++){
+			DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
 			DateTime tempDate = temp.getTime();
-			String daisy = dayLeft(now, tempDate);
+			String timeKeeper = dayLeft(now, tempDate);
 			int tempDateDay = tempDate.getDayOfYear();
 			int tempDateYear = tempDate.getYear();
 			if((tempDateYear < yearNow) || 
 				((tempDateDay < dayNow) && (tempDateYear <= yearNow))){
-				result.append(daisy + newLine);
-				result.append("[NO." + j++ + "]" + temp.toString(DATE_FORMAT) + newLine);
+				if(!timeKeeperCompare.equals(timeKeeper)){
+					result.append(newLine + timeKeeper + newLine);
+					timeKeeperCompare = timeKeeper;
+				}
+				result.append(temp.toStringWODate() + newLine);
 			}
 		}
-		return result.toString();
+		return result.toString().trim() + newLine;
 	}
 	
 	public static String dayLeft(DateTime today, DateTime taskDate){

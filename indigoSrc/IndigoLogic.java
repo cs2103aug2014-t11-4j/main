@@ -17,7 +17,7 @@ public class IndigoLogic {
 	public String feedback;
 	private static ParserList ps = new ParserList();
 	private static Parser parser;
-	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yy-MM-dd, kk:mm:ss");
+	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yy, kk:mm");
 	public static final String FILE_NAME = "myTask";
 	private static TaskList taskList = new TaskList();
 	
@@ -30,7 +30,14 @@ public class IndigoLogic {
 		loadData();
 		feedback = readCommand(userInput);
 		Read rc = new Read(parser, taskList);
-		display = rc.view();
+		if(!userInput.contains("view")){
+			display = rc.view();
+		} else {
+			Parser p = new Parser(userInput);
+			rc = new Read(p, taskList);
+			rc.execute();
+			display = rc.resulting;
+		}
 		saveData();
 	}
 
