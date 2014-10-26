@@ -1,7 +1,11 @@
 package indigoSrc;
-import static org.junit.Assert.*;
 
-import org.junit.Test;
+/* This class is the create class which adds the task that user
+ * would want to add. This class has the function to add task either
+ * in the floating tasklist or the deadline tasklist.
+ * 
+ * @author Ken
+ */
 
 public class Create extends CommandClass {
 
@@ -32,12 +36,6 @@ public class Create extends CommandClass {
 		}
 	}
 	
-	@Test
-	public void testCreate(){
-		Parser testParse = new Parser("add code finish v0.2");
-		add();
-	}
-	
 	public String add() {
 
 		int totalSize = taskListVar.getFloatingList().size() + taskListVar.getTimedList().size() + 1;
@@ -45,7 +43,6 @@ public class Create extends CommandClass {
 			System.out.println("invalid index");
 			return "Invalid index";
 		} else {
-		System.out.println("task addded.");
 		taskListVar.addTask(editIndex, toDo);
 		psl.push(new Parser("delete " + editIndex));
 		return toDo.toString() + " is added to taskList!";

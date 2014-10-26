@@ -9,7 +9,8 @@ package indigoSrc;
  * @author Joanna
  *
  */
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.logging.ConsoleHandler;
@@ -60,17 +61,16 @@ public class Parser {
 			index = toDo.indexOf("today");
 		} else if(toDo.contains(" tomorrow")){
 			index = toDo.indexOf("tomorrow");
-		} else if(toDo.contains(" by")){
+		} else if(toDo.contains(" by ")){
 			index = toDo.indexOf("by");
-		} else if (toDo.contains(" at")){
+		} else if (toDo.contains(" at ")){
 			index = toDo.indexOf("at");
-		} else if(toDo.contains(" from")){
+		} else if(toDo.contains(" from ")){
 			index = toDo.indexOf("from");
-		} else if(toDo.contains(" on")){
+		} else if(toDo.contains(" on ")){
 			index = toDo.indexOf("on");
 		}
 		return toDo.substring(0, index);
-	
 	}
 
 	public Parser(String userCommand) {
