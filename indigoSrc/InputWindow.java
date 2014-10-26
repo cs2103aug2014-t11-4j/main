@@ -200,23 +200,26 @@ public class InputWindow extends JFrame {
 	private void displayInfo(KeyEvent e, String command) {
         int id = e.getID();
         if (id == KeyEvent.KEY_TYPED) {
-        	liveUserFeedback.setText( "");	
+        	
         }
         
-        else if(id == KeyEvent.KEY_PRESSED) {
-        	liveUserFeedback.setText( "");	
+        else if(id == KeyEvent.KEY_PRESSED) {	
         	
         } 
         
         else if(id == KeyEvent.KEY_RELEASED) {
         	if (command.equals("a") || command.equals("ad") || command.equals("add")) 
-        		liveUserFeedback.append( "add help text here");
+        		liveUserFeedback.setText( "add (index) <some task>");
         	else if (command.equals("d") ||command.equals("de") || command.equals("del") || command.equals("dele")|| command.equals("delet")|| command.equals("delete"))
-        		liveUserFeedback.append( "delete help text here");
+        		liveUserFeedback.setText( "delete <index>");
         	else if (command.equals("v") || command.equals("vi") || command.equals("vie") || command.equals("view"))
-        		liveUserFeedback.append( "view help text here");
+        		liveUserFeedback.setText( "view <today/this week/this month/over due>");
         	else if (command.equals("e") || command.equals("ed") || command.equals("edi") || command.equals("edit"))
-        		liveUserFeedback.append( "edit help text here");
+        		liveUserFeedback.setText( "edit <index> <some task>");
+        	else if (command.equals("c")||command.equals("co")||command.equals("com")||command.equals("comp")||command.equals("compl")
+        			||command.equals("comple")||command.equals("complet")||command.equals("complete")){
+        		liveUserFeedback.setText("complete <index>");
+        	}
         }
 	}
 	
