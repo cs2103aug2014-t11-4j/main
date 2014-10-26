@@ -30,7 +30,7 @@ public class Parser {
 	private DateTime startTime;
 	private DateTime endTime;
 	boolean containConj 		= false;				//determine if it is a floating task
-	int editIndex;
+	private int editIndex;
 	private boolean isFloatingTask;
 	private boolean isDeadlineTask;
 	private boolean isTimedTask;
