@@ -1,7 +1,11 @@
 package indigoSrc;
-import static org.junit.Assert.*;
 
-import org.junit.Test;
+/* This class is the delete class which deletes the task that user
+ * would want to delete. User will have to indicate the index which the task 
+ * lies to delete the task.
+ * 
+ * @author Ken
+ */
 
 public class Delete extends CommandClass{
 
@@ -13,13 +17,7 @@ public class Delete extends CommandClass{
 	public Delete(Parser parsing, ParserList parseL, TaskList taskList){
 		parserVar = parsing;
 		psl = parseL;
-		this.taskListVar = taskList;
-	}
-	
-	@Test
-	public void testDelete(){
-		Parser testParse = new Parser("delete 1");
-		assertEquals(delete(), "Task deleted");
+		taskListVar = taskList;
 	}
 	
 	public String delete() throws ArrayIndexOutOfBoundsException{
@@ -28,9 +26,13 @@ public class Delete extends CommandClass{
 		if (index > totalSize || index < 1){
 			return "Invalid index";
 		} else {
-		psl.push(new Parser("add " + index + " " + taskListVar.get(index).getDescription()));
-		taskListVar.deleteTask(index);
-		return "Task deleted";
+			FloatingTask task = taskListVar.get(index);
+			if(!(task instanceof DeadlineTask)){
+				index += taskListVar.getTimedList().size();
+			}
+			psl.push(new Parser("add " + index + " " + taskListVar.get(index).getDescription()));
+			taskListVar.deleteTask(index);
+			return "Task deleted";
 		}
 	}
 

@@ -1,7 +1,10 @@
 package indigoSrc;
-import static org.junit.Assert.*;
-
-import org.junit.Test;
+/* This class is the update class which can update the task that user
+ * would want to edit. User will have to indicate the index which the task 
+ * lies to update the task.
+ * 
+ * @author Ken
+ */
 
 public class Update extends CommandClass{
 
@@ -14,15 +17,10 @@ public class Update extends CommandClass{
 	public Update(Parser parsing, ParserList parseL, TaskList taskList){
 		parserVar = parsing;
 		psl = parseL;
-		this.taskListVar = taskList; 
+		taskListVar = taskList; 
 
 	}
 	
-	@Test
-	public void testUpdate(){
-		Parser testParse = new Parser("edit 1 change to study");
-		assertEquals(edit(), "Task updated");
-	}
 	
 	public String edit() throws ArrayIndexOutOfBoundsException{
 		int index = parserVar.getEditIndex();
@@ -38,9 +36,12 @@ public class Update extends CommandClass{
 		if (index > totalSize || index <1){
 			return "index is not within the number of tasks in taskList";
 		} else {
-		psl.push(new Parser("edit " + index + " " + taskListVar.get(index).getDescription()));
-		taskListVar.editTask(index, task);
-		return "Task updated";
+			if(!(task instanceof DeadlineTask)){
+				index += taskListVar.getTimedList().size();
+			}
+			psl.push(new Parser("edit " + index + " " + taskListVar.get(index).getDescription()));
+			taskListVar.editTask(index, task);
+			return "Task updated";
 		}
 	}
 

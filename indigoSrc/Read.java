@@ -67,6 +67,7 @@ public class Read extends CommandClass{
 			return viewAll();
 	}
 	
+	//The view of all tasks in floating tasklist
 	public String viewFloatingTask(){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
 		for (int i=0,j=1;i<taskListVar.getFloatingList().size();i++){
@@ -77,6 +78,18 @@ public class Read extends CommandClass{
 		return result.toString().trim();
 	}
 	
+	//The view of all tasks in floating tasklist with index addendum.
+	public String viewFloatingTask(int index){
+		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
+		for (int i=0,j=index+1;i<taskListVar.getFloatingList().size();i++){
+			assert taskListVar.getFloatingList().get(i).toDeadlineTask()==null;
+			result.append(j++ + ". " + 
+					taskListVar.getFloatingList().get(i).toString() + newLine);
+		}
+		return result.toString().trim();
+	}
+	
+	//The view of all tasks in deadline tasklist
 	public String viewDeadlineTask(){
 		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
 		for (int i=0,j=1;i<taskListVar.getTimedList().size();i++){
@@ -86,17 +99,21 @@ public class Read extends CommandClass{
 		return result.toString().trim();
 	}
 	
+	//View all basically views deadline tasklist and floating tasklist
 	public String viewAll(){
 		int sum = taskListVar.getFloatingList().size() + taskListVar.getTimedList().size();
+		int index = taskListVar.getTimedList().size();
 		StringBuilder result = new StringBuilder("There are " + sum + " tasks listed:" + newLine);
-		result.append(viewDeadlineTask() + newLine + newLine + viewFloatingTask());
+		result.append(viewDeadlineTask() + newLine + newLine + viewFloatingTask(index));
 		return result.toString();
 	} 
 	
+	//View all the tasks which are done
 	public String viewDone(){
 		return taskListVar.viewDone();
 	}
 	
+	//View all the tasks which are not done
 	public String viewUndone(){
 		return taskListVar.viewUndone();
 	}
@@ -241,6 +258,26 @@ public class Read extends CommandClass{
 		}
 		
 		return returnString[0] + returnString[1];
+	}
+
+	public String viewSearch(ArrayList<Integer> indices) {
+		DateTime now = new DateTime();
+		StringBuilder result = new StringBuilder();
+		DeadlineTask tempFirst = (DeadlineTask) taskListVar.get(indices.get(0));
+		String timeKeeperCompare = dayLeft(now, tempFirst.getTime());
+		result.append(timeKeeperCompare + newLine);
+		result.append(tempFirst.toStringWODate() + newLine);
+		for (int i=1; i<indices.size(); i++){
+			DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
+			DateTime tempDate = temp.getTime();
+			String timeKeeper = dayLeft(now, tempDate);
+			if(!timeKeeperCompare.equals(timeKeeper)){
+				result.append(newLine + timeKeeper + newLine);
+				timeKeeperCompare = timeKeeper;
+			}
+			result.append(temp.toStringWODate() + newLine);
+		}
+		return result.toString().trim() + newLine;
 	}
 
 }
