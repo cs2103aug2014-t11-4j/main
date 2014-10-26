@@ -39,11 +39,10 @@ public class InputWindow extends JFrame {
 	private static final int BOTTOM_PANEL_INDEX = 3;
 	private static final int INPUT_FIELD_INDEX = 4;
 	private static final int USER_FEEDBACK_INDEX = 5;
-	   static final String newline = System.getProperty("line.separator");
+	static final String newline = System.getProperty("line.separator");
 	private JLayeredPane displayLayers = new JLayeredPane();
 	private JTextField readInput;
 	private JTextArea liveUserFeedback;
-	private JTextArea test;
 	TabbedPaneDisplay taskDisplay;
 	
 	@Override
@@ -101,7 +100,7 @@ public class InputWindow extends JFrame {
 			background.setBounds(0,0,700, 500);
 			displayLayers.add(background,new Integer(0));
 		} catch (IOException e) {
-			liveUserFeedback.setText("Cannot load image");
+			//liveUserFeedback.setText("Cannot load image");
 		}
 		
 	}
@@ -188,13 +187,13 @@ public class InputWindow extends JFrame {
 		}
 
 		@Override
-			public void keyReleased(KeyEvent e) {
+		public void keyReleased(KeyEvent e) {
 			displayInfo(e, readInput.getText());
-			 }
+		}
 
 		@Override
-			public void keyTyped(KeyEvent e) {
-		 displayInfo(e, readInput.getText());
+		public void keyTyped(KeyEvent e) {
+			displayInfo(e, readInput.getText());
 		}
 
 	}
