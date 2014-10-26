@@ -10,6 +10,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -37,7 +39,7 @@ public class InputWindow extends JFrame {
 	private static final int BOTTOM_PANEL_INDEX = 3;
 	private static final int INPUT_FIELD_INDEX = 4;
 	private static final int USER_FEEDBACK_INDEX = 5;
-	
+	   static final String newline = System.getProperty("line.separator");
 	private JLayeredPane displayLayers = new JLayeredPane();
 	private JTextField readInput;
 	private JTextArea liveUserFeedback;
@@ -66,7 +68,7 @@ public class InputWindow extends JFrame {
 	
 	public InputWindow(){
 		initialize(this);
-		fillUpTheMainWindow(this);
+		addComponentsToTheFrame(this);
 	}
 
 	public void initialize(JFrame mainWindow){	
@@ -76,7 +78,7 @@ public class InputWindow extends JFrame {
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	public void fillUpTheMainWindow(JFrame mainWindow){
+	public void addComponentsToTheFrame(JFrame mainWindow){
 		Container contentPane = mainWindow.getContentPane();
 		contentPane.add(displayLayers);
 		JPanel mainPanel = new JPanel();
@@ -99,8 +101,7 @@ public class InputWindow extends JFrame {
 			background.setBounds(0,0,700, 500);
 			displayLayers.add(background,new Integer(0));
 		} catch (IOException e) {
-			//TODO some notifying
-			//liveUserFeedback.setText("Cannot load image");
+			liveUserFeedback.setText("Cannot load image");
 		}
 		
 	}
@@ -150,6 +151,7 @@ public class InputWindow extends JFrame {
 		readInput = new JTextField();
 		bottomPanel.add(readInput, constraints);	
 		readInput.addActionListener(new readInputTextFieldListener());
+		readInput.addKeyListener(new readInputTextFieldListener());
 		
 	}
 	private void addLiveUserFeedback(JPanel bottomPanel) {
@@ -165,19 +167,9 @@ public class InputWindow extends JFrame {
 		
 		
 	}
-	
-/*	public void showFeedback(IndigoLogic logic){
-		taskDisplay.setEditable(false);
-		taskDisplay.setText(logic.dateLeft + "\n" + logic.feedback + "\n");
-	}
-	public void showTaskList(){
-		for (int i=0; i < inputs.size(); i++){
-		taskDisplay.setText(inputs.get(i) + '\n');
-		}
-	}*/
 
 	
-	public class readInputTextFieldListener implements ActionListener {
+	public class readInputTextFieldListener implements ActionListener, KeyListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -187,10 +179,48 @@ public class InputWindow extends JFrame {
 			liveUserFeedback.setText(controller.feedback);
 			taskDisplay.update();
 			//showFeedback(controller);
+			readInput.requestFocusInWindow();
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			 displayInfo(e, readInput.getText());
+		}
+
+		@Override
+			public void keyReleased(KeyEvent e) {
+			displayInfo(e, readInput.getText());
+			 }
+
+		@Override
+			public void keyTyped(KeyEvent e) {
+		 displayInfo(e, readInput.getText());
 		}
 
 	}
-
+	private void displayInfo(KeyEvent e, String command) {
+        int id = e.getID();
+        if (id == KeyEvent.KEY_TYPED) {
+        	liveUserFeedback.setText( "");	
+        }
+        
+        else if(id == KeyEvent.KEY_PRESSED) {
+        	liveUserFeedback.setText( "");	
+        	
+        } 
+        
+        else if(id == KeyEvent.KEY_RELEASED) {
+        	if (command.equals("a") || command.equals("ad") || command.equals("add")) 
+        		liveUserFeedback.append( "add help text here");
+        	else if (command.equals("d") ||command.equals("de") || command.equals("del") || command.equals("dele")|| command.equals("delet")|| command.equals("delete"))
+        		liveUserFeedback.append( "delete help text here");
+        	else if (command.equals("v") || command.equals("vi") || command.equals("vie") || command.equals("view"))
+        		liveUserFeedback.append( "view help text here");
+        	else if (command.equals("e") || command.equals("ed") || command.equals("edi") || command.equals("edit"))
+        		liveUserFeedback.append( "edit help text here");
+        }
+	}
+	
 	private GridBagConstraints setConstraints(int componentIndex) {
 		GridBagConstraints constraints;
 		Insets bottomPanel = new Insets(10,0,0,10);

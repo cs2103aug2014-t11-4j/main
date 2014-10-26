@@ -17,30 +17,30 @@ import javax.swing.ScrollPaneConstants;
 public class TabbedPaneDisplay extends JPanel {
 	
 	private JTabbedPane tabbedPaneDisplay;
-	private JTextPane textPaneToday; 
+	private JTextPane taskDisplayPane; 
 	public IndigoLogic id = new IndigoLogic();
 	public TabbedPaneDisplay(){
 		super(new GridLayout(1,1));
 		
 		tabbedPaneDisplay = new JTabbedPane();
 	
-		JComponent allPanel = makeTextPanel(textPaneToday, id.display);
+		JComponent allPanel = makeTextPanel(taskDisplayPane, id.display);
 		tabbedPaneDisplay.addTab("Inbox", null, allPanel, "Displays all tasks.");
 		tabbedPaneDisplay.setMnemonicAt(0, KeyEvent.VK_1);
 		
-		JComponent dailyPanel = makeTextPanel(textPaneToday, new IndigoLogic("view today").display);
+		JComponent dailyPanel = makeTextPanel(taskDisplayPane, new IndigoLogic("view today").display);
 		tabbedPaneDisplay.addTab("Today", null, dailyPanel, "Displays daily tasks.");
 		tabbedPaneDisplay.setMnemonicAt(1, KeyEvent.VK_2);
 		
-		JComponent weeklyPanel = makeTextPanel(textPaneToday, new IndigoLogic("view this week").display);
+		JComponent weeklyPanel = makeTextPanel(taskDisplayPane, new IndigoLogic("view this week").display);
 		tabbedPaneDisplay.addTab("This Week", null, weeklyPanel, "Displays weekly tasks.");
 		tabbedPaneDisplay.setMnemonicAt(2, KeyEvent.VK_3);
 		
-		JComponent monthlyPanel = makeTextPanel(textPaneToday, new IndigoLogic("view this month").display);
+		JComponent monthlyPanel = makeTextPanel(taskDisplayPane, new IndigoLogic("view this month").display);
 		tabbedPaneDisplay.addTab("This Month", null, monthlyPanel, "Displays monthly tasks.");
 		tabbedPaneDisplay.setMnemonicAt(3, KeyEvent.VK_4);
 		
-		JComponent floatingPanel = makeTextPanel(textPaneToday, new IndigoLogic("view -f").display);
+		JComponent floatingPanel = makeTextPanel(taskDisplayPane, new IndigoLogic("view -f").display);
 		tabbedPaneDisplay.addTab("Floating", null, floatingPanel, "Displays no-deadline tasks.");
 		tabbedPaneDisplay.setMnemonicAt(4, KeyEvent.VK_5);
 	
@@ -53,11 +53,11 @@ public class TabbedPaneDisplay extends JPanel {
 	private JComponent makeTextPanel(JTextPane textPane, String text) {
 		
 		JPanel tabbedPanel = new JPanel();
-		textPaneToday = new JTextPane();
+		taskDisplayPane = new JTextPane();
 
-		JScrollPane scroll = new JScrollPane(textPaneToday);
+		JScrollPane scroll = new JScrollPane(taskDisplayPane);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		textPaneToday.setText(text);
+		taskDisplayPane.setText(text);
 		tabbedPanel.setLayout(new GridLayout(1,1));
 		tabbedPanel.add(scroll);
 		
@@ -68,7 +68,7 @@ public class TabbedPaneDisplay extends JPanel {
 	public void update(){
 		//TODO
 		IndigoLogic lc = new IndigoLogic("view -today");
-		textPaneToday.setText(lc.display);
+		taskDisplayPane.setText(lc.display);
 	}
 	
 	private void setTab(String index){
