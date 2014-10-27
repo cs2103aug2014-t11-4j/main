@@ -58,17 +58,17 @@ public class Parser {
 		toDo = toDo.trim();
 		int index = toDo.length();
 		if(toDo.contains(" today")){
-			index = toDo.indexOf("today");
+			index = toDo.indexOf(" today ");
 		} else if(toDo.contains(" tomorrow")){
-			index = toDo.indexOf("tomorrow");
+			index = toDo.indexOf(" tomorrow ");
 		} else if(toDo.contains(" by ")){
-			index = toDo.indexOf("by");
+			index = toDo.indexOf(" by ");
 		} else if (toDo.contains(" at ")){
-			index = toDo.indexOf("at");
+			index = toDo.indexOf(" at ");
 		} else if(toDo.contains(" from ")){
-			index = toDo.indexOf("from");
+			index = toDo.indexOf(" from ");
 		} else if(toDo.contains(" on ")){
-			index = toDo.indexOf("on");
+			index = toDo.indexOf(" on ");
 		}
 		return toDo.substring(0, index);
 	}
@@ -123,7 +123,8 @@ public class Parser {
 				break;
 				
 			default:
-				keyWord = "view";
+				keyWord = "add";
+				toDo = userCommand + "";
 			} 
 		}	else {
 			assert editIndex < 0;
@@ -135,9 +136,11 @@ public class Parser {
 			case "undo":
 				keyWord = "undo";
 				break;
-				
-			default:
+			case "view":
 				keyWord = "view";
+				break;
+			default:
+				keyWord = "add";
 			}
 			toDo = userCommand + "";
 		}

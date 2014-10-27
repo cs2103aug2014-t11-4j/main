@@ -33,7 +33,7 @@ public class Read extends CommandClass{
 	
 	public Read(Parser parsing, TaskList taskList){
 		parserVar = parsing;
-		this.taskListVar = taskList;
+		taskListVar = taskList;
 		resulting = this.view();
 	}
 	
@@ -261,6 +261,9 @@ public class Read extends CommandClass{
 	}
 
 	public String viewSearch(ArrayList<Integer> indices) {
+		if(indices.size()==0){
+			return "None";
+		}
 		DateTime now = new DateTime();
 		StringBuilder result = new StringBuilder();
 		DeadlineTask tempFirst = (DeadlineTask) taskListVar.get(indices.get(0));
