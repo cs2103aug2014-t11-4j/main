@@ -50,6 +50,7 @@ public class IndigoLogic {
 		 * 2.execute Command
 		 */ // TODO simple input for testing
 		parser = new Parser(userCommand);
+		System.out.println(userCommand);
 		Command commandInput = new Command(parser.getKeyCommand());
 
 		return executeCommand(commandInput);
@@ -92,14 +93,18 @@ public class IndigoLogic {
 			case UNCOMPLETE:
 				int indexU = parser.getEditIndex();
 				taskList.get(indexU).unComplete();
-				return "Task marked as uncoplete";	
+				return "Task marked as uncomplete";	
 			case SEARCH:
 				String keyWords = parser.getCommand();
 				ArrayList<Integer> indices = new ArrayList<Integer>();
 				indices = taskList.search(keyWords);
 				Read classView2 = new Read(parser, taskList);
 				display = classView2.viewSearch(indices);
-				return "Search has found";
+				if(display.equals("None")){
+					return "Search not found";
+				} else {
+					return "Search has found";
+				}
 			default:
 				System.exit(0);
 		}
