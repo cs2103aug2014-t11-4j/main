@@ -123,7 +123,8 @@ public class Parser {
 				break;
 				
 			default:
-				keyWord = "view";
+				keyWord = "add";
+				toDo = userCommand + "";
 			} 
 		}	else {
 			assert editIndex < 0;
@@ -135,9 +136,11 @@ public class Parser {
 			case "undo":
 				keyWord = "undo";
 				break;
-				
-			default:
+			case "view":
 				keyWord = "view";
+				break;
+			default:
+				keyWord = "add";
 			}
 			toDo = userCommand + "";
 		}
