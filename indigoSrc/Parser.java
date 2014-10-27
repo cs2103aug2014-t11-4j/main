@@ -124,7 +124,7 @@ public class Parser {
 				break;
 				
 			default:
-				keyWord = "add";
+				keyWord = "view";
 				toDo = userCommand + "";
 			} 
 		}	else {

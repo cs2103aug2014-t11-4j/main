@@ -28,7 +28,7 @@ public class Search extends CommandClass {
 		int timeTasks = timeTaskList.size();
 		StringList.append("DeadLine Tasks found: " + "\n");
 		for(int i=0; i<timeTasks; i++){
-			if(timeTaskList.get(i).getDescription().contains(keyWords)){
+			if(timeTaskList.get(i).getDescription().toLowerCase().contains(keyWords)){
 				DeadlineTask temp = (DeadlineTask) timeTaskList.get(i);
 				StringList.append(i+1 + ". " + temp.toString() + "\n");
 				found++;
@@ -40,7 +40,7 @@ public class Search extends CommandClass {
 		}
 		StringList.append("\n" + "Floating Tasks found: " + "\n");
 		for(int j=0; j<floatTasks; j++){
-			if(floatTaskList.get(j).getDescription().contains(keyWords)){
+			if(floatTaskList.get(j).getDescription().toLowerCase().contains(keyWords)){
 				int sum = j + timeTasks + 1;
 				StringList.append(sum + ". " + floatTaskList.get(j).getDescription() + "\n");
 				found++;

@@ -48,18 +48,20 @@ public class Read extends CommandClass{
 		} else if (parserVar.getCommand().contains("-d")){
 			feedback = "All the deadline tasks are shown";
 			return viewDeadlineTask();
-		}  else if (parserVar.getCommand().contains("today")){
-			feedback = "Today's tasks are shown";
-			return viewOverDue() + newLine + viewToday();
-		}  else if (parserVar.getCommand().contains("this week")){
-			feedback = "This week's tasks are shown";
-			return viewOverDue() + newLine + viewThisWeek();
-		}  else if (parserVar.getCommand().contains("this month")){
-			feedback = "This month's tasks are shown";
-			return viewThisMonth();
 		}  else if (parserVar.getCommand().contains("overdue")){
 			feedback = "All tasks overdue are shown";
 			return viewOverDue().trim();
+		}  else if (parserVar.getCommand().contains("today")){
+			feedback = "Today's tasks are shown";
+			String result = viewOverDue() + newLine + viewToday();
+			return result.trim();
+		}  else if (parserVar.getCommand().contains("this week")){
+			feedback = "This week's tasks are shown";
+			String result = viewOverDue() + newLine + viewToday();
+			return result.trim();
+		}  else if (parserVar.getCommand().contains("this month")){
+			feedback = "This month's tasks are shown";
+			return viewThisMonth();
 		} else
 			feedback = "All the tasks are shown!";
 			return viewAll();
@@ -173,6 +175,7 @@ public class Read extends CommandClass{
 		StringBuilder result = new StringBuilder();
 		int tlSize = taskListVar.getTimedList().size();
 		String timeKeeperCompare = dayLeft(now, now);
+		result.append(timeKeeperCompare + newLine);
 		for (int i=1; i<=tlSize; i++){
 				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
 				DateTime tempDate = temp.getTime();
@@ -211,6 +214,9 @@ public class Read extends CommandClass{
 					timeKeeperCompare = timeKeeper;
 				}
 				result.append(temp.toStringWODate() + newLine);
+				if(result.equals(newLine)){
+					return result.append("").toString().trim();
+				}
 			}
 		}
 		return result.toString().trim() + newLine;
