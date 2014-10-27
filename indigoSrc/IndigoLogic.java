@@ -31,14 +31,18 @@ public class IndigoLogic {
 	public IndigoLogic(String userInput){
 		loadData();
 		feedback = readCommand(userInput);
-		Read rc = new Read(parser, taskList);
-		if(!userInput.contains("view")){
-			display = rc.view();
-		} else {
-			Parser p = new Parser(userInput);
-			rc = new Read(p, taskList);
+		Parser p = new Parser(userInput);
+		if(userInput.contains("view")){
+			Read rc = new Read(p, taskList);
 			rc.execute();
 			display = rc.resulting;
+		} else if(userInput.contains("search")) {
+			Search sc = new Search(parser, taskList);
+			sc.execute();
+			display = sc.displayLine;
+		}	else {
+			Read rc = new Read(p, taskList);
+			display = rc.view();
 		}
 		saveData();
 	}
@@ -95,16 +99,10 @@ public class IndigoLogic {
 				taskList.get(indexU).unComplete();
 				return "Task marked as uncomplete";	
 			case SEARCH:
-				String keyWords = parser.getCommand();
-				ArrayList<Integer> indices = new ArrayList<Integer>();
-				indices = taskList.search(keyWords);
-				Read classView2 = new Read(parser, taskList);
-				display = classView2.viewSearch(indices);
-				if(display.equals("None")){
-					return "Search not found";
-				} else {
-					return "Search has found";
-				}
+				Search classSearch = new Search(parser, taskList);
+				String result = classSearch.execute();
+				display = classSearch.displayLine;
+				return result;
 			default:
 				System.exit(0);
 		}

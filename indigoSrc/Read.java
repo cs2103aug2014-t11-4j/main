@@ -18,8 +18,6 @@ import org.junit.Test;
 
 public class Read extends CommandClass{
 	
-	//private static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
-	private static final String FILE_NAME = "myTask";
 	static final String newLine = System.getProperty("line.separator");
 	String feedback = "ViewClass";
 	String resulting = new String();
@@ -38,12 +36,12 @@ public class Read extends CommandClass{
 	}
 	
 	public String view(){
-		if(parserVar.getCommand().contains("done")){
-			feedback = "Done tasks are shown. Good Job!";
-			return viewDone();
-		} else if(parserVar.getCommand().contains("undone")){
+		if(parserVar.getCommand().contains("undone")){
 			feedback = "These are your undone tasks. You can do it!";
 			return viewUndone();
+		} else if(parserVar.getCommand().contains("done")){
+			feedback = "Done tasks are shown. Good Job!";
+			return viewDone();
 		} else if (parserVar.getCommand().contains("-f")){
 			feedback = "All the floating tasks are shown";
 			return viewFloatingTask();
@@ -259,28 +257,4 @@ public class Read extends CommandClass{
 		
 		return returnString[0] + returnString[1];
 	}
-
-	public String viewSearch(ArrayList<Integer> indices) {
-		if(indices.size()==0){
-			return "None";
-		}
-		DateTime now = new DateTime();
-		StringBuilder result = new StringBuilder();
-		DeadlineTask tempFirst = (DeadlineTask) taskListVar.get(indices.get(0));
-		String timeKeeperCompare = dayLeft(now, tempFirst.getTime());
-		result.append(timeKeeperCompare + newLine);
-		result.append(tempFirst.toStringWODate() + newLine);
-		for (int i=1; i<indices.size(); i++){
-			DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
-			DateTime tempDate = temp.getTime();
-			String timeKeeper = dayLeft(now, tempDate);
-			if(!timeKeeperCompare.equals(timeKeeper)){
-				result.append(newLine + timeKeeper + newLine);
-				timeKeeperCompare = timeKeeper;
-			}
-			result.append(temp.toStringWODate() + newLine);
-		}
-		return result.toString().trim() + newLine;
-	}
-
 }
