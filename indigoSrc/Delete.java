@@ -26,10 +26,6 @@ public class Delete extends CommandClass{
 		if (index > totalSize || index < 1){
 			return "Invalid index";
 		} else {
-			FloatingTask task = taskListVar.get(index);
-			if(!(task instanceof DeadlineTask)){
-				index += taskListVar.getTimedList().size();
-			}
 			psl.push(new Parser("add " + index + " " + taskListVar.get(index).getDescription()));
 			taskListVar.deleteTask(index);
 			return "Task deleted";
