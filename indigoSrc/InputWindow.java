@@ -111,7 +111,7 @@ public class InputWindow extends JFrame {
 		topPanel.setPreferredSize(new Dimension(600,200));
 		topPanel.setOpaque(false);
 		GridBagConstraints constraints;
-		constraints = setConstraints(TOP_PANEL_INDEX);
+		constraints = setConstraints(BOTTOM_PANEL_INDEX);
 		
 		addTabbedPane(topPanel);
 		
@@ -136,7 +136,7 @@ public class InputWindow extends JFrame {
 		bottomPanel.setOpaque(false);
 		GridBagConstraints constraints;
 		
-		constraints = setConstraints(BOTTOM_PANEL_INDEX);
+		constraints = setConstraints(TOP_PANEL_INDEX);
 		
 		addReadInput(bottomPanel);
 		addLiveUserFeedback(bottomPanel);
@@ -229,15 +229,8 @@ public class InputWindow extends JFrame {
 		Insets readInputInsets = new Insets(0,20,0,20);
 		Insets liveUserFeedbackInsets = new Insets(0,20,10,20);
 		
-		if(componentIndex == TOP_PANEL_INDEX){
-			constraints = new GridBagConstraints(0,1,3,3,0.0,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,topPanel,0,0);
-			return constraints;
-		}
-		else if(componentIndex == TABBED_PANE_INDEX){
-			constraints = new GridBagConstraints(0,0,1,1,0.1,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,tabbedPaneDisplayInsets,0,0);
-			return constraints;
-		}
-		else if(componentIndex == BOTTOM_PANEL_INDEX){
+		
+		if(componentIndex ==  TOP_PANEL_INDEX){
 			constraints = new GridBagConstraints(0,0,3,1,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,bottomPanel,0,0);
 			return constraints;
 		}
@@ -250,7 +243,14 @@ public class InputWindow extends JFrame {
 			constraints = new GridBagConstraints(0,1,3,1,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,liveUserFeedbackInsets,0,0);
 			return constraints;
 		}
-		
+		else if(componentIndex ==BOTTOM_PANEL_INDEX){
+			constraints = new GridBagConstraints(0,1,3,3,0.0,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,topPanel,0,0);
+			return constraints;
+		}
+		else if(componentIndex == TABBED_PANE_INDEX){
+			constraints = new GridBagConstraints(0,0,1,1,0.1,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,tabbedPaneDisplayInsets,0,0);
+			return constraints;
+		}
 		
 		return null;
 	}
