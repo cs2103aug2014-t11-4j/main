@@ -113,7 +113,7 @@ public class FillUpMainWindow {
 	private void addLiveUserFeedback(JPanel topPanel) {
 		GridBagConstraints constraints;
 		constraints = setConstraints(USER_FEEDBACK_INDEX);
-		liveUserFeedback = new JTextArea(1,1);
+		liveUserFeedback = new JTextArea(3,1);
 		Border liveUserFeedbackBorder = new LineBorder(Color.white);
 		liveUserFeedback.setMaximumSize(liveUserFeedback.getSize());
 		liveUserFeedback.setBorder(liveUserFeedbackBorder);
@@ -184,10 +184,10 @@ public class FillUpMainWindow {
 	private GridBagConstraints setConstraints(int componentIndex) {
 		GridBagConstraints constraints;
 		Insets topPanel = new Insets(10,0,0,10);
-		Insets bottomPanel = new Insets(0,0,70,10);
-		Insets tabbedPaneDisplayInsets = new Insets(10,20,0,20);
+		Insets bottomPanel = new Insets(0,0,60,10);
+		Insets tabbedPaneDisplayInsets = new Insets(0,20,0,20);
 		Insets readInputInsets = new Insets(0,20,0,20);
-		Insets liveUserFeedbackInsets = new Insets(0,20,10,20);
+		Insets liveUserFeedbackInsets = new Insets(0,20,0,20);
 		
 
 		
