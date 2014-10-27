@@ -24,6 +24,8 @@ public class TabbedPaneDisplay extends JPanel {
 	public TabbedPaneDisplay(){
 		super(new GridLayout(1,1));
 		
+		
+		
 		tabbedPaneDisplay = new JTabbedPane();
 		JComponent allPanel = makeTextPanel(taskDisplayPane, id.display);
 		tabbedPaneDisplay.addTab("Inbox", null, allPanel, "Displays all tasks.");
@@ -64,6 +66,7 @@ public class TabbedPaneDisplay extends JPanel {
 		
 		return tabbedPanel;
 		
+		
 	} 
 	
 	public void update(String text){
@@ -71,9 +74,7 @@ public class TabbedPaneDisplay extends JPanel {
 		if(text.contains("view")|| text.contains("search")){
 			setTab(text);
 		}
-		else{
-			PaneArray.get(0).setText(new IndigoLogic("view").display);
-		}
+		PaneArray.get(0).setText(new IndigoLogic("view").display);
 		PaneArray.get(1).setText(new IndigoLogic("view today").display);
 		PaneArray.get(2).setText(new IndigoLogic("view this week").display);
 		PaneArray.get(3).setText(new IndigoLogic("view this month").display);

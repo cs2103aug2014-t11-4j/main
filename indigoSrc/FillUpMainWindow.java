@@ -22,6 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
@@ -34,12 +35,16 @@ public class FillUpMainWindow {
 	private static final int TOP_PANEL_INDEX = 3;
 	private static final int INPUT_FIELD_INDEX = 4;
 	private static final int USER_FEEDBACK_INDEX = 5;
+	private static final int PROGRESS_BAR_INDEX = 6;
+	private static final int CALENDAR_INDEX = 7;
 	
 	
 	private JLayeredPane displayLayers = new JLayeredPane();
 	private JTextField readInput;
+	private JTextField calendarField;
 	private JTextArea liveUserFeedback;
-	TabbedPaneDisplay taskDisplay;
+	private JProgressBar taskStatus;
+	public TabbedPaneDisplay taskDisplay;
 	
 	public void addComponentsToTheFrame(JFrame mainWindow){
 		Container contentPane = mainWindow.getContentPane();
@@ -94,6 +99,8 @@ public class FillUpMainWindow {
 		GridBagConstraints constraints;
 
 		constraints = setConstraints(TOP_PANEL_INDEX);
+		addCalendar(topPanel);
+		addProgressBar(topPanel);
 		addReadInput(topPanel);
 		addLiveUserFeedback(topPanel);
 		mainPanel.add(topPanel, constraints);
@@ -101,6 +108,28 @@ public class FillUpMainWindow {
 	
 	}
 
+
+	private void addCalendar(JPanel topPanel) {
+		GridBagConstraints constraints;
+		constraints = setConstraints(CALENDAR_INDEX);
+		calendarField = new JTextField();
+		calendarField.setOpaque(false);
+		topPanel.add(calendarField,constraints);
+		
+//		Timer t = new Timer(1000, new Listener);
+		
+		
+	}
+
+	private void addProgressBar(JPanel topPanel) {
+		GridBagConstraints constraints;
+		constraints = setConstraints(PROGRESS_BAR_INDEX);
+		taskStatus = new JProgressBar(75,100);
+		taskStatus.setValue(0);
+		taskStatus.setStringPainted(true);
+		topPanel.add(taskStatus, constraints);
+		
+	}
 
 	private void addReadInput(JPanel topPanel) {
 		GridBagConstraints constraints;
@@ -183,35 +212,49 @@ public class FillUpMainWindow {
 	
 	private GridBagConstraints setConstraints(int componentIndex) {
 		GridBagConstraints constraints;
-		Insets topPanel = new Insets(10,0,0,10);
-		Insets bottomPanel = new Insets(0,0,60,10);
-		Insets tabbedPaneDisplayInsets = new Insets(0,20,0,20);
-		Insets readInputInsets = new Insets(0,20,0,20);
-		Insets liveUserFeedbackInsets = new Insets(0,20,0,20);
+		Insets topPanel = new Insets(10,0,5,10);
+		Insets insetsOfCalendarField = new Insets(0,70,5,20);
+		Insets insetsOfProgressBar = new Insets(0,20,5,70);
+		Insets insetsOfReadInput = new Insets(0,20,0,20);
+		Insets insetsOfUserFeedback = new Insets(0,20,0,20);
+		
+		Insets bottomPanel = new Insets(5,0,60,10);
+		Insets insetsOfTabbedPane = new Insets(0,20,0,20);
+		
 		
 
 		
 		if(componentIndex ==  TOP_PANEL_INDEX){
-			constraints = new GridBagConstraints(0,0,3,2,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,topPanel,0,0);
+			constraints = new GridBagConstraints(0,0,3,3,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,topPanel,0,0);
 
 			return constraints;
 		}
+		else if(componentIndex == CALENDAR_INDEX){
+			constraints = new GridBagConstraints(0,0,1,1,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,insetsOfCalendarField,0,0);
+			
+			return constraints;
+		}
+		else if(componentIndex == PROGRESS_BAR_INDEX){
+			constraints = new GridBagConstraints(1,0,1,1,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,insetsOfProgressBar,0,0);
+			
+			return constraints;
+		}
 		else if(componentIndex == INPUT_FIELD_INDEX){
-			constraints = new GridBagConstraints(0,0,3,1,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,readInputInsets,0,0);
+			constraints = new GridBagConstraints(0,1,3,1,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,insetsOfReadInput,0,0);
 			
 			return constraints;
 		}
 		else if(componentIndex == USER_FEEDBACK_INDEX){
-			constraints = new GridBagConstraints(0,1,3,1,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,liveUserFeedbackInsets,0,0);
+			constraints = new GridBagConstraints(0,2,3,1,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,insetsOfUserFeedback,0,0);
 			return constraints;
 		}
 		
 		else if(componentIndex ==BOTTOM_PANEL_INDEX){
-			constraints = new GridBagConstraints(0,2,3,3,0.0,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,bottomPanel,0,0);
+			constraints = new GridBagConstraints(0,3,3,3,0.0,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,bottomPanel,0,0);
 			return constraints;
 		}
 		else if(componentIndex == TABBED_PANE_INDEX){
-			constraints = new GridBagConstraints(0,0,1,1,0.1,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,tabbedPaneDisplayInsets,0,0);
+			constraints = new GridBagConstraints(0,0,1,1,0.1,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,insetsOfTabbedPane,0,0);
 			return constraints;
 		}
 
