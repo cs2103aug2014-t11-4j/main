@@ -43,7 +43,6 @@ public class InputWindow extends JFrame {
 	private JLayeredPane displayLayers = new JLayeredPane();
 	private JTextField readInput;
 	private JTextArea liveUserFeedback;
-	private JTextArea liveUserFeedback2;
 	TabbedPaneDisplay taskDisplay;
 	
 	@Override
@@ -112,17 +111,10 @@ public class InputWindow extends JFrame {
 		bottomPanel.setOpaque(false);
 		GridBagConstraints constraints;
 		constraints = setConstraints(BOTTOM_PANEL_INDEX);
-<<<<<<< HEAD
+
 		addTabbedPane(bottomPanel);
 		mainPanel.add(bottomPanel, constraints);
-=======
-		
-		addTabbedPane(topPanel);
-		
-		mainPanel.add(topPanel, constraints);
-		
-		
->>>>>>> master
+
 	}
 
 	private void addTabbedPane(JPanel bottomPanel) {
@@ -137,20 +129,12 @@ public class InputWindow extends JFrame {
 		topPanel.setPreferredSize(new Dimension(600,100));
 		topPanel.setOpaque(false);
 		GridBagConstraints constraints;
-<<<<<<< HEAD
+
 		constraints = setConstraints(TOP_PANEL_INDEX);
 		addReadInput(topPanel);
 		addLiveUserFeedback(topPanel);
-		addLiveUserFeedback2(topPanel);
 		mainPanel.add(topPanel, constraints);
-=======
-		
-		constraints = setConstraints(TOP_PANEL_INDEX);
-		
-		addReadInput(bottomPanel);
-		addLiveUserFeedback(bottomPanel);
-		mainPanel.add(bottomPanel, constraints);
->>>>>>> master
+
 	
 	}
 
@@ -175,17 +159,6 @@ public class InputWindow extends JFrame {
 		topPanel.add(liveUserFeedback, constraints);
 	}
 	
-	private void addLiveUserFeedback2(JPanel topPanel) {
-		GridBagConstraints constraints;
-		constraints = setConstraints(6);
-		liveUserFeedback2 = new JTextArea(1,1);
-		Border liveUserFeedbackBorder = new LineBorder(Color.white);
-		liveUserFeedback2.setMaximumSize(liveUserFeedback2.getSize());
-		liveUserFeedback2.setBorder(liveUserFeedbackBorder);
-		liveUserFeedback2.setLineWrap(true);
-		liveUserFeedback2.setEditable(false);
-		topPanel.add(liveUserFeedback2, constraints);
-	}
 
 	
 	public class readInputTextFieldListener implements ActionListener, KeyListener {
@@ -195,7 +168,7 @@ public class InputWindow extends JFrame {
 			String text = readInput.getText();
 			readInput.selectAll();
 			IndigoLogic controller = new IndigoLogic(text);
-			liveUserFeedback2.setText(controller.feedback);
+			liveUserFeedback.setText(controller.feedback);
 			taskDisplay.update(text);
 			//showFeedback(controller);
 			readInput.requestFocusInWindow();
@@ -223,21 +196,7 @@ public class InputWindow extends JFrame {
         	
         }
         
-<<<<<<< HEAD
-        else if(id == KeyEvent.KEY_PRESSED) {
-        	liveUserFeedback.setText( "");	
-        } 
-        
-        else if(id == KeyEvent.KEY_RELEASED) {
-			if (command.equals("a") || command.equals("ad") || command.equals("add"))
-        		liveUserFeedback.setText( "add help text here");
-        	else if (command.equals("d") ||command.equals("de") || command.equals("del") || command.equals("dele")|| command.equals("delet")|| command.equals("delete"))
-        		liveUserFeedback.setText( "delete help text here");
-        	else if (command.equals("v") || command.equals("vi") || command.equals("vie") || command.equals("view"))
-        		liveUserFeedback.setText( "view help text here");
-        	else if (command.equals("e") || command.equals("ed") || command.equals("edi") || command.equals("edit"))
-        		liveUserFeedback.setText( "edit help text here");
-=======
+
         else if(id == KeyEvent.KEY_PRESSED) {	
         	
         } 
@@ -255,7 +214,7 @@ public class InputWindow extends JFrame {
         			||command.equals("comple")||command.equals("complet")||command.equals("complete")){
         		liveUserFeedback.setText("complete <index>");
         	}
->>>>>>> master
+
         }
 	}
 	
@@ -267,22 +226,11 @@ public class InputWindow extends JFrame {
 		Insets readInputInsets = new Insets(0,20,0,20);
 		Insets liveUserFeedbackInsets = new Insets(0,20,10,20);
 		
-<<<<<<< HEAD
-		if(componentIndex == TOP_PANEL_INDEX){
-			constraints = new GridBagConstraints(0,0,3,1,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,topPanel,0,0);
-			return constraints;
-		}
-		else if(componentIndex == TABBED_PANE_INDEX){
-			constraints = new GridBagConstraints(0,0,1,1,0.1,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,tabbedPaneDisplayInsets,0,0);
-			return constraints;
-		}
-		else if(componentIndex == BOTTOM_PANEL_INDEX){
-			constraints = new GridBagConstraints(0,1,3,3,0.0,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,bottomPanel,0,0);
-=======
+
 		
 		if(componentIndex ==  TOP_PANEL_INDEX){
 			constraints = new GridBagConstraints(0,0,3,1,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,bottomPanel,0,0);
->>>>>>> master
+
 			return constraints;
 		}
 		else if(componentIndex == INPUT_FIELD_INDEX){
@@ -294,13 +242,8 @@ public class InputWindow extends JFrame {
 			constraints = new GridBagConstraints(0,1,3,1,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,liveUserFeedbackInsets,0,0);
 			return constraints;
 		}
-<<<<<<< HEAD
-		else if(componentIndex == 6){
-			constraints = new GridBagConstraints(0,2,3,1,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,liveUserFeedbackInsets,0,0);
-			return constraints;
-		}
 		
-=======
+
 		else if(componentIndex ==BOTTOM_PANEL_INDEX){
 			constraints = new GridBagConstraints(0,1,3,3,0.0,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,topPanel,0,0);
 			return constraints;
@@ -309,7 +252,7 @@ public class InputWindow extends JFrame {
 			constraints = new GridBagConstraints(0,0,1,1,0.1,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,tabbedPaneDisplayInsets,0,0);
 			return constraints;
 		}
->>>>>>> master
+
 		
 		return null;
 	}
