@@ -58,9 +58,9 @@ public class Parser {
 		toDo = toDo.trim();
 		int index = toDo.length();
 		if(toDo.contains(" today")){
-			index = toDo.indexOf(" today ");
+			index = toDo.indexOf(" today");
 		} else if(toDo.contains(" tomorrow")){
-			index = toDo.indexOf(" tomorrow ");
+			index = toDo.indexOf(" tomorrow");
 		} else if(toDo.contains(" by ")){
 			index = toDo.indexOf(" by ");
 		} else if (toDo.contains(" at ")){

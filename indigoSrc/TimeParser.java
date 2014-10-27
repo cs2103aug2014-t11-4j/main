@@ -29,6 +29,7 @@ public class TimeParser {
 		userCommand = someCommand.trim();
 		assert userCommand!=null;
 		parser = new PrettyTimeParser().parseSyntax(userCommand);
+		filterParser();  
 		if (parser == null){
 			LOGGER.log(Level.FINE, "floating task detected.");
 			sortedUserCommand = userCommand + "";
@@ -43,11 +44,40 @@ public class TimeParser {
 	    		break;
 	    	default:
 	    		LOGGER.log(Level.FINE, "multiple dateGroup detected.");
+	    		LOGGER.log(Level.FINE, listAllDates(parser));
 	    	    parseTime();
 		}
 		}
 	    
 		assert sortedUserCommand!=null;
+	}
+
+	private void filterParser() { 
+		for (int j=0;j<parser.size();j++){
+				if(isInteger(parser.get(j).getText())) { 
+					parser.remove(j); 
+				}
+		}
+	}
+	
+	public static boolean isInteger(String s) {
+	    try { 
+	        Integer.parseInt(s); 
+	    } catch(NumberFormatException e) { 
+	        return false; 
+	    }
+	    // only got here if we didn't return false
+	    return true;
+	}
+	private String listAllDates(List<DateGroup> parser2) {
+		StringBuilder result = new StringBuilder("Dates are:\n");
+		for (int i=0;i<parser2.size();i++){
+			result.append("DateGroup " + i+ " "+  parser2.get(i).getText() + ":\n");
+			for (int j=0;j<parser2.get(i).getDates().size();j++){
+				result.append(parser2.get(i).getDates().get(j).toString());
+			}
+		}
+		return result.toString();
 	}
 
 	private void parseTime() {
