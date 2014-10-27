@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.Component;
+import java.util.ArrayList;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -19,11 +20,11 @@ public class TabbedPaneDisplay extends JPanel {
 	private JTabbedPane tabbedPaneDisplay;
 	private JTextPane taskDisplayPane; 
 	public IndigoLogic id = new IndigoLogic();
+	public static ArrayList<JTextPane> PaneArray = new ArrayList<JTextPane>();
 	public TabbedPaneDisplay(){
 		super(new GridLayout(1,1));
 		
 		tabbedPaneDisplay = new JTabbedPane();
-	
 		JComponent allPanel = makeTextPanel(taskDisplayPane, id.display);
 		tabbedPaneDisplay.addTab("Inbox", null, allPanel, "Displays all tasks.");
 		tabbedPaneDisplay.setMnemonicAt(0, KeyEvent.VK_1);
@@ -44,20 +45,20 @@ public class TabbedPaneDisplay extends JPanel {
 		tabbedPaneDisplay.addTab("Floating", null, floatingPanel, "Displays no-deadline tasks.");
 		tabbedPaneDisplay.setMnemonicAt(4, KeyEvent.VK_5);
 	
-		
 		add(tabbedPaneDisplay);
 		
 		tabbedPaneDisplay.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 	}
 
-	private JComponent makeTextPanel(JTextPane textPane, String text) {
+	private JComponent makeTextPanel(JTextPane textPaneTemp, String text) {
 		
 		JPanel tabbedPanel = new JPanel();
-		taskDisplayPane = new JTextPane();
+		textPaneTemp = new JTextPane();
+		PaneArray.add(textPaneTemp);
 
-		JScrollPane scroll = new JScrollPane(taskDisplayPane);
+		JScrollPane scroll = new JScrollPane(textPaneTemp);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		taskDisplayPane.setText(text);
+		textPaneTemp.setText(text);
 		tabbedPanel.setLayout(new GridLayout(1,1));
 		tabbedPanel.add(scroll);
 		
@@ -67,8 +68,11 @@ public class TabbedPaneDisplay extends JPanel {
 	
 	public void update(){
 		//TODO
-		IndigoLogic lc = new IndigoLogic("view -today");
-		taskDisplayPane.setText(lc.display);
+		PaneArray.get(0).setText(new IndigoLogic("view").display);
+		PaneArray.get(1).setText(new IndigoLogic("view -t").display);
+		PaneArray.get(2).setText(new IndigoLogic("view this week").display);
+		PaneArray.get(3).setText(new IndigoLogic("view this month").display);
+		PaneArray.get(4).setText(new IndigoLogic("view -f").display);
 	}
 	
 	private void setTab(String index){

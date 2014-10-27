@@ -39,14 +39,18 @@ public class Create extends CommandClass {
 	}
 	
 	public String add() {
-		int totalSize = taskListVar.getFloatingList().size() + taskListVar.getTimedList().size();
+
+		int totalSize = taskListVar.getFloatingList().size() + taskListVar.getTimedList().size() + 1;
 		if (editIndex > totalSize || editIndex < 1){
+			System.out.println("invalid index");
 			return "Invalid index";
 		} else {
+		System.out.println("task addded.");
 		taskListVar.addTask(editIndex, toDo);
 		psl.push(new Parser("delete " + editIndex));
 		return toDo.toString() + " is added to taskList!";
 		}
+
 	}
 
 }

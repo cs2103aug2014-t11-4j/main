@@ -30,7 +30,7 @@ public class Parser {
 	private DateTime startTime;
 	private DateTime endTime;
 	boolean containConj 		= false;				//determine if it is a floating task
-	int editIndex;
+	private int editIndex;
 	private boolean isFloatingTask;
 	private boolean isDeadlineTask;
 	private boolean isTimedTask;
@@ -39,22 +39,38 @@ public class Parser {
 
 	
 	public static void main(String args[]) {
-		ConsoleHandler handler = new ConsoleHandler();
+	/*	ConsoleHandler handler = new ConsoleHandler();
 		LOGGER.setLevel(Level.FINER);
 		handler.setLevel(Level.FINER);
 		LOGGER.addHandler(handler);
-		
+	*/	
 		String testInput;
 		System.out.println("Enter command:");
 		Scanner sc = new Scanner(System.in);
 		testInput = sc.nextLine();
 		
 		Parser test = new Parser(testInput);
+		System.out.println(test.getCommand());
 	}
 	
 	public String getCommand() {
 		toDo = toDo.trim();
-		return toDo;
+		int index = toDo.length();
+		if(toDo.contains(" today")){
+			index = toDo.indexOf("today");
+		} else if(toDo.contains(" tomorrow")){
+			index = toDo.indexOf("tomorrow");
+		} else if(toDo.contains(" by")){
+			index = toDo.indexOf("by");
+		} else if (toDo.contains(" at")){
+			index = toDo.indexOf("at");
+		} else if(toDo.contains(" from")){
+			index = toDo.indexOf("from");
+		} else if(toDo.contains(" on")){
+			index = toDo.indexOf("on");
+		}
+		return toDo.substring(0, index);
+	
 	}
 
 	public Parser(String userCommand) {
@@ -149,7 +165,7 @@ public class Parser {
 		return keyWord;
 	}
 
-	public Integer getEditIndex() { 
+	public int getEditIndex() { 
 		System.out.println("Edit index: " +editIndex);
 		if (editIndex == -1){
 			return 1;
