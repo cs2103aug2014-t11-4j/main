@@ -36,9 +36,6 @@ public class Update extends CommandClass{
 		if (index > totalSize || index <1){
 			return "index is not within the number of tasks in taskList";
 		} else {
-			if(!(task instanceof DeadlineTask)){
-				index += taskListVar.getTimedList().size();
-			}
 			psl.push(new Parser("edit " + index + " " + taskListVar.get(index).getDescription()));
 			taskListVar.editTask(index, task);
 			return "Task updated";

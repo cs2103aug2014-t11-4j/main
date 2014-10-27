@@ -69,7 +69,7 @@ public class TabbedPaneDisplay extends JPanel {
 	public void update(String text){
 		//TODO
 		if(text.contains("view")|| text.contains("search")){
-			PaneArray.get(0).setText(new IndigoLogic(text).display);
+			setTab(text);
 		}
 		else{
 			PaneArray.get(0).setText(new IndigoLogic("view").display);
@@ -81,16 +81,16 @@ public class TabbedPaneDisplay extends JPanel {
 	}
 	
 	private void setTab(String index){
-		if (index.equalsIgnoreCase("today")){
+		if (index.contains("today")){
 			tabbedPaneDisplay.setSelectedIndex(1);
 		}
-		else if (index.equalsIgnoreCase("this week")){
+		else if (index.contains("this week")){
 			tabbedPaneDisplay.setSelectedIndex(2);
 		}
-		else if (index.equalsIgnoreCase("this month")){
+		else if (index.contains("this month")){
 			tabbedPaneDisplay.setSelectedIndex(2);
 		}
-		else if (index.equalsIgnoreCase("all tasks")){
+		else if (index.contains("all tasks")){
 			tabbedPaneDisplay.setSelectedIndex(4);
 		}
 		else {
