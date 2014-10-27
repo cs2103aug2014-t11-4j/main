@@ -142,7 +142,7 @@ public class Parser {
 			toDo = userCommand + "";
 		}
 		
-		TimeParser timeParser = new TimeParser(userCommand);
+		TimeParser timeParser = new TimeParser(toDo);
 		sortedCommand = timeParser.getSortedCommand() + "";
 		
 		if (timeParser.isTimedTask()){
