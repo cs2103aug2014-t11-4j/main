@@ -39,7 +39,8 @@ public class InputWindow extends JFrame {
 	private static final int TOP_PANEL_INDEX = 3;
 	private static final int INPUT_FIELD_INDEX = 4;
 	private static final int USER_FEEDBACK_INDEX = 5;
-	static final String newline = System.getProperty("line.separator");
+	
+	
 	private JLayeredPane displayLayers = new JLayeredPane();
 	private JTextField readInput;
 	private JTextArea liveUserFeedback;
@@ -243,7 +244,6 @@ public class InputWindow extends JFrame {
 			return constraints;
 		}
 		
-
 		else if(componentIndex ==BOTTOM_PANEL_INDEX){
 			constraints = new GridBagConstraints(0,2,3,3,0.0,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,bottomPanel,0,0);
 			return constraints;
