@@ -19,7 +19,7 @@ public class TimeParser {
 	private DateTime endTime;
 	private DateTime startTime;
 	private List<Date> dates;
-	private List<DateGroup> parser;
+	List<DateGroup> parser;
 	
 	private final static Logger LOGGER = Logger.getLogger(TimeParser.class.getName()); 
 
@@ -122,9 +122,10 @@ public class TimeParser {
 		assert endTime != null;
 	}
 
-	private boolean isDateFree() {
+	public boolean isDateFree() {
 		List<DateGroup> parse = new PrettyTimeParser().parseSyntax(userCommand);
 		int numDate = parse.get(0).getDates().size();
+		
 		if (numDate ==0){
 			return true;
 		} else {

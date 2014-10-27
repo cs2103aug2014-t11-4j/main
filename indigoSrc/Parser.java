@@ -34,7 +34,8 @@ public class Parser {
 	private int editIndex;
 	private boolean isFloatingTask;
 	private boolean isDeadlineTask;
-	private boolean isTimedTask;
+	private boolean isTimedTask; 
+	static TimeParser testParser; 
 	ArrayList<String> detailsList = new ArrayList<String>();
 	private final static Logger LOGGER = Logger.getLogger(Parser.class.getName());
 
@@ -49,28 +50,64 @@ public class Parser {
 		System.out.println("Enter command:");
 		Scanner sc = new Scanner(System.in);
 		testInput = sc.nextLine();
-		
 		Parser test = new Parser(testInput);
+		testParser = new TimeParser(testInput);	
+		//System.out.println(testParser.parser.get(0).getText());
 		System.out.println(test.getCommand());
 	}
 	
 	public String getCommand() {
 		toDo = toDo.trim();
 		int index = toDo.length();
+		
+		ArrayList<String> prepWordsList = new ArrayList<String>();
+		prepWordsList.add("on");
+		prepWordsList.add("by");
+		prepWordsList.add("at");
+		prepWordsList.add("from");
+		String[] description;
+		int size = testParser.parser.size();
+		String[] identifers = new String[size]; 
+		for(int i=0; i<size;i++){ 
+			identifers[i] = testParser.parser.get(i).getText();
+		}
+		for(int k=0; k<size; k++) { 
+			toDo = toDo.replaceFirst(identifers[k], "IDENTIFIER"); 
+			description = toDo.split(" "); 
+				for(int j=0; j<description.length; j++) { 
+					if(description[j].contains("IDENTIFIER") && j>0) { 
+						String prepWord = description[j-1]; 			
+							if(prepWordsList.contains(prepWord)) { 
+								String finaltoDo = "";  
+								description[j-1] ="";
+								for(int j1=0; j1<description.length; j1++) {
+									finaltoDo = finaltoDo + description[j1] + " "; 
+								}
+								toDo = finaltoDo; 
+								toDo = toDo.replace("IDENTIFIER", "");
+								toDo = toDo.trim(); 
+								toDo = toDo.replaceAll("( )+", " ");
+							}
+					}
+					toDo = toDo.replace("IDENTIFIER", ""); 
+					toDo = toDo.trim(); 
+				}
+		}
 		if(toDo.contains(" today")){
 			index = toDo.indexOf(" today");
 		} else if(toDo.contains(" tomorrow")){
-			index = toDo.indexOf(" tomorrow");
-		} else if(toDo.contains(" by ")){
-			index = toDo.indexOf(" by ");
-		} else if (toDo.contains(" at ")){
-			index = toDo.indexOf(" at ");
-		} else if(toDo.contains(" from ")){
-			index = toDo.indexOf(" from ");
-		} else if(toDo.contains(" on ")){
-			index = toDo.indexOf(" on ");
+			index = toDo.indexOf(" tomorrow");			
+	//	} else if(toDo.contains(" by ")){
+	//		index = toDo.indexOf(" by ");
+	//	} else if (toDo.contains(" at ")){
+	//		index = toDo.indexOf(" at ");
+	//	} else if(toDo.contains(" from ")){
+	//		index = toDo.indexOf(" from ");
+	//	} else if(toDo.contains(" on ")){
+	//		index = toDo.indexOf(" on ");
 		}
-		return toDo.substring(0, index);
+		//return toDo.substring(0, index);
+		return toDo; 
 	}
 
 	public Parser(String userCommand) {
