@@ -128,6 +128,7 @@ public class Parser {
 			case "edit" :
 			case "complete":
 			case "uncomplete":
+			case "search":
 			case "view":
 				details = commandWords.split(" ");
 				LOGGER.log(Level.FINE, "commandWords: " + commandWords);
@@ -160,7 +161,7 @@ public class Parser {
 				break;
 				
 			default:
-				keyWord = "add";
+				keyWord = "view";
 				toDo = userCommand + "";
 			} 
 		}	else {
