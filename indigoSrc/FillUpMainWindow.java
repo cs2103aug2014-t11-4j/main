@@ -165,7 +165,7 @@ public class FillUpMainWindow {
 			readInput.selectAll();
 			IndigoLogic controller = new IndigoLogic(text);
 			liveUserFeedback.setText(controller.feedback);
-			taskDisplay.update(text);
+			taskDisplay.update(controller.display);
 			readInput.requestFocusInWindow();
 		}
 
