@@ -22,10 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-<<<<<<< HEAD
-=======
 import javax.swing.JProgressBar;
->>>>>>> d7bd00d4390b6f320a094080bbbb016e4681fce7
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
@@ -38,24 +35,14 @@ public class FillUpMainWindow {
 	private static final int TOP_PANEL_INDEX = 3;
 	private static final int INPUT_FIELD_INDEX = 4;
 	private static final int USER_FEEDBACK_INDEX = 5;
-<<<<<<< HEAD
-=======
 	private static final int PROGRESS_BAR_INDEX = 6;
 	private static final int CALENDAR_INDEX = 7;
->>>>>>> d7bd00d4390b6f320a094080bbbb016e4681fce7
-	
-	
 	private JLayeredPane displayLayers = new JLayeredPane();
 	private JTextField readInput;
-<<<<<<< HEAD
-	private JTextArea liveUserFeedback;
-	TabbedPaneDisplay taskDisplay;
-=======
 	private JTextField calendarField;
 	private JTextArea liveUserFeedback;
 	private JProgressBar taskStatus;
 	public TabbedPaneDisplay taskDisplay;
->>>>>>> d7bd00d4390b6f320a094080bbbb016e4681fce7
 	
 	public void addComponentsToTheFrame(JFrame mainWindow){
 		Container contentPane = mainWindow.getContentPane();
@@ -110,11 +97,8 @@ public class FillUpMainWindow {
 		GridBagConstraints constraints;
 
 		constraints = setConstraints(TOP_PANEL_INDEX);
-<<<<<<< HEAD
-=======
 		addCalendar(topPanel);
 		addProgressBar(topPanel);
->>>>>>> d7bd00d4390b6f320a094080bbbb016e4681fce7
 		addReadInput(topPanel);
 		addLiveUserFeedback(topPanel);
 		mainPanel.add(topPanel, constraints);
@@ -122,9 +106,6 @@ public class FillUpMainWindow {
 	
 	}
 
-
-<<<<<<< HEAD
-=======
 	private void addCalendar(JPanel topPanel) {
 		GridBagConstraints constraints;
 		constraints = setConstraints(CALENDAR_INDEX);
@@ -147,7 +128,6 @@ public class FillUpMainWindow {
 		
 	}
 
->>>>>>> d7bd00d4390b6f320a094080bbbb016e4681fce7
 	private void addReadInput(JPanel topPanel) {
 		GridBagConstraints constraints;
 		constraints = setConstraints(INPUT_FIELD_INDEX);
@@ -229,35 +209,15 @@ public class FillUpMainWindow {
 	
 	private GridBagConstraints setConstraints(int componentIndex) {
 		GridBagConstraints constraints;
-<<<<<<< HEAD
-		Insets topPanel = new Insets(10,0,0,10);
-		Insets bottomPanel = new Insets(0,0,60,10);
-		Insets tabbedPaneDisplayInsets = new Insets(0,20,0,20);
-		Insets readInputInsets = new Insets(0,20,0,20);
-		Insets liveUserFeedbackInsets = new Insets(0,20,0,20);
-=======
 		Insets topPanel = new Insets(10,0,5,10);
 		Insets insetsOfCalendarField = new Insets(0,70,5,20);
 		Insets insetsOfProgressBar = new Insets(0,20,5,70);
 		Insets insetsOfReadInput = new Insets(0,20,0,20);
-		Insets insetsOfUserFeedback = new Insets(0,20,0,20);
-		
+		Insets insetsOfUserFeedback = new Insets(0,20,0,20);		
 		Insets bottomPanel = new Insets(5,0,60,10);
 		Insets insetsOfTabbedPane = new Insets(0,20,0,20);
 		
->>>>>>> d7bd00d4390b6f320a094080bbbb016e4681fce7
-		
-
-		
 		if(componentIndex ==  TOP_PANEL_INDEX){
-<<<<<<< HEAD
-			constraints = new GridBagConstraints(0,0,3,2,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,topPanel,0,0);
-
-			return constraints;
-		}
-		else if(componentIndex == INPUT_FIELD_INDEX){
-			constraints = new GridBagConstraints(0,0,3,1,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,readInputInsets,0,0);
-=======
 			constraints = new GridBagConstraints(0,0,3,3,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,topPanel,0,0);
 
 			return constraints;
@@ -274,33 +234,19 @@ public class FillUpMainWindow {
 		}
 		else if(componentIndex == INPUT_FIELD_INDEX){
 			constraints = new GridBagConstraints(0,1,3,1,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,insetsOfReadInput,0,0);
->>>>>>> d7bd00d4390b6f320a094080bbbb016e4681fce7
-			
 			return constraints;
 		}
 		else if(componentIndex == USER_FEEDBACK_INDEX){
-<<<<<<< HEAD
-			constraints = new GridBagConstraints(0,1,3,1,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,liveUserFeedbackInsets,0,0);
-=======
 			constraints = new GridBagConstraints(0,2,3,1,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,insetsOfUserFeedback,0,0);
->>>>>>> d7bd00d4390b6f320a094080bbbb016e4681fce7
 			return constraints;
 		}
 		
 		else if(componentIndex ==BOTTOM_PANEL_INDEX){
-<<<<<<< HEAD
-			constraints = new GridBagConstraints(0,2,3,3,0.0,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,bottomPanel,0,0);
-			return constraints;
-		}
-		else if(componentIndex == TABBED_PANE_INDEX){
-			constraints = new GridBagConstraints(0,0,1,1,0.1,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,tabbedPaneDisplayInsets,0,0);
-=======
 			constraints = new GridBagConstraints(0,3,3,3,0.0,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,bottomPanel,0,0);
 			return constraints;
 		}
 		else if(componentIndex == TABBED_PANE_INDEX){
 			constraints = new GridBagConstraints(0,0,1,1,0.1,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,insetsOfTabbedPane,0,0);
->>>>>>> d7bd00d4390b6f320a094080bbbb016e4681fce7
 			return constraints;
 		}
 
