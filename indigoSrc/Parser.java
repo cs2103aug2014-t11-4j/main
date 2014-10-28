@@ -35,7 +35,7 @@ public class Parser {
 	private boolean isFloatingTask;
 	private boolean isDeadlineTask;
 	private boolean isTimedTask; 
-	static TimeParser testParser; 
+	static TimeParser testParser;	
 	ArrayList<String> detailsList = new ArrayList<String>();
 	private final static Logger LOGGER = Logger.getLogger(Parser.class.getName());
 
@@ -52,7 +52,11 @@ public class Parser {
 		testInput = sc.nextLine();
 		Parser test = new Parser(testInput);
 		testParser = new TimeParser(testInput);	
-		//System.out.println(testParser.parser.get(0).getText());
+		try {
+			System.out.println(testParser.parser.get(0).getText());
+		} catch (IndexOutOfBoundsException err){
+			System.out.println("There are no such thing as time! Hurhur");
+		}
 		System.out.println(test.getCommand());
 	}
 	
@@ -66,7 +70,12 @@ public class Parser {
 		prepWordsList.add("at");
 		prepWordsList.add("from");
 		String[] description;
-		int size = testParser.parser.size();
+		int size = 0;
+		try {
+			size = testParser.parser.size();
+		} catch (Exception err){
+			
+		}
 		String[] identifers = new String[size]; 
 		for(int i=0; i<size;i++){ 
 			identifers[i] = testParser.parser.get(i).getText();
