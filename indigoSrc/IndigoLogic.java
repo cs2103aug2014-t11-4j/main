@@ -125,5 +125,9 @@ public class IndigoLogic {
 		return taskList.readFromXML(FILE_NAME);
 	}
 
+	public TaskList getTasks() {
+		return taskList;
+	}
+
 
 }
