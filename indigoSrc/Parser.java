@@ -38,6 +38,7 @@ public class Parser {
 	static TimeParser testParser;	
 	ArrayList<String> detailsList = new ArrayList<String>();
 	private final static Logger LOGGER = Logger.getLogger(Parser.class.getName());
+	private static Scanner sc;
 
 	
 	public static void main(String args[]) {
@@ -48,7 +49,7 @@ public class Parser {
 	*/	
 		String testInput;
 		System.out.println("Enter command:");
-		Scanner sc = new Scanner(System.in);
+		sc = new Scanner(System.in);
 		testInput = sc.nextLine();
 		Parser test = new Parser(testInput);
 		testParser = new TimeParser(testInput);	
@@ -60,9 +61,14 @@ public class Parser {
 		System.out.println(test.getCommand());
 	}
 	
+	public String getRawCommand(){
+		toDo = toDo.trim();
+		return toDo;
+	}
+	
 	public String getCommand() {
 		toDo = toDo.trim();
-		int index = toDo.length();
+		//int index = toDo.length();
 		
 		ArrayList<String> prepWordsList = new ArrayList<String>();
 		prepWordsList.add("on");
@@ -145,11 +151,11 @@ public class Parser {
 						}
 					}
 		
-		if(toDo.contains(" today")){
+	/*	if(toDo.contains(" today")){
 			index = toDo.indexOf(" today");
 		} else if(toDo.contains(" tomorrow")){
 			index = toDo.indexOf(" tomorrow");	
-		}
+		}*/
 		return toDo; 
 	}
 

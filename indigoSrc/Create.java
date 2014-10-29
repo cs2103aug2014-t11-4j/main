@@ -22,9 +22,9 @@ public class Create extends CommandClass {
 		return add();
 	}	
 	
-	public Create(Parser parsing, ParserList pslist, TaskList taskList){
+	public Create(Parser parsing, UndoList pslist, TaskList taskList){
 		parserVar = parsing;
-		psl = pslist;
+		uList = pslist;
 		taskListVar = taskList;
 		editIndex = parserVar.getEditIndex();
 		if (parserVar.isDeadlineTask()){
@@ -44,7 +44,7 @@ public class Create extends CommandClass {
 			return "Invalid index";
 		} else {
 		taskListVar.addTask(editIndex, toDo);
-		psl.push(new Parser("delete " + editIndex));
+		uList.push(new Parser("delete " + parserVar.getRawCommand()));
 		return toDo.toString() + " is added to taskList!";
 		}
 

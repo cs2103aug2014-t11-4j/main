@@ -17,7 +17,7 @@ import org.joda.time.format.DateTimeFormatter;
 public class IndigoLogic {
 	public String display;
 	public String feedback;
-	private static ParserList ps = new ParserList();;
+	private static UndoList uList = new UndoList();;
 	private static Parser parser;
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yy, HH:mm");
 	public static final String FILE_NAME = "myTask";
@@ -70,7 +70,7 @@ public class IndigoLogic {
 		 */
 		switch (commandInput.getKey()){
 			case CREATE:
-				Create classAdd = new Create(parser, ps, taskList);
+				Create classAdd = new Create(parser, uList, taskList);
 				return classAdd.execute();
 			case READ:
 				Read classView = new Read(parser, taskList);
@@ -79,16 +79,16 @@ public class IndigoLogic {
 				}
 				return classView.execute();
 			case UPDATE:
-				Update classEdit = new Update(parser, ps, taskList);
+				Update classEdit = new Update(parser, uList, taskList);
 				return classEdit.execute();
 			case DELETE:
-				Delete classDelete = new Delete(parser, ps, taskList);
+				Delete classDelete = new Delete(parser, uList, taskList);
 				return classDelete.execute();
 			case UNDO:
-				Undo classUndo = new Undo(parser, ps, taskList);
+				Undo classUndo = new Undo(parser, uList, taskList);
 				return classUndo.execute();
 			case REDO:
-				Undo classRedo = new Undo(parser, ps, taskList);
+				Undo classRedo = new Undo(parser, uList, taskList);
 				return classRedo.rexecute();
 			case COMPLETE:
 				int indexC = parser.getEditIndex();

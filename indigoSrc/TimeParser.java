@@ -24,6 +24,7 @@ public class TimeParser {
 	private final static Logger LOGGER = Logger.getLogger(TimeParser.class.getName()); 
 
 	private int numDate = -1;
+	private static Scanner sc;
 	
 	public TimeParser(String someCommand){
 		userCommand = someCommand.trim();
@@ -139,7 +140,7 @@ public class TimeParser {
 		handler.setLevel(Level.FINER);
 		LOGGER.addHandler(handler);
 		
-		Scanner sc = new Scanner(System.in);
+		sc = new Scanner(System.in);
 		while (true){	
 			TimeParser mp = new TimeParser(sc.nextLine());
 			System.out.println("numDateGroup:" + mp.parser.size());

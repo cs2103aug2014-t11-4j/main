@@ -1,12 +1,5 @@
 package indigoSrc;
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.junit.Test;
 
 /* This class is the read class which will display the list that user
  * would want to see. This class has different types of views that user
@@ -119,7 +112,7 @@ public class Read extends CommandClass{
 	}
 	
 	//This method is to find tasks which are due today.
-	public static String viewToday(){
+	public String viewToday(){
 		DateTime now = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
@@ -138,7 +131,7 @@ public class Read extends CommandClass{
 	//This method is to find tasks which are due this week. 
 	//It does not follow the pattern on Monday to Sunday. It takes tasks of
 	//the next seven days.
-	public static String viewThisWeek(){
+	public String viewThisWeek(){
 		DateTime now = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
@@ -167,7 +160,7 @@ public class Read extends CommandClass{
 	
 	//This method is to find the tasks which are due this current month. Taking Overdue tasks 
 	//for the month into consideration as well.
-	public static String viewThisMonth(){
+	public String viewThisMonth(){
 		DateTime now = new DateTime();
 		int yearNow = now.getYear();
 		int monthNow = now.getMonthOfYear();
@@ -193,7 +186,7 @@ public class Read extends CommandClass{
 	}
 	
 	//This method lets user see tasks which are overdue but not done
-	public static String viewOverDue(){
+	public String viewOverDue(){
 		DateTime now = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
@@ -222,7 +215,7 @@ public class Read extends CommandClass{
 		return result.toString().trim() + newLine;
 	}
 	
-	public static String dayLeft(DateTime today, DateTime taskDate){
+	private String dayLeft(DateTime today, DateTime taskDate){
 		String returnString[] = new String[2];
 		int days = 0;
 		if(today.getYear() == taskDate.getYear()){

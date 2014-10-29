@@ -5,7 +5,7 @@ package indigoSrc;
 
 public abstract class CommandClass {
 	protected Parser parserVar; 
-	protected static ParserList psl = new ParserList();
+	protected static UndoList uList = new UndoList();
 	protected static TaskList taskListVar = new TaskList();
 	
 	public abstract String execute();

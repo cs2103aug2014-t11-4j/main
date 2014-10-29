@@ -14,9 +14,9 @@ public class Delete extends CommandClass{
 		return delete();
 	}
 	
-	public Delete(Parser parsing, ParserList parseL, TaskList taskList){
+	public Delete(Parser parsing, UndoList psList, TaskList taskList){
 		parserVar = parsing;
-		psl = parseL;
+		uList = psList;
 		taskListVar = taskList;
 	}
 	
@@ -26,7 +26,7 @@ public class Delete extends CommandClass{
 		if (index > totalSize || index < 1){
 			return "Invalid index";
 		} else {
-			psl.push(new Parser("add " + index + " " + taskListVar.get(index).getDescription()));
+			uList.push(new Parser("add " + index + " " + taskListVar.get(index).getDescription()));
 			taskListVar.deleteTask(index);
 			return "Task deleted";
 		}

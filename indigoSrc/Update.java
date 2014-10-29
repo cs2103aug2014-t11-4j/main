@@ -14,9 +14,9 @@ public class Update extends CommandClass{
 		return edit();
 	}
 
-	public Update(Parser parsing, ParserList parseL, TaskList taskList){
+	public Update(Parser parsing, UndoList psList, TaskList taskList){
 		parserVar = parsing;
-		psl = parseL;
+		uList = psList;
 		taskListVar = taskList; 
 
 	}
@@ -36,7 +36,7 @@ public class Update extends CommandClass{
 		if (index > totalSize || index <1){
 			return "index is not within the number of tasks in taskList";
 		} else {
-			psl.push(new Parser("edit " + index + " " + taskListVar.get(index).getDescription()));
+			uList.push(new Parser("edit " + parserVar.getRawCommand()));
 			taskListVar.editTask(index, task);
 			return "Task updated";
 		}

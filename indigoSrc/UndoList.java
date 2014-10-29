@@ -1,5 +1,5 @@
 package indigoSrc;
-/** This class is used for undo and redo operations.
+/** This class is used for undo operations.
  *  It store all the parser/Commands into a list with a pointer indicating the current position.
  *  A parser needs to be added for any normal command executed other than redo/undo.
  *  The class requires the support from Parser.
@@ -16,19 +16,22 @@ package indigoSrc;
 
 import java.util.LinkedList;
 
-
-public class ParserList {
-	private static LinkedList<Parser> parserList;
+public class UndoList {
+	private static LinkedList<Parser> uList;
 	private static int currentPos;
+	private static LinkedList<Parser> redoList;
+	private static int currentRedoPos;
 	
-	public ParserList(){
-		parserList = new LinkedList<Parser>();
+	public UndoList(){
+		uList = new LinkedList<Parser>();
+		redoList = new LinkedList<Parser>();
 		currentPos = -1;
+		currentRedoPos = -1;
 	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		ParserList myList= new ParserList();
+		UndoList myList= new UndoList();
 		myList.push(new Parser("add catch a dog"));
 		myList.push(new Parser("add catch a cat"));
 		myList.push(new Parser("add catch a fish"));
@@ -38,29 +41,56 @@ public class ParserList {
 	}
 	
 	public void push(Parser newParser){
-		clear();
-		parserList.add(newParser);
+		clear(uList);
+		uList.add(newParser);
 		currentPos++;
 	}
-
-	public void clear(){
+	
+	public void pushRedo(Parser newParser){
+		clear(redoList);
+		redoList.add(newParser);
+		currentPos++;
+	}
+	
+/*	public void push(COMMAND_KEY key, int editIndex, FloatingTask toDo){
+		clear();
+		tasks.add(toDo);
+		switch (key){
+			case CREATE:
+				
+			case UPDATE:
+			case DELETE:
+				Delete
+			case COMPLETE:
+			case UNCOMPLETE:
+			default:
+				
+		}
+	}
+*/
+	public void clear(LinkedList<Parser> list){
 		int i = currentPos+1;
-		while (i<parserList.size()){
-			parserList.remove(i);
+		while (i<list.size()){
+			list.remove(i);
 		}
 	}
 	
 	public Parser undo(){
 		currentPos--;
-		return parserList.get(currentPos + 1);
+		return uList.get(currentPos + 1);
 	}
 	
 	public Parser redo(){
+		currentRedoPos--;
 		currentPos++;
-		return parserList.get(currentPos);
+		return redoList.get(currentPos + 1);
 	}
 	
 	public boolean isUndoAble(){
 		return currentPos >= 0;
+	}
+	
+	public boolean isRedoAble(){
+		return currentRedoPos >= 0;
 	}
 }

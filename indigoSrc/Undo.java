@@ -14,29 +14,32 @@ public class Undo extends CommandClass {
 		return redo();
 	}
 
-	public Undo(Parser parsing, ParserList parseL, TaskList taskList){
+	public Undo(Parser parsing, UndoList psList, TaskList taskList){
 		parserVar = parsing;
-		psl = parseL;
+		uList = psList;
 		taskListVar = taskList;
 	}
 	
 	private static String undo(){
-		if (psl.isUndoAble() == false){
+		if (uList.isUndoAble() == false){
 			return "Cannot Undo!";
 		}
-		Parser commandPre = psl.undo();
+		Parser commandPre = uList.undo();
 		Command commandInput = new Command(commandPre.getKeyCommand());
 		System.out.println(commandPre.getKeyCommand());
 		COMMAND_KEY comm = commandInput.getKey();
 		switch (comm){
 			case CREATE:
 				taskListVar.addTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
+				uList.pushRedo(new Parser("delete" + commandPre.getEditIndex()));
 				return "Undo a delete";
 			case UPDATE:
 				taskListVar.editTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
+				uList.pushRedo(new Parser("edit" + commandPre.getEditIndex() + commandPre.getCommand()));
 				return "Undo an Update";
 			case DELETE:
 				taskListVar.deleteTask(commandPre.getEditIndex());
+				uList.pushRedo(new Parser("edit" + commandPre.getEditIndex() + commandPre.getCommand()));
 				return "Undo a create";
 			case UNCOMPLETE:
 				taskListVar.get(commandPre.getEditIndex()).unComplete();
@@ -47,7 +50,7 @@ public class Undo extends CommandClass {
 	}
 	
 	private static String redo(){
-		Parser commandNext = psl.redo();
+		Parser commandNext = uList.redo();
 		Command commandInput = new Command(commandNext.getKeyCommand());
 		System.out.println(commandNext.getKeyCommand());
 		COMMAND_KEY comm = commandInput.getKey();
