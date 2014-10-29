@@ -36,7 +36,7 @@ public class Update extends CommandClass{
 		if (index > totalSize || index <1){
 			return "index is not within the number of tasks in taskList";
 		} else {
-			uList.push(new Parser("edit " + parserVar.getRawCommand()));
+			uList.push(new Parser("edit " + parserVar.getRawCommand()), parserVar);
 			taskListVar.editTask(index, task);
 			return "Task updated";
 		}

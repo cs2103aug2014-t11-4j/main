@@ -71,7 +71,16 @@ public class TabbedPaneDisplay extends JPanel {
 	
 	public void update(String text){
 		//TODO
-		PaneArray.get(0).setText(text);
+		if(text.contains("view")){
+			setTab(text);
+			PaneArray.get(0).setText(new IndigoLogic(text).display);
+		} else if(text.contains("search")){
+			setTab("other");
+			PaneArray.get(0).setText(new IndigoLogic(text).display);
+		} else{
+			setTab("other");
+			PaneArray.get(0).setText(new IndigoLogic("view").display);
+		}
 		PaneArray.get(1).setText(new IndigoLogic("view today").display);
 		PaneArray.get(2).setText(new IndigoLogic("view this week").display);
 		PaneArray.get(3).setText(new IndigoLogic("view this month").display);

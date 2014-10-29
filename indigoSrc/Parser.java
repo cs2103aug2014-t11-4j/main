@@ -56,7 +56,7 @@ public class Parser {
 		try {
 			System.out.println(testParser.parser.get(0).getText());
 		} catch (IndexOutOfBoundsException err){
-			System.out.println("There are no such thing as time! Hurhur");
+			System.out.println("There are no such thing as time!");
 		}
 		System.out.println(test.getCommand());
 	}
@@ -90,7 +90,7 @@ public class Parser {
 		
 		for(int i=0; i<size;i++){ 
 			identifers[i] = TimeParser.parser.get(i).getText();
-			System.out.println(identifers[i]);
+			//System.out.println(identifers[i]);
 		} 
 		
 		for(int j=0; j<size; j++) { 
@@ -127,7 +127,7 @@ public class Parser {
 		for(int k=0; k<size; k++) {
 			String word = identifers[k]; 
 			toDo = toDo.replaceFirst(identifers[k], "IDENTIFIER"); 
-			System.out.println(toDo); 
+			//System.out.println(toDo); 
 			description = toDo.split(" "); 
 				for(int j=0; j<description.length; j++) { 
 					if(description[j].contains("IDENTIFIER") && j>0) { 
@@ -139,7 +139,7 @@ public class Parser {
 									finaltoDo = finaltoDo + description[j1] + " "; 
 								}
 								toDo = finaltoDo; 
-								System.out.println(toDo); 
+			//					System.out.println(toDo); 
 								toDo = toDo.replace("IDENTIFIER", "");
 								toDo = toDo.trim(); 
 								toDo = toDo.replaceAll("( )+", " ");
@@ -202,7 +202,7 @@ public class Parser {
 					 }
 				 catch(NumberFormatException er)
 				  {
-					 System.out.println("exception for editIndex.");
+					//System.out.println("exception for editIndex.");
 				  }
 				 for(int i=0; i<details.length; i++) 
 					detailsList.add(details[i]);
@@ -223,6 +223,8 @@ public class Parser {
 			break;
 			
 			case "undo" :
+				break;
+			case "redo" :
 				break;
 				
 			default:
@@ -269,12 +271,12 @@ public class Parser {
 	}
 	
 	public String getKeyCommand() { 
-		System.out.println("Key command: " +keyWord);
+		//System.out.println("Key command: " +keyWord);
 		return keyWord;
 	}
 
 	public int getEditIndex() { 
-		System.out.println("Edit index: " +editIndex);
+		//System.out.println("Edit index: " +editIndex);
 		if (editIndex == -1){
 			return 1;
 		}

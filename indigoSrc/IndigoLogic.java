@@ -54,7 +54,7 @@ public class IndigoLogic {
 		 * 2.execute Command
 		 */ // TODO simple input for testing
 		parser = new Parser(userCommand);
-		System.out.println(userCommand);
+		//System.out.println(userCommand);
 		Command commandInput = new Command(parser.getKeyCommand());
 
 		return executeCommand(commandInput);

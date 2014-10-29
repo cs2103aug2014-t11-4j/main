@@ -26,7 +26,7 @@ public class Delete extends CommandClass{
 		if (index > totalSize || index < 1){
 			return "Invalid index";
 		} else {
-			uList.push(new Parser("add " + index + " " + taskListVar.get(index).getDescription()));
+			uList.push(new Parser("add " + index + " " + taskListVar.get(index).getDescription()), parserVar);
 			taskListVar.deleteTask(index);
 			return "Task deleted";
 		}

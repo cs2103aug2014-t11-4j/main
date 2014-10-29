@@ -31,15 +31,12 @@ public class Undo extends CommandClass {
 		switch (comm){
 			case CREATE:
 				taskListVar.addTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
-				uList.pushRedo(new Parser("delete" + commandPre.getEditIndex()));
 				return "Undo a delete";
 			case UPDATE:
 				taskListVar.editTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
-				uList.pushRedo(new Parser("edit" + commandPre.getEditIndex() + commandPre.getCommand()));
 				return "Undo an Update";
 			case DELETE:
 				taskListVar.deleteTask(commandPre.getEditIndex());
-				uList.pushRedo(new Parser("edit" + commandPre.getEditIndex() + commandPre.getCommand()));
 				return "Undo a create";
 			case UNCOMPLETE:
 				taskListVar.get(commandPre.getEditIndex()).unComplete();
@@ -50,6 +47,9 @@ public class Undo extends CommandClass {
 	}
 	
 	private static String redo(){
+		if (uList.isRedoAble() == false){
+			return "Cannot Undo!";
+		}
 		Parser commandNext = uList.redo();
 		Command commandInput = new Command(commandNext.getKeyCommand());
 		System.out.println(commandNext.getKeyCommand());
@@ -64,8 +64,8 @@ public class Undo extends CommandClass {
 			case DELETE:
 				taskListVar.deleteTask(commandNext.getEditIndex());
 				return "Task is deleted again";
-			case UNCOMPLETE:
-				taskListVar.get(commandNext.getEditIndex()).unComplete();
+			case COMPLETE:
+				taskListVar.get(commandNext.getEditIndex()).complete();
 				return "Task is complete!";
 			default: 
 				return "view";
