@@ -44,9 +44,6 @@ public class Create extends CommandClass {
 			return "Invalid index";
 		} else {
 		taskListVar.addTask(editIndex, toDo);
-		if(!(toDo instanceof DeadlineTask)){
-			editIndex += taskListVar.getTimedList().size();
-		}
 		psl.push(new Parser("delete " + editIndex));
 		return toDo.toString() + " is added to taskList!";
 		}
