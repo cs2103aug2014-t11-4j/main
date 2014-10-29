@@ -9,8 +9,6 @@ public class TimedTask extends DeadlineTask {
 	
 	protected DateTime startTime;
 	
-	protected Interval interval;
-	
 	protected String newLine = System.getProperty("line.separator");
 	
 	public static void main(String[] args){
@@ -23,7 +21,6 @@ public class TimedTask extends DeadlineTask {
 	public TimedTask(String description, DateTime beginTime, DateTime endTime){
 		super(description, endTime);
 		startTime = beginTime;
-		interval = new Interval(beginTime, endTime);
 		numDates = 2;
 		keyTime = beginTime;
 	}
@@ -32,9 +29,6 @@ public class TimedTask extends DeadlineTask {
 		return startTime;
 	}
 	
-	public String getInterval(){
-		return interval.toString();
-	}
 	
 	public String toString(DateTimeFormatter dtf){
 		FloatingTask temp = new FloatingTask(this);

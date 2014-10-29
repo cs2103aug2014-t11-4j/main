@@ -220,7 +220,7 @@ public class Parser {
 				break;
 				
 			default:
-				keyWord = "view";
+				keyWord = "add";
 				toDo = userCommand + "";
 			} 
 		}	else {
@@ -234,8 +234,10 @@ public class Parser {
 				keyWord = "undo";
 				break;
 			case "view":
+			case "search":
 				keyWord = "view";
 				break;
+			
 			default:
 				keyWord = "add";
 			}
