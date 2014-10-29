@@ -19,7 +19,7 @@ public class TimeParser {
 	private DateTime endTime;
 	private DateTime startTime;
 	private List<Date> dates;
-	List<DateGroup> parser;
+	static List<DateGroup> parser;
 	
 	private final static Logger LOGGER = Logger.getLogger(TimeParser.class.getName()); 
 

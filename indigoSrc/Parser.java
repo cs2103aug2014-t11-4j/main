@@ -68,55 +68,105 @@ public class Parser {
 		prepWordsList.add("on");
 		prepWordsList.add("by");
 		prepWordsList.add("at");
-		prepWordsList.add("from");
+		prepWordsList.add("from");	
+		prepWordsList.add("in"); 
+		
+		ArrayList<String> monthsList = doMonthsList();
+				
 		String[] description;
 		int size = 0;
 		try {
-			size = testParser.parser.size();
+			size = TimeParser.parser.size();
 		} catch (Exception err){
 			
 		}
 		String[] identifers = new String[size]; 
+		
 		for(int i=0; i<size;i++){ 
-			identifers[i] = testParser.parser.get(i).getText();
+			identifers[i] = TimeParser.parser.get(i).getText();
+			System.out.println(identifers[i]);
+		} 
+		
+		for(int j=0; j<size; j++) { 
+			if(monthsList.contains(identifers[j])) { 
+				String regex1 = "\bjan\b";
+				String regex2 = "\bfeb\b";
+				String regex3 = "\bmar\b";
+				String regex4 = "\bapr\b";
+				String regex5 = "\bmay\b";
+				String regex6 = "\bjun\b";
+				String regex7 = "\bjul\b";
+				String regex8 = "\baug\b";
+				String regex9 = "\bsep\b";
+				String regex10 = "\boct\b";
+				String regex11 = "\bnov\b";
+				String regex12 = "\bdec\b";
+					if(!identifers[j].equals(regex1)) 
+					if(!identifers[j].equals(regex2)) 
+					if(!identifers[j].equals(regex3)) 
+					if(!identifers[j].equals(regex4)) 
+					if(!identifers[j].equals(regex5)) 
+					if(!identifers[j].equals(regex6)) 
+					if(!identifers[j].equals(regex7))
+					if(!identifers[j].equals(regex8))
+					if(!identifers[j].equals(regex9))
+					if(!identifers[j].equals(regex10))
+					if(!identifers[j].equals(regex11)) 
+					if(!identifers[j].equals(regex12)){  
+						identifers[j] = ""; 
+				}
+			}
 		}
-		for(int k=0; k<size; k++) { 
+	
+		for(int k=0; k<size; k++) {
+			String word = identifers[k]; 
 			toDo = toDo.replaceFirst(identifers[k], "IDENTIFIER"); 
+			System.out.println(toDo); 
 			description = toDo.split(" "); 
 				for(int j=0; j<description.length; j++) { 
 					if(description[j].contains("IDENTIFIER") && j>0) { 
 						String prepWord = description[j-1]; 			
-							if(prepWordsList.contains(prepWord)) { 
+							if(prepWordsList.contains(prepWord) && description[j].equals("IDENTIFIER")) {
 								String finaltoDo = "";  
 								description[j-1] ="";
 								for(int j1=0; j1<description.length; j1++) {
 									finaltoDo = finaltoDo + description[j1] + " "; 
 								}
 								toDo = finaltoDo; 
+								System.out.println(toDo); 
 								toDo = toDo.replace("IDENTIFIER", "");
 								toDo = toDo.trim(); 
 								toDo = toDo.replaceAll("( )+", " ");
+								
 							}
+					} 
+							toDo = toDo.replace("IDENTIFIER", ""); 
+							toDo = toDo.trim();
+						}
 					}
-					toDo = toDo.replace("IDENTIFIER", ""); 
-					toDo = toDo.trim(); 
-				}
-		}
+		
 		if(toDo.contains(" today")){
 			index = toDo.indexOf(" today");
 		} else if(toDo.contains(" tomorrow")){
-			index = toDo.indexOf(" tomorrow");			
-	//	} else if(toDo.contains(" by ")){
-	//		index = toDo.indexOf(" by ");
-	//	} else if (toDo.contains(" at ")){
-	//		index = toDo.indexOf(" at ");
-	//	} else if(toDo.contains(" from ")){
-	//		index = toDo.indexOf(" from ");
-	//	} else if(toDo.contains(" on ")){
-	//		index = toDo.indexOf(" on ");
+			index = toDo.indexOf(" tomorrow");	
 		}
-		//return toDo.substring(0, index);
 		return toDo; 
+	}
+
+	public ArrayList<String> doMonthsList() {
+		ArrayList<String> monthsList = new ArrayList<String>();
+		monthsList.add("jan");
+		monthsList.add("feb");
+		monthsList.add("mar");
+		monthsList.add("apr");
+		monthsList.add("may");
+		monthsList.add("jun");
+		monthsList.add("jul");
+		monthsList.add("aug");
+		monthsList.add("sep");
+		monthsList.add("nov");
+		monthsList.add("dec");
+		return monthsList;
 	}
 
 	public Parser(String userCommand) {
