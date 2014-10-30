@@ -32,6 +32,7 @@ public class Parser {
 	private DateTime endTime;
 	boolean containConj 		= false;				//determine if it is a floating task
 	private int editIndex;
+	private String location;
 	private boolean isFloatingTask;
 	private boolean isDeadlineTask;
 	private boolean isTimedTask; 
@@ -58,6 +59,10 @@ public class Parser {
 			System.out.println("There are no such thing as time! Hurhur");
 		}
 		System.out.println(test.getCommand());
+	}
+	
+	public String getLocation(){
+		return location + "";
 	}
 	
 	public String getCommand() {
@@ -188,6 +193,7 @@ public class Parser {
 			commandSentence = userCommand.split(" ", 2);
 			keyWord = commandSentence[0];
 			commandWords = commandSentence[1];
+			location = parseLocation(commandSentence);
 			
 			switch(keyWord) { 
 			case "add":// for instance add buy a cat on 23/12/2014
@@ -270,6 +276,17 @@ public class Parser {
 		assert commandWords !=null;
 	}
 	
+	private String parseLocation(String[] words) {
+		String place = new String("");
+		for (String str: words){
+			if (str.startsWith("@")){
+				place = str.substring(1);
+				return place;
+			}
+		}
+		return null;
+	}
+
 	public String getKeyCommand() { 
 		System.out.println("Key command: " +keyWord);
 		return keyWord;
