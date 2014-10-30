@@ -38,8 +38,9 @@ public class LogicFacade {
 		this("view");
 	}
 	
-	public LogicFacade(String userInput){
+	public LogicFacade(String userCommand){
 		loadData();
+		String userInput = userCommand + "";
 		feedback = readCommand(userInput);
 		Parser p = new Parser(userInput);
 		if(userInput.contains("view")){

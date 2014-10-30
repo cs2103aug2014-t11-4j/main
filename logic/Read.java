@@ -45,18 +45,18 @@ public class Read extends CommandClass{
 		} else if (parserVar.getCommand().contains("-d")){
 			feedback = "All the deadline tasks are shown";
 			return viewDeadlineTask();
-		}  else if (parserVar.getCommand().contains("overdue")){
+		}  else if (parserVar.getCommand().contains("-overdue")){
 			feedback = "All tasks overdue are shown";
 			return viewOverDue().trim();
-		}  else if (parserVar.getCommand().contains("today")){
+		}  else if (parserVar.getCommand().contains("-t")){
 			feedback = "Today's tasks are shown";
 			String result = viewOverDue() + newLine + viewToday();
 			return result.trim();
-		}  else if (parserVar.getCommand().contains("this week")){
+		}  else if (parserVar.getCommand().contains("-w")){
 			feedback = "This week's tasks are shown";
-			String result = viewOverDue() + newLine + viewToday();
+			String result = viewOverDue() + newLine + viewThisWeek();
 			return result.trim();
-		}  else if (parserVar.getCommand().contains("this month")){
+		}  else if (parserVar.getCommand().contains("-m")){
 			feedback = "This month's tasks are shown";
 			return viewThisMonth();
 		} else

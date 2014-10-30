@@ -32,6 +32,7 @@ public class Parser {
 	private DateTime endTime;
 	boolean containConj 		= false;				//determine if it is a floating task
 	private int editIndex;
+	private String location;
 	private boolean isFloatingTask;
 	private boolean isDeadlineTask;
 	private boolean isTimedTask; 
@@ -65,6 +66,10 @@ public class Parser {
 		toDo = toDo.trim();
 		return toDo;
 	}
+
+	public String getLocation(){
+		return location + "";
+	}
 	
 	public String getCommand() {
 		toDo = toDo.trim();
@@ -76,7 +81,7 @@ public class Parser {
 		prepWordsList.add("at");
 		prepWordsList.add("from");	
 		prepWordsList.add("in"); 
-		
+	
 		ArrayList<String> monthsList = doMonthsList();
 				
 		String[] description;
@@ -107,6 +112,9 @@ public class Parser {
 				String regex10 = "\boct\b";
 				String regex11 = "\bnov\b";
 				String regex12 = "\bdec\b";
+				String regex13 = "\bmon\b";
+				String regex14 = "\bwed\b";
+				
 					if(!identifers[j].equals(regex1)) 
 					if(!identifers[j].equals(regex2)) 
 					if(!identifers[j].equals(regex3)) 
@@ -118,7 +126,9 @@ public class Parser {
 					if(!identifers[j].equals(regex9))
 					if(!identifers[j].equals(regex10))
 					if(!identifers[j].equals(regex11)) 
-					if(!identifers[j].equals(regex12)){  
+					if(!identifers[j].equals(regex12)) 
+					if(!identifers[j].equals(regex13)) 
+					if(!identifers[j].equals(regex14)){  
 						identifers[j] = ""; 
 				}
 			}
@@ -145,6 +155,7 @@ public class Parser {
 							}
 					} 
 							toDo = toDo.replace("IDENTIFIER", ""); 
+							toDo = toDo.replaceAll("( )+", " ");
 							toDo = toDo.trim();
 						}
 					}
@@ -165,6 +176,8 @@ public class Parser {
 		monthsList.add("sep");
 		monthsList.add("nov");
 		monthsList.add("dec");
+		monthsList.add("mon"); 
+		monthsList.add("wed"); 
 		return monthsList;
 	}
 
@@ -179,6 +192,7 @@ public class Parser {
 			commandSentence = userCommand.split(" ", 2);
 			keyWord = commandSentence[0];
 			commandWords = commandSentence[1];
+			location = parseLocation(commandSentence);
 			
 			switch(keyWord) { 
 			case "add":// for instance add buy a cat on 23/12/2014
@@ -263,6 +277,17 @@ public class Parser {
 		assert commandWords !=null;
 	}
 	
+	private String parseLocation(String[] words) {
+		String place = new String("");
+		for (String str: words){
+			if (str.startsWith("@")){
+				place = str.substring(1);
+				return place;
+			}
+		}
+		return null;
+	}
+
 	public String getKeyCommand() { 
 		//System.out.println("Key command: " +keyWord);
 		return keyWord;

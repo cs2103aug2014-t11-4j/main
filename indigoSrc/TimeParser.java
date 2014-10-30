@@ -84,11 +84,13 @@ public class TimeParser {
 	private void parseTime() {
 		LOGGER.log(Level.FINE, "Time String dected:" + parser.get(0).getText());
 		dates = parser.get(0).getDates();
+		System.out.println("TESTTTTTT");
+		System.out.println(dates); 
 		numDate = dates.size();
 		sortedUserCommand = userCommand + "";
 		sortedUserCommand = sortedUserCommand.replaceAll(parser.get(0).getText(), "");
 		LOGGER.log(Level.FINE, "UserCommand after removing time info: " + sortedUserCommand);
-		
+		System.out.println(numDate); 
 	    switch (numDate){
 	    case 1: // a deadLine task
 	    	parseDeadLineTask();

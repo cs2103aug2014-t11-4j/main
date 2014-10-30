@@ -37,7 +37,7 @@ public class Create extends CommandClass {
 		} else if (parserVar.isTimedTask()){
 			toDo = new TimedTask(parserVar.getCommand(),parserVar.getStartTime(),parserVar.getEndTime());
 		} else {
-			toDo = new FloatingTask(parserVar.getCommand());
+			toDo = new FloatingTask(parserVar.getCommand(),parserVar.getLocation());
 		}
 	}
 	

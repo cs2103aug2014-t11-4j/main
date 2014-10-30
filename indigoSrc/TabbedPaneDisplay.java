@@ -60,7 +60,9 @@ public class TabbedPaneDisplay extends JPanel {
 
 		JScrollPane scroll = new JScrollPane(textPaneTemp);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		textPaneTemp.setText(text);
+		textPaneTemp.setEditable(false);
 		tabbedPanel.setLayout(new GridLayout(1,1));
 		tabbedPanel.add(scroll);
 		
@@ -81,9 +83,10 @@ public class TabbedPaneDisplay extends JPanel {
 			setTab("other");
 			PaneArray.get(0).setText(new LogicFacade("view").display);
 		}
-		PaneArray.get(1).setText(new LogicFacade("view today").display);
-		PaneArray.get(2).setText(new LogicFacade("view this week").display);
-		PaneArray.get(3).setText(new LogicFacade("view this month").display);
+		PaneArray.get(0).setText(text);
+		PaneArray.get(1).setText(new LogicFacade("view -t").display);
+		PaneArray.get(2).setText(new LogicFacade("view -w").display);
+		PaneArray.get(3).setText(new LogicFacade("view -m").display);
 		PaneArray.get(4).setText(new LogicFacade("view -f").display);
 	}
 	
