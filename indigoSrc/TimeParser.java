@@ -1,4 +1,5 @@
 package indigoSrc;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -20,6 +21,7 @@ public class TimeParser {
 	private DateTime startTime;
 	private List<Date> dates;
 	static List<DateGroup> parser;
+	ArrayList<String> filterWords = new ArrayList<String>();
 	
 	private final static Logger LOGGER = Logger.getLogger(TimeParser.class.getName()); 
 
@@ -54,9 +56,83 @@ public class TimeParser {
 	}
 
 	private void filterParser() { 
+		filterWords.add("mon"); 
+		filterWords.add("tue"); 
+		filterWords.add("wed"); 
+		filterWords.add("thu"); 
+		filterWords.add("fri"); 
+		filterWords.add("jan"); 
+		filterWords.add("feb"); 
+		filterWords.add("mar"); 
+		filterWords.add("apr");
+		filterWords.add("may"); 
+		filterWords.add("june"); 
+		filterWords.add("jul"); 
+		filterWords.add("aug"); 
+		filterWords.add("sep");
+		filterWords.add("oct"); 
+		filterWords.add("nov"); 
+		filterWords.add("dec"); 
+		
+		String regex1 = "\bmon\b";
+		String regex2 = "\btue\b";
+		String regex3 = "\bwed\b"; 
+		String regex4 = "\bthu\b"; 
+		String regex5 = "\bfri\b"; 
+		String regex6 = "\bjan\b"; 
+		String regex7 = "\bfeb\b"; 
+		String regex8 = "\bmar\b"; 
+		String regex9 = "\bapr\b"; 
+		String regex10 = "\bmay\b"; 
+		String regex11 = "\bjun\b"; 
+		String regex12 = "\bjul\b"; 
+		String regex13 = "\baug\b";
+		String regex14 = "\bsep\b";
+		String regex15 = "\boct\b";
+		String regex16 = "\bnov\b";
+		String regex17 = "\bdec\b"; 
+		
 		for (int j=0;j<parser.size();j++){
+				String identified = parser.get(j).getText();
 				if(isInteger(parser.get(j).getText())) { 
 					parser.remove(j); 
+				}
+				if(identified.matches(".*\\d.*")) {				
+					for(int d=0; d<identified.length();d++) { 
+						if(Character.isDigit(identified.charAt(d))){ 
+							if(!(identified.charAt(d+1) == 'a') && (!(identified.charAt(d+2) == 'm')))
+							if(!(identified.charAt(d+1) == 'p') && (!(identified.charAt(d+2) == 'm'))) { 
+								//op2 tomorrow, i need to remove the 2 and just have tomorrow only
+								parser.remove(j); 
+								//String s = identified.charAt(d) + ""; 
+							//	identified = identified.replace(s, "");
+								//parser.add(identified); 
+							}
+								
+						}
+					}
+					
+				}
+				if(filterWords.contains(identified)) { 
+					if(!parser.get(j).getText().equals(regex1)) 
+					if(!parser.get(j).getText().equals(regex2)) 
+					if(!parser.get(j).getText().equals(regex3)) 
+					if(!parser.get(j).getText().equals(regex4)) 
+					if(!parser.get(j).getText().equals(regex5)) 
+					if(!parser.get(j).getText().equals(regex6))
+					if(!parser.get(j).getText().equals(regex7)) 
+					if(!parser.get(j).getText().equals(regex8))
+					if(!parser.get(j).getText().equals(regex9)) 
+					if(!parser.get(j).getText().equals(regex10)) 
+					if(!parser.get(j).getText().equals(regex11))
+					if(!parser.get(j).getText().equals(regex12)) 
+					if(!parser.get(j).getText().equals(regex13)) 
+					if(!parser.get(j).getText().equals(regex14))
+					if(!parser.get(j).getText().equals(regex15)) 
+					if(!parser.get(j).getText().equals(regex16)) 
+					if(!parser.get(j).getText().equals(regex17)) { 
+						parser.remove(j);  
+					}
 				}
 		}
 	}
@@ -70,6 +146,7 @@ public class TimeParser {
 	    // only got here if we didn't return false
 	    return true;
 	}
+	
 	private String listAllDates(List<DateGroup> parser2) {
 		StringBuilder result = new StringBuilder("Dates are:\n");
 		for (int i=0;i<parser2.size();i++){
