@@ -1,5 +1,6 @@
 package indigoSrc;
 import logic.*;
+
 import java.util.ArrayList;
 
 import logic.Command;
@@ -48,9 +49,10 @@ public class LogicFacade {
 			rc.execute();
 			display = rc.resultString;
 		} else if(userInput.contains("search")) {
-			Search sc = new Search(parser, taskList);
+			Search sc = new Search(p, taskList);
 			sc.execute();
 			display = sc.searchResult;
+
 		}	else {
 			Read rc = new Read(p, taskList);
 			display = rc.view();

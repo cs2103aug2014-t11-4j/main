@@ -86,6 +86,15 @@ public class TaskList {
 		return tempFloatingTask;
 	}
 	
+	public void deleteTask(FloatingTask toDo) {
+		// TODO Auto-generated method stub
+		if(floatingTaskList.contains(toDo)){
+			floatingTaskList.remove(toDo);
+		} else {
+			timedTaskList.remove(toDo);
+		}
+	}
+
 	// edit
 	public FloatingTask editTask(int index,  FloatingTask newTask){
 		FloatingTask tempFloatingTask = deleteTask(index);

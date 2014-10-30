@@ -169,7 +169,7 @@ public class FillUpMainWindow {
 			readInput.selectAll();
 			LogicFacade controller = new LogicFacade(text);
 			liveUserFeedback.setText(controller.feedback);
-			taskDisplay.update(controller.display);
+			taskDisplay.update(text);
 			
 			//----start---
 			//Added by Ken to test the floating task display.

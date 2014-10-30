@@ -27,26 +27,26 @@ public class TabbedPaneDisplay extends JPanel {
 		
 		
 		tabbedPaneDisplay = new JTabbedPane();
-		JComponent allPanel = makeTextPanel(taskDisplayPane, id.display);
+		JComponent allPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -d").display);
 		tabbedPaneDisplay.addTab("Inbox", null, allPanel, "Displays all tasks.");
 		tabbedPaneDisplay.setMnemonicAt(0, KeyEvent.VK_1);
 		
-		JComponent dailyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view today").display);
+		JComponent dailyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -t").display);
 		tabbedPaneDisplay.addTab("Today", null, dailyPanel, "Displays daily tasks.");
 		tabbedPaneDisplay.setMnemonicAt(1, KeyEvent.VK_2);
 		
-		JComponent weeklyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view this week").display);
+		JComponent weeklyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -w").display);
 		tabbedPaneDisplay.addTab("This Week", null, weeklyPanel, "Displays weekly tasks.");
 		tabbedPaneDisplay.setMnemonicAt(2, KeyEvent.VK_3);
 		
-		JComponent monthlyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view this month").display);
+		JComponent monthlyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -m").display);
 		tabbedPaneDisplay.addTab("This Month", null, monthlyPanel, "Displays monthly tasks.");
 		tabbedPaneDisplay.setMnemonicAt(3, KeyEvent.VK_4);
-		
-		JComponent floatingPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -f").display);
+	
+/*		JComponent floatingPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -f").display);
 		tabbedPaneDisplay.addTab("Floating", null, floatingPanel, "Displays no-deadline tasks.");
 		tabbedPaneDisplay.setMnemonicAt(4, KeyEvent.VK_5);
-	
+*/	
 		add(tabbedPaneDisplay);
 		
 		tabbedPaneDisplay.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -81,29 +81,24 @@ public class TabbedPaneDisplay extends JPanel {
 			PaneArray.get(0).setText(new LogicFacade(text).display);
 		} else{
 			setTab("other");
-			PaneArray.get(0).setText(new LogicFacade("view").display);
+			PaneArray.get(0).setText(new LogicFacade("view -d").display);
 		}
-		PaneArray.get(0).setText(text);
 		PaneArray.get(1).setText(new LogicFacade("view -t").display);
 		PaneArray.get(2).setText(new LogicFacade("view -w").display);
 		PaneArray.get(3).setText(new LogicFacade("view -m").display);
-		PaneArray.get(4).setText(new LogicFacade("view -f").display);
+//		PaneArray.get(4).setText(new LogicFacade("view -f").display);
 	}
 	
 	private void setTab(String index){
-		if (index.contains("today")){
+		if (index.contains("-t")){
 			tabbedPaneDisplay.setSelectedIndex(1);
-		}
-		else if (index.contains("this week")){
+		} else if (index.contains("-w")){
 			tabbedPaneDisplay.setSelectedIndex(2);
-		}
-		else if (index.contains("this month")){
-			tabbedPaneDisplay.setSelectedIndex(2);
-		}
-		else if (index.contains("all tasks")){
+		} else if (index.contains("-m")){
+			tabbedPaneDisplay.setSelectedIndex(3);
+/*		} else if (index.contains("-f")){
 			tabbedPaneDisplay.setSelectedIndex(4);
-		}
-		else {
+*/		} else {
 			tabbedPaneDisplay.setSelectedIndex(0);
 		}
 	}
