@@ -127,7 +127,6 @@ public class Parser {
 		for(int k=0; k<size; k++) {
 			String word = identifers[k]; 
 			toDo = toDo.replaceFirst(identifers[k], "IDENTIFIER"); 
-			//System.out.println(toDo); 
 			description = toDo.split(" "); 
 				for(int j=0; j<description.length; j++) { 
 					if(description[j].contains("IDENTIFIER") && j>0) { 
@@ -139,7 +138,6 @@ public class Parser {
 									finaltoDo = finaltoDo + description[j1] + " "; 
 								}
 								toDo = finaltoDo; 
-			//					System.out.println(toDo); 
 								toDo = toDo.replace("IDENTIFIER", "");
 								toDo = toDo.trim(); 
 								toDo = toDo.replaceAll("( )+", " ");
@@ -151,11 +149,6 @@ public class Parser {
 						}
 					}
 		
-	/*	if(toDo.contains(" today")){
-			index = toDo.indexOf(" today");
-		} else if(toDo.contains(" tomorrow")){
-			index = toDo.indexOf(" tomorrow");	
-		}*/
 		return toDo; 
 	}
 
@@ -199,11 +192,8 @@ public class Parser {
 				LOGGER.log(Level.FINE, "commandWords: " + commandWords);
 				try{
 					 editIndex = Integer.parseInt(details[0]);
-					 }
-				 catch(NumberFormatException er)
-				  {
-					//System.out.println("exception for editIndex.");
-				  }
+				} catch(NumberFormatException er){
+				}
 				 for(int i=0; i<details.length; i++) 
 					detailsList.add(details[i]);
 				 

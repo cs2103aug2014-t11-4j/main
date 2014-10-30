@@ -21,17 +21,15 @@ public class Delete extends CommandClass{
 		parserVar = parsing;
 		uList = psList;
 		taskListVar = taskList;
-		int totalSize = taskListVar.getFloatingList().size() + taskListVar.getTimedList().size();
+		int totalSize = taskListVar.getSize();
 		index = parserVar.getEditIndex();
-		if (!(index > totalSize || index < 1)){
-			toDo = taskListVar.get(index);
-		} else {
-			toDo = null;
+		if (index > totalSize || index < 1){
+			isValid = false;
 		}
 	}
 	
 	public String delete() throws ArrayIndexOutOfBoundsException{
-		if (toDo == null){
+		if (isValid==false){
 			return "Invalid index";
 		} else {
 			taskListVar.deleteTask(index);

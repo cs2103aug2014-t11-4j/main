@@ -7,6 +7,7 @@ public abstract class CommandClass {
 	protected Parser parserVar; 
 	protected static UndoList uList = new UndoList();
 	protected static TaskList taskListVar = new TaskList();
+	protected boolean isValid = true;
 	
 	public abstract String execute();
 	public abstract String undo();

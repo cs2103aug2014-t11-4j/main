@@ -9,9 +9,7 @@ package indigoSrc;
 
 public class Create extends CommandClass {
 
-	FloatingTask toDo;{
-		assert parserVar.getCommand() instanceof String;
-	}
+	FloatingTask toDo;
 	int index;
 	
 	@Override
@@ -25,6 +23,10 @@ public class Create extends CommandClass {
 		uList = pslist;
 		taskListVar = taskList;
 		index = parserVar.getEditIndex();
+		int totalSize = taskListVar.getSize() + 1;
+		if (index > totalSize || index < 1){
+			isValid = false;
+		}
 		if (parserVar.isDeadlineTask()){
 			toDo = new DeadlineTask(parserVar.getCommand(),parserVar.getEndTime());
 		} else if (parserVar.isTimedTask()){
@@ -35,10 +37,7 @@ public class Create extends CommandClass {
 	}
 	
 	public String add() {
-
-		int totalSize = taskListVar.getFloatingList().size() + taskListVar.getTimedList().size() + 1;
-		if (index > totalSize || index < 1){
-			System.out.println("invalid index");
+		if (isValid==false){
 			return "Invalid index";
 		} else {
 		taskListVar.addTask(index, toDo);

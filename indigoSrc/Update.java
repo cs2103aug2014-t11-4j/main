@@ -8,13 +8,10 @@ package indigoSrc;
 
 public class Update extends CommandClass{
 	
-	FloatingTask toDo;{
-		assert parserVar.getCommand() instanceof String;
-	}
-	Integer editIndex;{
-		assert editIndex instanceof Integer;
-	}
-
+	FloatingTask toDo;
+	FloatingTask toDoReplaced;
+	int index;
+	
 	@Override
 	public String execute() {
 		// TODO Auto-generated method stub
@@ -25,6 +22,8 @@ public class Update extends CommandClass{
 		parserVar = parsing;
 		uList = psList;
 		taskListVar = taskList; 
+		int totalSize = taskListVar.getSize();
+		index = parserVar.getEditIndex();
 		if (parserVar.isDeadlineTask()){
 			toDo = new DeadlineTask(parserVar.getCommand(),parserVar.getEndTime());
 		} else if (parserVar.isTimedTask()){
@@ -32,26 +31,33 @@ public class Update extends CommandClass{
 		} else {
 			toDo = new FloatingTask(parserVar.getCommand());
 		}
-
+		if (index > totalSize || index < 1){
+			isValid = false;
+			toDoReplaced = null;
+		} else {
+			toDoReplaced = taskListVar.get(index);
+		}
 	}
 	
 	
 	public String edit() throws ArrayIndexOutOfBoundsException{
-		int index = parserVar.getEditIndex();
-		int totalSize = taskListVar.getFloatingList().size() + taskListVar.getTimedList().size();
-		if (index > totalSize || index <1){
-			return "index is not within the number of tasks in taskList";
+		index = taskListVar.search(toDoReplaced) + 1;
+		if (isValid==false){
+			return "Invalid index";
 		} else {
-			//uList.push(new Parser("edit " + parserVar.getRawCommand()), parserVar);
+			assert(toDoReplaced != null);
+			index = taskListVar.search(toDoReplaced) + 1;
 			taskListVar.editTask(index, toDo);
-			return "Task updated";
+			return "Task updated to " + toDo.toString();
 		}
 	}
 
 	@Override
 	public String undo() {
 		// TODO Auto-generated method stub
-		return null;
+		index = taskListVar.search(toDo) + 1;
+		taskListVar.editTask(index, toDoReplaced);
+		return "Task updated to " + toDoReplaced.toString();
 	}
 
 }
