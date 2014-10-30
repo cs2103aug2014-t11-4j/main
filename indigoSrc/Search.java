@@ -60,5 +60,11 @@ public class Search extends CommandClass {
 			return "Search words not found";
 		}
 	}
+
+	@Override
+	public String undo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

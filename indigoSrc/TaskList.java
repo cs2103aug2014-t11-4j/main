@@ -33,6 +33,7 @@ import org.w3c.dom.Element;
 
 public class TaskList {
 	
+	private static final int NOT_FOUND = -1;
 	private ArrayList<FloatingTask> floatingTaskList;
 	private ArrayList<FloatingTask> timedTaskList;
 	
@@ -310,23 +311,26 @@ public class TaskList {
 		return floatingTaskList;
 	}
 
-	public ArrayList<Integer> search(String keyWords) {
+	public int search(FloatingTask task) {
 		// TODO Searches keyWords in the TaskList. Returns a list of Strings.
-		ArrayList<Integer> indices = new ArrayList<Integer>();
 		int floatSize = floatingTaskList.size();
 		int timeSize = timedTaskList.size();
-		for(int i=0; i<timeSize; i++){
-			if(timedTaskList.get(i).getDescription().contains(keyWords)){
-				indices.add(i + 1);
+		if(task.numDates == 1 || task.numDates == 2){
+			for(int i=0; i<timeSize; i++){
+				if(timedTaskList.get(i).equals(task)){
+					return i;
+				}
 			}
-		}
-		for(int j=0; j<floatSize; j++){
-			if(timedTaskList.get(j).getDescription().contains(keyWords)){
-				indices.add(j + timeSize);
+		} else if(task.numDates == 0){
+			for(int j=0; j<floatSize; j++){
+				if(floatingTaskList.get(j).equals(task)){
+					return j + timeSize;
+				}
 			}
+		} else {
+			return NOT_FOUND;
 		}
-		
-		return indices;
+		return NOT_FOUND;
 	}
 	
 	public int getSize(){

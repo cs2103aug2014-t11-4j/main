@@ -37,4 +37,15 @@ public class TimedTask extends DeadlineTask {
 		return result.toString();
 	}
 
+	@Override
+	public boolean equals(Object anotherTask) {
+		// TODO Auto-generated method stub
+		if (anotherTask instanceof TimedTask){
+			TimedTask myTask = (TimedTask) anotherTask;
+			return super.equals(anotherTask) && this.startTime.equals(myTask.startTime);
+		} else{
+			return false;
+		}
+	}
+
 }

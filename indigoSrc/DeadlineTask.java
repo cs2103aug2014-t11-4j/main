@@ -70,4 +70,15 @@ public class DeadlineTask extends FloatingTask{
 		return keyTime;
 	}
 
+	@Override
+	public boolean equals(Object anotherTask) {
+		// TODO Auto-generated method stub
+		if (anotherTask instanceof DeadlineTask){
+			DeadlineTask myTask = (DeadlineTask) anotherTask;
+			return super.equals(anotherTask) && this.endTime.equals(myTask.endTime);
+		} else{
+			return false;
+		}
+	}
+
 }

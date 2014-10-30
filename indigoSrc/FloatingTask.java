@@ -95,7 +95,8 @@ public class FloatingTask implements Comparable<FloatingTask>{
 		// TODO Auto-generated method stub
 		if (anotherTask instanceof FloatingTask){
 			FloatingTask myTask = (FloatingTask) anotherTask;
-			return this.getDescription().equals(myTask.getDescription());
+			return this.getDescription().equals(myTask.getDescription()) &&
+					this.isDone == myTask.isDone && this.numDates == myTask.numDates;
 		} else {
 			return false;
 		}

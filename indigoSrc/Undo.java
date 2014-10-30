@@ -11,7 +11,7 @@ public class Undo extends CommandClass {
 	}
 	
 	public String rexecute(){
-		return redo();
+		return null; //redo();
 	}
 
 	public Undo(Parser parsing, UndoList psList, TaskList taskList){
@@ -19,15 +19,15 @@ public class Undo extends CommandClass {
 		uList = psList;
 		taskListVar = taskList;
 	}
-	
+/*	
 	private static String undo(){
 		if (uList.isUndoAble() == false){
 			return "Cannot Undo!";
 		}
-		Parser commandPre = uList.undo();
-		Command commandInput = new Command(commandPre.getKeyCommand());
-		System.out.println(commandPre.getKeyCommand());
-		COMMAND_KEY comm = commandInput.getKey();
+		UndoListNode node = uList.undo();
+		//Command commandInput = new Command(commandPre.getKeyCommand());
+		//System.out.println(commandPre.getKeyCommand());
+		COMMAND_KEY comm = node.getInvertKey();
 		switch (comm){
 			case CREATE:
 				taskListVar.addTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
@@ -36,7 +36,8 @@ public class Undo extends CommandClass {
 				taskListVar.editTask(commandPre.getEditIndex(), new FloatingTask(commandPre.getCommand()));
 				return "Undo an Update";
 			case DELETE:
-				taskListVar.deleteTask(commandPre.getEditIndex());
+				taskListVar.search(node.getTask());
+				taskListVar.deleteTask(command);
 				return "Undo a create";
 			case UNCOMPLETE:
 				taskListVar.get(commandPre.getEditIndex()).unComplete();
@@ -78,5 +79,12 @@ public class Undo extends CommandClass {
 			default: 
 				return "view";
 		}
+	}
+	*/
+
+	@Override
+	public String undo() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

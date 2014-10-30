@@ -9,5 +9,6 @@ public abstract class CommandClass {
 	protected static TaskList taskListVar = new TaskList();
 	
 	public abstract String execute();
+	public abstract String undo();
 	
 }

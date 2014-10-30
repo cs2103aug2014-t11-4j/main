@@ -74,6 +74,7 @@ public class IndigoLogic {
 		switch (commandInput.getKey()){
 			case CREATE:
 				Create classAdd = new Create(parser, uList, taskList);
+				uList.push(classAdd);
 				return classAdd.execute();
 			case READ:
 				Read classView = new Read(parser, taskList);
@@ -83,13 +84,18 @@ public class IndigoLogic {
 				return classView.execute();
 			case UPDATE:
 				Update classEdit = new Update(parser, uList, taskList);
+				uList.push(classEdit);
 				return classEdit.execute();
 			case DELETE:
 				Delete classDelete = new Delete(parser, uList, taskList);
+				uList.push(classDelete);
 				return classDelete.execute();
 			case UNDO:
-				Undo classUndo = new Undo(parser, uList, taskList);
-				return classUndo.execute();
+				if(uList.isUndoAble()){
+					return uList.undo().undo();
+				} else {
+					return "Nothing to undo";
+				}
 			case REDO:
 				Undo classRedo = new Undo(parser, uList, taskList);
 				return classRedo.rexecute();

@@ -17,39 +17,61 @@ package indigoSrc;
 import java.util.LinkedList;
 
 public class UndoList {
-	private static LinkedList<Parser> undoList;
+	//private static LinkedList<Parser> undoList;
 	private static int currentPos;
-	private static LinkedList<Parser> redoList;
+	//private static LinkedList<Parser> redoList;
+	private static LinkedList<CommandClass> list;
 	
-	public UndoList(){
+/*	public UndoList(){
 		undoList = new LinkedList<Parser>();
 		redoList = new LinkedList<Parser>();
 		currentPos = -1;
 	}
-	
-	public void push(Parser newParser, Parser oldParser){
+*/	
+	public UndoList(){
+		list = new LinkedList<CommandClass>();
+		currentPos = -1;
+	}
+/*	public void push(Parser newParser, Parser oldParser){
 		clear();
 		undoList.add(newParser);
 		redoList.add(oldParser);
 		currentPos++;
 	}
+*/
+/*	public void push(COMMAND_KEY key, FloatingTask task){
+		clear();
+		UndoListNode node = new UndoListNode(key, task);
+		list.add(node);
+		currentPos++;
+	}
+*/
+	public void push(CommandClass cc){
+		clear();
+		//UndoListNode node = new UndoListNode(key, task);
+		list.add(cc);
+		currentPos++;
+	}
 	
 	public void clear(){
 		int i = currentPos+1;
-		while (i<undoList.size()){
-			undoList.remove(i);
-			redoList.remove(i);
+		while (i < list.size()){
+			list.remove(i);
 		}
 	}
 	
-	public Parser undo(){
+	public CommandClass undo(){
 		currentPos--;
-		return undoList.get(currentPos + 1);
+		return list.get(currentPos + 1);
 	}
 	
-	public Parser redo(){
+	public CommandClass redo(){
 		currentPos++;
-		return redoList.get(currentPos);
+		return list.get(currentPos);
+	}
+	
+	public int size(){
+		return list.size();
 	}
 	
 	public boolean isUndoAble(){
@@ -57,6 +79,6 @@ public class UndoList {
 	}
 	
 	public boolean isRedoAble(){
-		return currentPos >= 0;
+		return currentPos + 1 < size();
 	}
 }

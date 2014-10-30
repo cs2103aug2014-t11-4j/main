@@ -256,4 +256,10 @@ public class Read extends CommandClass{
 		
 		return returnString[0] + returnString[1];
 	}
+
+	@Override
+	public String undo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

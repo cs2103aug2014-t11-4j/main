@@ -42,10 +42,16 @@ public class Update extends CommandClass{
 		if (index > totalSize || index <1){
 			return "index is not within the number of tasks in taskList";
 		} else {
-			uList.push(new Parser("edit " + parserVar.getRawCommand()), parserVar);
+			//uList.push(new Parser("edit " + parserVar.getRawCommand()), parserVar);
 			taskListVar.editTask(index, toDo);
 			return "Task updated";
 		}
+	}
+
+	@Override
+	public String undo() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
