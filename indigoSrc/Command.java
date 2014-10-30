@@ -28,6 +28,10 @@ public class Command{
 				return COMMAND_KEY.COMPLETE;
 			case "uncomplete":
 				return COMMAND_KEY.UNCOMPLETE;
+			case "search":
+				return COMMAND_KEY.SEARCH;
+			case "clear":
+				return COMMAND_KEY.CLEAR;
 			default:
 				return COMMAND_KEY.READ;
 		}

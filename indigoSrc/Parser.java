@@ -241,6 +241,9 @@ public class Parser {
 			case "undo":
 				keyWord = "undo";
 				break;
+			case "redo":
+				keyWord = "redo";
+				break;
 			case "view":
 			case "search":
 				keyWord = "view";

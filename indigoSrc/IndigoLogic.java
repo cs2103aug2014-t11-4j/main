@@ -56,7 +56,10 @@ public class IndigoLogic {
 		parser = new Parser(userCommand);
 		//System.out.println(userCommand);
 		Command commandInput = new Command(parser.getKeyCommand());
-
+		if(userCommand.equals("clear")){
+			commandInput = new Command("clear");
+		}
+		
 		return executeCommand(commandInput);
 	}
 
@@ -103,6 +106,8 @@ public class IndigoLogic {
 				String result = classSearch.execute();
 				display = classSearch.displayLine;
 				return result;
+			case CLEAR:
+				return taskList.clear();
 			default:
 				System.exit(0);
 		}

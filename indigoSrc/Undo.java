@@ -56,7 +56,15 @@ public class Undo extends CommandClass {
 		COMMAND_KEY comm = commandInput.getKey();
 		switch (comm){
 			case CREATE:
-				taskListVar.addTask(commandNext.getEditIndex(), new FloatingTask(commandNext.getCommand()));
+				FloatingTask toDo = new FloatingTask();
+				if (commandNext.isDeadlineTask()){
+					toDo = new DeadlineTask(commandNext.getCommand(),commandNext.getEndTime());
+				} else if (commandNext.isTimedTask()){
+					toDo = new TimedTask(commandNext.getCommand(),commandNext.getStartTime(),commandNext.getEndTime());
+				} else {
+					toDo = new FloatingTask(commandNext.getCommand());
+				}
+				taskListVar.addTask(commandNext.getEditIndex(), toDo);
 				return "Task recreated";
 			case UPDATE:
 				taskListVar.editTask(commandNext.getEditIndex(), new FloatingTask(commandNext.getCommand()));

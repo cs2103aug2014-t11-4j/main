@@ -49,7 +49,7 @@ public class UndoList {
 	
 	public Parser redo(){
 		currentPos++;
-		return redoList.get(currentPos + 1);
+		return redoList.get(currentPos);
 	}
 	
 	public boolean isUndoAble(){

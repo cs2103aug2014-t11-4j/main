@@ -328,5 +328,19 @@ public class TaskList {
 		
 		return indices;
 	}
+	
+	public int getSize(){
+		int floatSize = floatingTaskList.size();
+		int timeSize = timedTaskList.size();
+		return floatSize + timeSize;
+	}
+	
+	public String clear(){
+		while(getSize()!=0){
+			floatingTaskList.clear();
+			timedTaskList.clear();
+		}
+		return "List is cleared";
+	}
 
 }

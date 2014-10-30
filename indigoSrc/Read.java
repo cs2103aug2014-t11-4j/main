@@ -112,7 +112,7 @@ public class Read extends CommandClass{
 	}
 	
 	//This method is to find tasks which are due today.
-	public String viewToday(){
+	public static String viewToday(){
 		DateTime now = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
@@ -131,7 +131,7 @@ public class Read extends CommandClass{
 	//This method is to find tasks which are due this week. 
 	//It does not follow the pattern on Monday to Sunday. It takes tasks of
 	//the next seven days.
-	public String viewThisWeek(){
+	public static String viewThisWeek(){
 		DateTime now = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
@@ -160,7 +160,7 @@ public class Read extends CommandClass{
 	
 	//This method is to find the tasks which are due this current month. Taking Overdue tasks 
 	//for the month into consideration as well.
-	public String viewThisMonth(){
+	public static String viewThisMonth(){
 		DateTime now = new DateTime();
 		int yearNow = now.getYear();
 		int monthNow = now.getMonthOfYear();
@@ -186,7 +186,7 @@ public class Read extends CommandClass{
 	}
 	
 	//This method lets user see tasks which are overdue but not done
-	public String viewOverDue(){
+	public static String viewOverDue(){
 		DateTime now = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
@@ -215,7 +215,7 @@ public class Read extends CommandClass{
 		return result.toString().trim() + newLine;
 	}
 	
-	private String dayLeft(DateTime today, DateTime taskDate){
+	private static String dayLeft(DateTime today, DateTime taskDate){
 		String returnString[] = new String[2];
 		int days = 0;
 		if(today.getYear() == taskDate.getYear()){
