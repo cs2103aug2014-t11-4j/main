@@ -48,7 +48,7 @@ public class Undo extends CommandClass {
 	
 	private static String redo(){
 		if (uList.isRedoAble() == false){
-			return "Cannot Undo!";
+			return "Cannot redo!";
 		}
 		Parser commandNext = uList.redo();
 		Command commandInput = new Command(commandNext.getKeyCommand());

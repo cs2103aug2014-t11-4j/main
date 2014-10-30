@@ -44,7 +44,7 @@ public class Create extends CommandClass {
 			return "Invalid index";
 		} else {
 		taskListVar.addTask(editIndex, toDo);
-		uList.push(new Parser("delete " + parserVar.getRawCommand()), parserVar);
+		uList.push(new Parser("delete " + editIndex), parserVar);
 		return toDo.toString() + " is added to taskList!";
 		}
 

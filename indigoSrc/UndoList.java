@@ -57,6 +57,6 @@ public class UndoList {
 	}
 	
 	public boolean isRedoAble(){
-		return currentPos <= redoList.size();
+		return currentPos >= 0;
 	}
 }
