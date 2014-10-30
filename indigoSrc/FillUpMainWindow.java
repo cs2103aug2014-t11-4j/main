@@ -194,7 +194,19 @@ public class FillUpMainWindow {
         
 
         else if(id == KeyEvent.KEY_PRESSED) {	
-        	
+        	if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Z) {
+        		IndigoLogic lc = new IndigoLogic("undo");
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Y){
+        		IndigoLogic lc = new IndigoLogic("redo");
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_D){
+        		readInput.setText("delete ");
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_N){
+        		readInput.setText("add ");
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_E){
+        		readInput.setText("edit ");
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_F){
+        		readInput.setText("search ");
+        	}
         } 
         
         else if(id == KeyEvent.KEY_RELEASED) {

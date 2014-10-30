@@ -28,8 +28,9 @@ public class IndigoLogic {
 		this("view");
 	}
 	
-	public IndigoLogic(String userInput){
+	public IndigoLogic(String userCommand){
 		loadData();
+		String userInput = userCommand + "";
 		feedback = readCommand(userInput);
 		Parser p = new Parser(userInput);
 		if(userInput.contains("view")){
