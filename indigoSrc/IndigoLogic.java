@@ -97,8 +97,11 @@ public class IndigoLogic {
 					return "Nothing to undo";
 				}
 			case REDO:
-				Undo classRedo = new Undo(parser, uList, taskList);
-				return classRedo.rexecute();
+				if(uList.isRedoAble()){
+					return uList.redo().execute();
+				} else {
+					return "Nothing to redo";
+				}
 			case COMPLETE:
 				int indexC = parser.getEditIndex();
 				taskList.get(indexC).complete();

@@ -8,6 +8,9 @@ package indigoSrc;
  */
 
 public class Delete extends CommandClass{
+	
+	FloatingTask toDo;
+	int index;
 
 	@Override
 	public String execute() {
@@ -18,23 +21,27 @@ public class Delete extends CommandClass{
 		parserVar = parsing;
 		uList = psList;
 		taskListVar = taskList;
+		int totalSize = taskListVar.getFloatingList().size() + taskListVar.getTimedList().size();
+		index = parserVar.getEditIndex();
+		if (!(index > totalSize || index < 1)){
+			toDo = taskListVar.get(index);
+		} else {
+			toDo = null;
+		}
 	}
 	
 	public String delete() throws ArrayIndexOutOfBoundsException{
-		int index = parserVar.getEditIndex();
-		int totalSize = taskListVar.getFloatingList().size() + taskListVar.getTimedList().size();
-		if (index > totalSize || index < 1){
+		if (toDo == null){
 			return "Invalid index";
 		} else {
-		//	uList.push(new Parser("add " + index + " " + taskListVar.get(index).getDescription()), parserVar);
 			taskListVar.deleteTask(index);
-			return "Task deleted";
+			return toDo.toString() + " is deleted";
 		}
 	}
 	
 	public String undo(){
-			
-		return "What";
+		taskListVar.addTask(index, toDo);
+		return toDo.toString() + " is re-added!";
 	}
 
 }
