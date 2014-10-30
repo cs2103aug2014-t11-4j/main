@@ -1,4 +1,8 @@
-package indigoSrc;
+package logic;
+
+import indigoSrc.FloatingTask;
+import indigoSrc.Parser;
+import indigoSrc.TaskList;
 
 /* This class is the delete class which deletes the task that user
  * would want to delete. User will have to indicate the index which the task 
@@ -17,18 +21,20 @@ public class Delete extends CommandClass{
 		return delete();
 	}
 	
-	public Delete(Parser parsing, UndoList psList, TaskList taskList){
+	public Delete(Parser parsing, TaskList taskList){
 		parserVar = parsing;
-		uList = psList;
 		taskListVar = taskList;
 		int totalSize = taskListVar.getSize();
 		index = parserVar.getEditIndex();
 		if (index > totalSize || index < 1){
+			toDo = null;
 			isValid = false;
+		} else {
+			toDo = taskListVar.get(index);
 		}
 	}
 	
-	public String delete() throws ArrayIndexOutOfBoundsException{
+	private String delete() throws ArrayIndexOutOfBoundsException{
 		if (isValid==false){
 			return "Invalid index";
 		} else {

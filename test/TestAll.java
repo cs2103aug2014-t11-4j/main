@@ -1,6 +1,6 @@
 package test;
 
-import indigoSrc.IndigoLogic;
+import indigoSrc.LogicFacade;
 
 import java.util.Scanner;
 public class TestAll {
@@ -11,7 +11,7 @@ public class TestAll {
 		String inp = sc.nextLine();
 		
 		while(!inp.equals("pickety")){
-			IndigoLogic id = new IndigoLogic(inp);
+			LogicFacade id = new LogicFacade(inp);
 			System.out.println(id.feedback);
 			System.out.println(id.display);
 			inp = sc.nextLine();

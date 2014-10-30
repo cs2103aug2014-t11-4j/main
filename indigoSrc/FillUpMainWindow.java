@@ -163,7 +163,7 @@ public class FillUpMainWindow {
 		public void actionPerformed(ActionEvent e) {
 			String text = readInput.getText();
 			readInput.selectAll();
-			IndigoLogic controller = new IndigoLogic(text);
+			LogicFacade controller = new LogicFacade(text);
 			liveUserFeedback.setText(controller.feedback);
 			taskDisplay.update(controller.display);
 			readInput.requestFocusInWindow();

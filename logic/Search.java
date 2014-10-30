@@ -1,10 +1,15 @@
-package indigoSrc;
+package logic;
+
+import indigoSrc.DeadlineTask;
+import indigoSrc.FloatingTask;
+import indigoSrc.Parser;
+import indigoSrc.TaskList;
 
 import java.util.ArrayList;
 
 public class Search extends CommandClass {
 
-	String displayLine = new String();
+	public String searchResult = new String();
 	
 	@Override
 	public String execute() {
@@ -52,11 +57,11 @@ public class Search extends CommandClass {
 		
 		//display = StringList.toString();
 		if(found!=0){
-			displayLine = "There are " + found + " tasks listed: " + "\n"; 
-			displayLine += StringList.toString();
+			searchResult = "There are " + found + " tasks listed: " + "\n"; 
+			searchResult += StringList.toString();
 			return "Results found";
 		} else {
-			displayLine = "No Tasks with search words found" + "\n";
+			searchResult = "No Tasks with search words found" + "\n";
 			return "Search words not found";
 		}
 	}

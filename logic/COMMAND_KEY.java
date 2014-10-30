@@ -1,4 +1,4 @@
-package indigoSrc;
+package logic;
 public enum COMMAND_KEY {
 	CREATE, READ, UPDATE, DELETE, UNDO, COMPLETE, UNCOMPLETE, REDO, SEARCH, CLEAR
 }

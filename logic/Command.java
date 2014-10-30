@@ -1,4 +1,6 @@
-package indigoSrc;
+package logic;
+
+
 public class Command{
 	private COMMAND_KEY key;
 	

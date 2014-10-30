@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import indigoSrc.IndigoLogic;
+import indigoSrc.LogicFacade;
 
 import org.joda.time.DateTime;
 import org.junit.BeforeClass;
@@ -44,19 +44,19 @@ public class testSystem {
 
 	@Test
 	public void testBasic() {
-		IndigoLogic test = new IndigoLogic();
+		LogicFacade test = new LogicFacade();
 		int sizeOfFloatingList = test.getTasks().getFloatingList().size();
 		int sizeOfTimedList = test.getTasks().getTimedList().size();
 		numOfAllTask = sizeOfFloatingList + sizeOfTimedList;
 		for (String str: testInputsBasic){
-			IndigoLogic lc = new IndigoLogic(str);
+			LogicFacade lc = new LogicFacade(str);
 			if (str.contains("add") && !str.contains("wrong")){
 				numOfAllTask ++;
 			} if (str.contains("delete") && !lc.feedback.contains("Invalid")){
 				numOfAllTask --;
 			}
 		}
-		test = new IndigoLogic();
+		test = new LogicFacade();
 		int expectedSizeOfFloatingList = test.getTasks().getFloatingList().size();
 		int expectedSizeOfTimedList = test.getTasks().getTimedList().size();
 		assertEquals(expectedSizeOfFloatingList+expectedSizeOfTimedList, numOfAllTask);

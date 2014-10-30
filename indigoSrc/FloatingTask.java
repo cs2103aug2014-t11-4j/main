@@ -78,9 +78,9 @@ public class FloatingTask implements Comparable<FloatingTask>{
 	public String toString() {
 		StringBuilder result = new StringBuilder("");
 		if (toTimedTask()!=null){
-			result.append(toTimedTask().toString(IndigoLogic.DATE_FORMAT));
+			result.append(toTimedTask().toString(LogicFacade.DATE_FORMAT));
 		} else if	(toDeadlineTask()!=null){
-			result.append(toDeadlineTask().toString(IndigoLogic.DATE_FORMAT));
+			result.append(toDeadlineTask().toString(LogicFacade.DATE_FORMAT));
 		} else {
 			result.append(taskDescription);
 			if (isDone){

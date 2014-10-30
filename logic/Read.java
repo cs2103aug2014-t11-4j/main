@@ -1,4 +1,8 @@
-package indigoSrc;
+package logic;
+import indigoSrc.DeadlineTask;
+import indigoSrc.Parser;
+import indigoSrc.TaskList;
+
 import org.joda.time.DateTime;
 
 /* This class is the read class which will display the list that user
@@ -13,7 +17,7 @@ public class Read extends CommandClass{
 	
 	static final String newLine = System.getProperty("line.separator");
 	String feedback = "ViewClass";
-	String resulting = new String();
+	public String resultString = new String();
 
 	@Override
 	public String execute() {
@@ -25,7 +29,7 @@ public class Read extends CommandClass{
 	public Read(Parser parsing, TaskList taskList){
 		parserVar = parsing;
 		taskListVar = taskList;
-		resulting = this.view();
+		resultString = this.view();
 	}
 	
 	public String view(){

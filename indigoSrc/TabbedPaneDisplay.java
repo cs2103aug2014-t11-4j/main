@@ -19,7 +19,7 @@ public class TabbedPaneDisplay extends JPanel {
 	
 	private JTabbedPane tabbedPaneDisplay;
 	private JTextPane taskDisplayPane; 
-	public IndigoLogic id = new IndigoLogic();
+	public LogicFacade id = new LogicFacade();
 	public static ArrayList<JTextPane> PaneArray = new ArrayList<JTextPane>();
 	public TabbedPaneDisplay(){
 		super(new GridLayout(1,1));
@@ -31,19 +31,19 @@ public class TabbedPaneDisplay extends JPanel {
 		tabbedPaneDisplay.addTab("Inbox", null, allPanel, "Displays all tasks.");
 		tabbedPaneDisplay.setMnemonicAt(0, KeyEvent.VK_1);
 		
-		JComponent dailyPanel = makeTextPanel(taskDisplayPane, new IndigoLogic("view today").display);
+		JComponent dailyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view today").display);
 		tabbedPaneDisplay.addTab("Today", null, dailyPanel, "Displays daily tasks.");
 		tabbedPaneDisplay.setMnemonicAt(1, KeyEvent.VK_2);
 		
-		JComponent weeklyPanel = makeTextPanel(taskDisplayPane, new IndigoLogic("view this week").display);
+		JComponent weeklyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view this week").display);
 		tabbedPaneDisplay.addTab("This Week", null, weeklyPanel, "Displays weekly tasks.");
 		tabbedPaneDisplay.setMnemonicAt(2, KeyEvent.VK_3);
 		
-		JComponent monthlyPanel = makeTextPanel(taskDisplayPane, new IndigoLogic("view this month").display);
+		JComponent monthlyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view this month").display);
 		tabbedPaneDisplay.addTab("This Month", null, monthlyPanel, "Displays monthly tasks.");
 		tabbedPaneDisplay.setMnemonicAt(3, KeyEvent.VK_4);
 		
-		JComponent floatingPanel = makeTextPanel(taskDisplayPane, new IndigoLogic("view -f").display);
+		JComponent floatingPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -f").display);
 		tabbedPaneDisplay.addTab("Floating", null, floatingPanel, "Displays no-deadline tasks.");
 		tabbedPaneDisplay.setMnemonicAt(4, KeyEvent.VK_5);
 	
@@ -73,18 +73,18 @@ public class TabbedPaneDisplay extends JPanel {
 		//TODO
 		if(text.contains("view")){
 			setTab(text);
-			PaneArray.get(0).setText(new IndigoLogic(text).display);
+			PaneArray.get(0).setText(new LogicFacade(text).display);
 		} else if(text.contains("search")){
 			setTab("other");
-			PaneArray.get(0).setText(new IndigoLogic(text).display);
+			PaneArray.get(0).setText(new LogicFacade(text).display);
 		} else{
 			setTab("other");
-			PaneArray.get(0).setText(new IndigoLogic("view").display);
+			PaneArray.get(0).setText(new LogicFacade("view").display);
 		}
-		PaneArray.get(1).setText(new IndigoLogic("view today").display);
-		PaneArray.get(2).setText(new IndigoLogic("view this week").display);
-		PaneArray.get(3).setText(new IndigoLogic("view this month").display);
-		PaneArray.get(4).setText(new IndigoLogic("view -f").display);
+		PaneArray.get(1).setText(new LogicFacade("view today").display);
+		PaneArray.get(2).setText(new LogicFacade("view this week").display);
+		PaneArray.get(3).setText(new LogicFacade("view this month").display);
+		PaneArray.get(4).setText(new LogicFacade("view -f").display);
 	}
 	
 	private void setTab(String index){

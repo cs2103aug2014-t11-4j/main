@@ -1,4 +1,10 @@
-package indigoSrc;
+package logic;
+
+import indigoSrc.DeadlineTask;
+import indigoSrc.FloatingTask;
+import indigoSrc.Parser;
+import indigoSrc.TaskList;
+import indigoSrc.TimedTask;
 
 /* This class is the create class which adds the task that user
  * would want to add. This class has the function to add task either
@@ -18,9 +24,8 @@ public class Create extends CommandClass {
 		return add();
 	}	
 	
-	public Create(Parser parsing, UndoList pslist, TaskList taskList){
+	public Create(Parser parsing, TaskList taskList){
 		parserVar = parsing;
-		uList = pslist;
 		taskListVar = taskList;
 		index = parserVar.getEditIndex();
 		int totalSize = taskListVar.getSize() + 1;
@@ -36,7 +41,7 @@ public class Create extends CommandClass {
 		}
 	}
 	
-	public String add() {
+	private String add() {
 		if (isValid==false){
 			return "Invalid index";
 		} else {

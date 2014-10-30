@@ -1,4 +1,10 @@
-package indigoSrc;
+package logic;
+
+import indigoSrc.DeadlineTask;
+import indigoSrc.FloatingTask;
+import indigoSrc.Parser;
+import indigoSrc.TaskList;
+import indigoSrc.TimedTask;
 /* This class is the update class which can update the task that user
  * would want to edit. User will have to indicate the index which the task 
  * lies to update the task.
@@ -18,9 +24,8 @@ public class Update extends CommandClass{
 		return edit();
 	}
 
-	public Update(Parser parsing, UndoList psList, TaskList taskList){
+	public Update(Parser parsing, TaskList taskList){
 		parserVar = parsing;
-		uList = psList;
 		taskListVar = taskList; 
 		int totalSize = taskListVar.getSize();
 		index = parserVar.getEditIndex();
@@ -40,7 +45,7 @@ public class Update extends CommandClass{
 	}
 	
 	
-	public String edit() throws ArrayIndexOutOfBoundsException{
+	private String edit() throws ArrayIndexOutOfBoundsException{
 		index = taskListVar.search(toDoReplaced) + 1;
 		if (isValid==false){
 			return "Invalid index";

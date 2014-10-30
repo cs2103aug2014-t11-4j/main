@@ -3,7 +3,7 @@ package test;
 import static org.junit.Assert.*;
 import indigoSrc.DeadlineTask;
 import indigoSrc.FloatingTask;
-import indigoSrc.IndigoLogic;
+import indigoSrc.LogicFacade;
 import indigoSrc.TaskList;
 import indigoSrc.TimedTask;
 
@@ -55,7 +55,7 @@ public class testTaskList {
 		}
 		DateTime now = DateTime.now();
 		FloatingTask anotherTask = new DeadlineTask("edited Task",now);
-		outputStr.append("[No.4][" + IndigoLogic.DATE_FORMAT.print(now)+ "]edited Task"+newLine);
+		outputStr.append("[No.4][" + LogicFacade.DATE_FORMAT.print(now)+ "]edited Task"+newLine);
 		testList.complete(2);
 		testList.editTask(3, anotherTask);
 		testList.complete(8);
@@ -69,8 +69,8 @@ public class testTaskList {
 		testList.writeXMLDocument("testStorage1");
 		list1.readFromXML("testStorage1");
 		assertEquals(list1.viewFloatingTask(),testList.viewFloatingTask());
-		assertEquals(list1.viewDeadlineTask(IndigoLogic.DATE_FORMAT),testList.viewDeadlineTask(IndigoLogic.DATE_FORMAT));
-		assertEquals(list1.viewAll(IndigoLogic.DATE_FORMAT),testList.viewAll(IndigoLogic.DATE_FORMAT));
+		assertEquals(list1.viewDeadlineTask(LogicFacade.DATE_FORMAT),testList.viewDeadlineTask(LogicFacade.DATE_FORMAT));
+		assertEquals(list1.viewAll(LogicFacade.DATE_FORMAT),testList.viewAll(LogicFacade.DATE_FORMAT));
 	}
 	
 	@Test
@@ -81,7 +81,7 @@ public class testTaskList {
 				+ "[No.3]something happens"+newLine
 				+ "[No.4]default task."+newLine
 				+ "[No.5]buy a fish"+newLine);
-		assertEquals(testList.viewAll(IndigoLogic.DATE_FORMAT),outputStr.toString());
+		assertEquals(testList.viewAll(LogicFacade.DATE_FORMAT),outputStr.toString());
 	}
 
 }

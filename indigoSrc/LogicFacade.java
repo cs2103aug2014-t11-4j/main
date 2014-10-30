@@ -1,5 +1,15 @@
 package indigoSrc;
+import logic.*;
 import java.util.ArrayList;
+
+import logic.Command;
+import logic.Complete;
+import logic.Create;
+import logic.Delete;
+import logic.Read;
+import logic.Search;
+import logic.UndoList;
+import logic.Update;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -14,7 +24,7 @@ import org.joda.time.format.DateTimeFormatter;
  *
  */
 
-public class IndigoLogic {
+public class LogicFacade {
 	public String display;
 	public String feedback;
 	private static UndoList uList = new UndoList();;
@@ -24,22 +34,22 @@ public class IndigoLogic {
 	private static TaskList taskList = new TaskList();
 	
 	//Default constructor
-	public IndigoLogic(){
+	public LogicFacade(){
 		this("view");
 	}
 	
-	public IndigoLogic(String userInput){
+	public LogicFacade(String userInput){
 		loadData();
 		feedback = readCommand(userInput);
 		Parser p = new Parser(userInput);
 		if(userInput.contains("view")){
 			Read rc = new Read(p, taskList);
 			rc.execute();
-			display = rc.resulting;
+			display = rc.resultString;
 		} else if(userInput.contains("search")) {
 			Search sc = new Search(parser, taskList);
 			sc.execute();
-			display = sc.displayLine;
+			display = sc.searchResult;
 		}	else {
 			Read rc = new Read(p, taskList);
 			display = rc.view();
@@ -54,7 +64,6 @@ public class IndigoLogic {
 		 * 2.execute Command
 		 */ // TODO simple input for testing
 		parser = new Parser(userCommand);
-		//System.out.println(userCommand);
 		Command commandInput = new Command(parser.getKeyCommand());
 		if(userCommand.equals("clear")){
 			commandInput = new Command("clear");
@@ -73,7 +82,7 @@ public class IndigoLogic {
 		 */
 		switch (commandInput.getKey()){
 			case CREATE:
-				Create classAdd = new Create(parser, uList, taskList);
+				Create classAdd = new Create(parser, taskList);
 				if(classAdd.isValid){
 					uList.push(classAdd);
 				}
@@ -82,13 +91,13 @@ public class IndigoLogic {
 				Read classView = new Read(parser, taskList);
 				return classView.execute();
 			case UPDATE:
-				Update classEdit = new Update(parser, uList, taskList);
+				Update classEdit = new Update(parser, taskList);
 				if(classEdit.isValid){
 					uList.push(classEdit);
 				}
 				return classEdit.execute();
 			case DELETE:
-				Delete classDelete = new Delete(parser, uList, taskList);
+				Delete classDelete = new Delete(parser, taskList);
 				if(classDelete.isValid){
 					uList.push(classDelete);
 				}
@@ -106,9 +115,11 @@ public class IndigoLogic {
 					return "Nothing to redo";
 				}
 			case COMPLETE:
-				int indexC = parser.getEditIndex();
-				taskList.get(indexC).complete();
-				return "Task marked as complete";
+				Complete classCheck = new Complete(parser, taskList, true);
+				if(classCheck.isValid){
+					uList.push(classCheck);
+				}
+				return classCheck.execute();
 			case UNCOMPLETE:
 				int indexU = parser.getEditIndex();
 				taskList.get(indexU).unComplete();
@@ -116,7 +127,7 @@ public class IndigoLogic {
 			case SEARCH:
 				Search classSearch = new Search(parser, taskList);
 				String result = classSearch.execute();
-				display = classSearch.displayLine;
+				display = classSearch.searchResult;
 				return result;
 			case CLEAR:
 				return taskList.clear();
@@ -125,13 +136,7 @@ public class IndigoLogic {
 		}
 		return "Saved";
 	}
-/*	
-	private static void complete(int index) {
-		ps.push(new Parser("UnComplete " + index));
-		taskList.complete(index);
-	}
 
-*/
 	private static void saveData() {
 		//  save taskList into TEXT file
 		taskList.writeXMLDocument(FILE_NAME);
@@ -145,6 +150,4 @@ public class IndigoLogic {
 	public TaskList getTasks() {
 		return taskList;
 	}
-
-
 }
