@@ -60,7 +60,9 @@ public class TabbedPaneDisplay extends JPanel {
 
 		JScrollPane scroll = new JScrollPane(textPaneTemp);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		textPaneTemp.setText(text);
+		textPaneTemp.setEditable(false);
 		tabbedPanel.setLayout(new GridLayout(1,1));
 		tabbedPanel.add(scroll);
 		
@@ -70,7 +72,6 @@ public class TabbedPaneDisplay extends JPanel {
 	} 
 	
 	public void update(String text){
-		//TODO
 		if(text.contains("view")){
 			setTab(text);
 		}
