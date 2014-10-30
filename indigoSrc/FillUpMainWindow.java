@@ -39,7 +39,6 @@ public class FillUpMainWindow {
 	private static final int INPUT_FIELD_INDEX = 4;
 	private static final int USER_FEEDBACK_INDEX = 5;
 	private static final int FLOATING_TASKS_INDEX = 6;
-
 	private static final int CALENDAR_INDEX = 7;
 
 	private JLayeredPane displayLayers = new JLayeredPane();
@@ -68,12 +67,11 @@ public class FillUpMainWindow {
 	private void setBackGroundImage() {
 		BufferedImage img;
 		try {
-			img = ImageIO.read(new File("src/wood.jpg"));
+			img = ImageIO.read(new File("src/gui/wood.jpg"));
 			JLabel background = new JLabel(new ImageIcon(img));
 			background.setBounds(0,0,700, 500);
 			displayLayers.add(background,new Integer(0));
 		} catch (IOException e) {
-			//liveUserFeedback.setText("Cannot load image");
 		}
 		
 	}
@@ -96,6 +94,14 @@ public class FillUpMainWindow {
 		constraints = setConstraints(FLOATING_TASKS_INDEX);
 		floatingTaskDisplay = new JTextPane();
 		
+		//----start---
+		//Added by Ken to test the floating task display.
+		//Can delete and update the code if needed.
+		LogicFacade lc = new LogicFacade("view -f");
+		String display = lc.display;
+		floatingTaskDisplay.setText(display);
+		//---end---
+		
 		bottomPanel.add(floatingTaskDisplay, constraints);
 		
 	}
@@ -114,8 +120,10 @@ public class FillUpMainWindow {
 		GridBagConstraints constraints;
 
 		constraints = setConstraints(TOP_PANEL_INDEX);
-
-		addCalendar(topPanel);
+		
+		//Commented out by Ken as this is supposed to be scraped, right?
+		//Can uncomment if code update is needed. 
+		//addCalendar(topPanel);
 		addReadInput(topPanel);
 		addLiveUserFeedback(topPanel);
 		mainPanel.add(topPanel, constraints);
@@ -131,9 +139,6 @@ public class FillUpMainWindow {
 		topPanel.add(calendarField,constraints);
 			
 	}
-
-	
-
 
 	private void addReadInput(JPanel topPanel) {
 		GridBagConstraints constraints;
@@ -156,8 +161,6 @@ public class FillUpMainWindow {
 		topPanel.add(liveUserFeedback, constraints);
 	}
 	
-
-	
 	public class readInputTextFieldListener implements ActionListener, KeyListener {
 
 		@Override
@@ -167,6 +170,14 @@ public class FillUpMainWindow {
 			LogicFacade controller = new LogicFacade(text);
 			liveUserFeedback.setText(controller.feedback);
 			taskDisplay.update(controller.display);
+			
+			//----start---
+			//Added by Ken to test the floating task display.
+			//Can delete and update the code if needed.
+			controller = new LogicFacade("view -f");
+			floatingTaskDisplay.setText(controller.display);
+			//---end---
+			
 			readInput.requestFocusInWindow();
 		}
 
@@ -191,13 +202,14 @@ public class FillUpMainWindow {
         if (id == KeyEvent.KEY_TYPED) {
         	
         }
-        
 
         else if(id == KeyEvent.KEY_PRESSED) {	
         	if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Z) {
-        		IndigoLogic lc = new IndigoLogic("undo");
+        		LogicFacade lc = new LogicFacade("undo");
+        		taskDisplay.update(lc.display);
         	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Y){
-        		IndigoLogic lc = new IndigoLogic("redo");
+        		LogicFacade lc = new LogicFacade("redo");
+        		taskDisplay.update(lc.display);
         	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_D){
         		readInput.setText("delete ");
         	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_N){
@@ -237,10 +249,6 @@ public class FillUpMainWindow {
 		Insets bottomPanel = new Insets(5,0,60,10);
 		Insets insetsOfTabbedPane = new Insets(0,20,0,20);
 
-		
-
-		
-
 		if(componentIndex ==  TOP_PANEL_INDEX){
 			constraints = new GridBagConstraints(0,0,3,3,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,topPanel,0,0);
 
@@ -278,7 +286,6 @@ public class FillUpMainWindow {
 			return constraints;
 		}
 
-		
 		return null;
 	}
 }
