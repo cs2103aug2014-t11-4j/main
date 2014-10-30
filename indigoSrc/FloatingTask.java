@@ -23,6 +23,8 @@ public class FloatingTask implements Comparable<FloatingTask>{
 	protected boolean isImportant; // a mark up to tell whether the task is important
 	
 	protected int numDates;
+	
+	protected String location;
 	// Floating = 0, Deadline = 1; Timed = 2;
 	
 	public static void main(String[] args){
@@ -36,6 +38,7 @@ public class FloatingTask implements Comparable<FloatingTask>{
 		this.isImportant = another.isImportant;
 		this.taskDetails = another.taskDetails;
 		this.numDates = another.numDates;
+		this.location = another.location;
 	}
 	
 	public FloatingTask() {
@@ -44,14 +47,28 @@ public class FloatingTask implements Comparable<FloatingTask>{
 	}
 
 	public FloatingTask(String description) {
-		taskDescription = description;
+		taskDescription = description + "";
 		isDone = false;
 		isImportant = false;
 		taskDetails = "";
 		numDates = 0;
+		this.location = "home";
+	}
+	
+	public FloatingTask(String description, String place){
+		taskDescription = description + "";
+		isDone = false;
+		isImportant = false;
+		taskDetails = "";
+		numDates = 0;
+		this.location = place + "";
 	}
 
 	// accessor
+	public String getLocation(){
+		return this.location;
+	}
+	
 	public String getDescription() {
 		return this.taskDescription;
 	}
@@ -72,6 +89,11 @@ public class FloatingTask implements Comparable<FloatingTask>{
 	public String editDescription(String newDescription) {
 		taskDescription = newDescription;
 		return taskDescription;
+	}
+	
+	public String editLocation(String newPlace){
+		location = newPlace;
+		return newPlace;
 	}
 
 
