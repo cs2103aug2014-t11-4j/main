@@ -39,7 +39,7 @@ public class InputWindow extends JFrame {
 		mainWindow.setBounds(300, 150, 700, 500);
 		mainWindow.setResizable(false);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainWindow.setIconImage(new ImageIcon("src/IndigoLogo.jpg").getImage());
+		mainWindow.setIconImage(new ImageIcon("gui/goindigologo.jpg").getImage());
 	}
 
 }
