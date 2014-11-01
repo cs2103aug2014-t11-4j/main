@@ -73,7 +73,6 @@ public class Parser {
 	
 	public String getCommand() {
 		toDo = toDo.trim();
-		//int index = toDo.length();
 		
 		ArrayList<String> prepWordsList = new ArrayList<String>();
 		prepWordsList.add("on");
@@ -81,6 +80,7 @@ public class Parser {
 		prepWordsList.add("at");
 		prepWordsList.add("from");	
 		prepWordsList.add("in"); 
+		prepWordsList.add("until"); 
 	
 		ArrayList<String> monthsList = doMonthsList();
 				
@@ -136,6 +136,7 @@ public class Parser {
 	
 		for(int k=0; k<size; k++) {
 			String word = identifers[k]; 
+			System.out.println(toDo);
 			toDo = toDo.replaceFirst(identifers[k], "IDENTIFIER"); 
 			description = toDo.split(" "); 
 				for(int j=0; j<description.length; j++) { 
@@ -181,12 +182,8 @@ public class Parser {
 		return monthsList;
 	}
 
-	public Parser(String userCommand) {
-		
-		//conjWords.add("by"); 
-		//conjWords.add("on"); 							// words to filter out dates
-		editIndex = -1;
-		
+	public Parser(String userCommand) {		
+		editIndex = -1;		
 		
 		if (userCommand.contains(" ")){
 			commandSentence = userCommand.split(" ", 2);
@@ -195,7 +192,7 @@ public class Parser {
 			location = parseLocation(commandSentence);
 			
 			switch(keyWord) { 
-			case "add":// for instance add buy a cat on 23/12/2014
+			case "add":
 			case "delete":
 			case "edit" :
 			case "complete":

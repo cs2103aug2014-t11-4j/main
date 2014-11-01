@@ -13,8 +13,6 @@ import org.ocpsoft.prettytime.nlp.parse.DateGroup;
 
 
 public class TimeParser {
-//	private DateTime startTime;
-//	private DateTime endTime;
 	private String userCommand; // raw command from user
 	private String sortedUserCommand; // commands follows a format without a date:  e.g.add go to school
 	private DateTime endTime;
@@ -31,13 +29,36 @@ public class TimeParser {
 	public TimeParser(String someCommand){
 		userCommand = someCommand.trim();
 		assert userCommand!=null;
+		 
+		for(int k=0;k<userCommand.length();k++) { 
+			if(Character.isDigit(userCommand.charAt(k))) { 
+				System.out.println(userCommand.charAt(k)); 
+				if(Character.isLetter(userCommand.charAt(k-1))) { 
+					int digitInt = 0; 
+					char digitChar = (char)userCommand.charAt(k); 
+					digitInt = Character.getNumericValue(digitChar); 
+					ArrayList<Integer> digits = new ArrayList<Integer>(); 
+					digits.add(digitInt);  
+					int length = userCommand.length(); 
+					userCommand = userCommand.substring(0,k)+"DIGIT"+userCommand.substring(k+1,length);
+					System.out.println(userCommand);
+					System.out.println(digits); 
+				}
+			}
+		}
+		
 		parser = new PrettyTimeParser().parseSyntax(userCommand);
 		filterParser();  
+		
 		if (parser == null){
 			LOGGER.log(Level.FINE, "floating task detected.");
 			sortedUserCommand = userCommand + "";
 			assert isDateFree();
 		} else {
+			//for (int j=0;j<parser.size();j++){
+			//	String identified = parser.get(j).getText();
+			//	if(identified.)
+			//}
 	    switch (parser.size()){
 	    	case 0:
 	    		assert isDateFree();
@@ -51,7 +72,6 @@ public class TimeParser {
 	    	    parseTime();
 		}
 		}
-	    
 		assert sortedUserCommand!=null;
 	}
 
@@ -97,22 +117,22 @@ public class TimeParser {
 				if(isInteger(parser.get(j).getText())) { 
 					parser.remove(j); 
 				}
-				if(identified.matches(".*\\d.*")) {				
-					for(int d=0; d<identified.length();d++) { 
-						if(Character.isDigit(identified.charAt(d))){ 
-							if(!(identified.charAt(d+1) == 'a') && (!(identified.charAt(d+2) == 'm')))
-							if(!(identified.charAt(d+1) == 'p') && (!(identified.charAt(d+2) == 'm'))) { 
+			//	if(identified.matches(".*\\d.*")) {				
+				//	for(int d=0; d<identified.length();d++) { 
+						//if(Character.isDigit(identified.charAt(d))){ 
+						//	if(!(identified.charAt(d+1) == 'a') && (!(identified.charAt(d+2) == 'm')))
+						//	if(!(identified.charAt(d+1) == 'p') && (!(identified.charAt(d+2) == 'm'))) { 
 								//op2 tomorrow, i need to remove the 2 and just have tomorrow only
-								parser.remove(j); 
+								//parser.remove(j); 
 								//String s = identified.charAt(d) + ""; 
 							//	identified = identified.replace(s, "");
 								//parser.add(identified); 
-							}
+						//	}
 								
-						}
-					}
+						//}
+				//	}
 					
-				}
+				//}
 				if(filterWords.contains(identified)) { 
 					if(!parser.get(j).getText().equals(regex1)) 
 					if(!parser.get(j).getText().equals(regex2)) 
