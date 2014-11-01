@@ -95,7 +95,7 @@ public class Parser {
 		
 		for(int i=0; i<size;i++){ 
 			identifers[i] = TimeParser.parser.get(i).getText();
-			//System.out.println(identifers[i]);
+			System.out.println(identifers[i]);
 		} 
 		
 		for(int j=0; j<size; j++) { 
@@ -286,12 +286,10 @@ public class Parser {
 	}
 
 	public String getKeyCommand() { 
-		//System.out.println("Key command: " +keyWord);
 		return keyWord;
 	}
 
 	public int getEditIndex() { 
-		//System.out.println("Edit index: " +editIndex);
 		if (editIndex == -1){
 			return 1;
 		}
