@@ -152,6 +152,7 @@ public class TimeParser {
 		filterWords.add("oct"); 
 		filterWords.add("nov"); 
 		filterWords.add("dec"); 
+		filterWords.add("eve"); 
 		
 		String regex1 = "\bmon\b";
 		String regex2 = "\btue\b";
@@ -170,6 +171,7 @@ public class TimeParser {
 		String regex15 = "\boct\b";
 		String regex16 = "\bnov\b";
 		String regex17 = "\bdec\b"; 
+		String regex18 = "\beve\b"; 
 		
 		for (int j=0;j<parser.size();j++){
 				String identified = parser.get(j).getText();
@@ -194,7 +196,8 @@ public class TimeParser {
 					if(!parser.get(j).getText().equals(regex14))
 					if(!parser.get(j).getText().equals(regex15)) 
 					if(!parser.get(j).getText().equals(regex16)) 
-					if(!parser.get(j).getText().equals(regex17)) { 
+					if(!parser.get(j).getText().equals(regex17)) 	
+					if(!parser.get(j).getText().equals(regex18)) { 
 						parser.remove(j);  
 					}
 				}

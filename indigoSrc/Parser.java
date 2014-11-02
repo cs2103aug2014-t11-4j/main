@@ -98,6 +98,11 @@ public class Parser {
 			System.out.println(identifers[i]);
 		} 
 		
+		for (int k=0;k<identifers.length;k++){
+			if(isInteger(identifers[k])) { 
+				identifers[k] = ""; 
+			}
+		}
 		for(int j=0; j<size; j++) { 
 			if(monthsList.contains(identifers[j])) { 
 				String regex1 = "\bjan\b";
@@ -139,6 +144,8 @@ public class Parser {
 			System.out.println(toDo);
 			toDo = toDo.replaceFirst(identifers[k], "IDENTIFIER"); 
 			description = toDo.split(" "); 
+			System.out.println("HERE"); 
+			System.out.println(toDo); 
 				for(int j=0; j<description.length; j++) { 
 					if(description[j].contains("IDENTIFIER") && j>0) { 
 						String prepWord = description[j-1]; 			
@@ -164,6 +171,15 @@ public class Parser {
 		return toDo; 
 	}
 
+	public static boolean isInteger(String s) {
+	    try { 
+	        Integer.parseInt(s); 
+	    } catch(NumberFormatException e) { 
+	        return false; 
+	    }
+	    // only got here if we didn't return false
+	    return true;
+	}
 	public ArrayList<String> doMonthsList() {
 		ArrayList<String> monthsList = new ArrayList<String>();
 		monthsList.add("jan");
