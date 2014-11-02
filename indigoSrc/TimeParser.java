@@ -35,7 +35,7 @@ public class TimeParser {
 		userCommand = someCommand.trim();
 		assert userCommand!=null;
 		 
-		for(int k=0;k<userCommand.length();k++) { 
+		for(int k=0;k<userCommand.length();k++) {  //deal with cases like op2/cs2103
 			if(Character.isDigit(userCommand.charAt(k))) { 
 				System.out.println(userCommand.charAt(k)); 
 				if(k==0) { 
@@ -53,7 +53,18 @@ public class TimeParser {
 			}
 		}
 		
-		parser = new PrettyTimeParser().parseSyntax(userCommand);
+		String[] identifyInt = userCommand.split(" ");
+		for(int g=0;g<identifyInt.length;g++) { 
+			if(isInteger(identifyInt[g])) {
+				identifyInt[g] = "";
+			}
+		}
+		String filteredCommand = "";
+		for(int f=0; f<identifyInt.length;f++) { 
+			filteredCommand = filteredCommand + " " + identifyInt[f]; 
+		}
+		
+		parser = new PrettyTimeParser().parseSyntax(filteredCommand);
 		filterParser();  
 		filterTimedTask(); 
 		filterDeadLineTask();
