@@ -7,6 +7,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,7 +46,7 @@ public class FillUpMainWindow {
 	private JTextField readInput;
 	private JTextField calendarField;
 	private JTextArea liveUserFeedback;
-	private JTextPane floatingTaskDisplay;
+	private JTextPane floatingTextPane;
 
 	public TabbedPaneDisplay taskDisplay;
 	public DefiningConstraints gridBag = new DefiningConstraints();
@@ -84,26 +85,42 @@ public class FillUpMainWindow {
 		constraints =  gridBag.setConstraints(BOTTOM_PANEL_INDEX);
 
 		addTabbedPane(bottomPanel);
-		addFloatingTaskDisplay(bottomPanel);
+		createFloatingPanel(bottomPanel);
 		mainPanel.add(bottomPanel, constraints);
 
 	}
 	
-	private void addFloatingTaskDisplay(JPanel bottomPanel){
+	private void createFloatingPanel(JPanel bottomPanel){
 		GridBagConstraints constraints;
 		constraints =  gridBag.setConstraints(FLOATING_TASKS_INDEX);
-		floatingTaskDisplay = new JTextPane();
+		JPanel floatingPanel = new JPanel();
 		
+		addFloatingTextPane(floatingPanel);
+		JScrollPane scroll = new JScrollPane(floatingTextPane);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		floatingPanel.add(scroll);
+		floatingPanel.setLayout(new GridLayout(1,1));
+		
+		bottomPanel.add(floatingPanel, constraints);
+		
+	}
+
+	private void addFloatingTextPane(JPanel floatingPanel) {
+		// TODO Auto-generated method stub
+		GridBagConstraints constraints;
+		constraints =  gridBag.setConstraints(FLOATING_TASKS_INDEX);
+				floatingTextPane = new JTextPane();
+				
 		//----start---
-		//Added by Ken to test the floating task display.
-		//Can delete and update the code if needed.
-		LogicFacade lc = new LogicFacade("view -f");
-		String display = lc.display;
-		floatingTaskDisplay.setText(display);
-		//---end---
-		
-		bottomPanel.add(floatingTaskDisplay, constraints);
-		
+				//Added by Ken to test the floating task display.
+				//Can delete and update the code if needed.
+				LogicFacade lc = new LogicFacade("view -f");
+				String display = lc.display;
+				floatingTextPane.setText(display);
+				//---end---
+			
+				floatingPanel.add(floatingTextPane,constraints);
 	}
 
 	private void addTabbedPane(JPanel bottomPanel) {
@@ -175,7 +192,7 @@ public class FillUpMainWindow {
 			//Added by Ken to test the floating task display.
 			//Can delete and update the code if needed.
 			controller = new LogicFacade("view -f");
-			floatingTaskDisplay.setText(controller.display);
+			floatingTextPane.setText(controller.display);
 			//---end---
 			
 			readInput.requestFocusInWindow();
