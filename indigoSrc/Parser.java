@@ -119,6 +119,7 @@ public class Parser {
 				String regex12 = "\bdec\b";
 				String regex13 = "\bmon\b";
 				String regex14 = "\bwed\b";
+				String regex15 = "\beve\b"; 
 				
 					if(!identifers[j].equals(regex1)) 
 					if(!identifers[j].equals(regex2)) 
@@ -133,7 +134,8 @@ public class Parser {
 					if(!identifers[j].equals(regex11)) 
 					if(!identifers[j].equals(regex12)) 
 					if(!identifers[j].equals(regex13)) 
-					if(!identifers[j].equals(regex14)){  
+					if(!identifers[j].equals(regex14)) 
+					if(!identifers[j].equals(regex15)){  
 						identifers[j] = ""; 
 				}
 			}

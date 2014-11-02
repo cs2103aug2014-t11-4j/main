@@ -38,7 +38,10 @@ public class TimeParser {
 		for(int k=0;k<userCommand.length();k++) { 
 			if(Character.isDigit(userCommand.charAt(k))) { 
 				System.out.println(userCommand.charAt(k)); 
-				if(Character.isLetter(userCommand.charAt(k-1))) { 
+				if(k==0) { 
+					break; 
+				}
+				else if(Character.isLetter(userCommand.charAt(k-1))) { 
 					int digitInt = 0; 
 					char digitChar = (char)userCommand.charAt(k); 
 					digitInt = Character.getNumericValue(digitChar); 
