@@ -92,18 +92,20 @@ public class TimeParser {
 		String regex16 = "\bnov\b";
 		String regex17 = "\bdec\b"; 
 		
+		boolean needRemove = false;
 		for (int j=0;j<parser.size();j++){
+			needRemove = false;
 				String identified = parser.get(j).getText();
 				if(isInteger(parser.get(j).getText())) { 
-					parser.remove(j); 
+					needRemove = true; 
 				}
 				if(identified.matches(".*\\d.*")) {				
-					for(int d=0; d<identified.length();d++) { 
+					for(int d=0; d<identified.length()-2;d++) { 
 						if(Character.isDigit(identified.charAt(d))){ 
 							if(!(identified.charAt(d+1) == 'a') && (!(identified.charAt(d+2) == 'm')))
 							if(!(identified.charAt(d+1) == 'p') && (!(identified.charAt(d+2) == 'm'))) { 
 								//op2 tomorrow, i need to remove the 2 and just have tomorrow only
-								parser.remove(j); 
+								needRemove = true; 
 								//String s = identified.charAt(d) + ""; 
 							//	identified = identified.replace(s, "");
 								//parser.add(identified); 
@@ -131,8 +133,11 @@ public class TimeParser {
 					if(!parser.get(j).getText().equals(regex15)) 
 					if(!parser.get(j).getText().equals(regex16)) 
 					if(!parser.get(j).getText().equals(regex17)) { 
-						parser.remove(j);  
+						needRemove = true;
 					}
+				}
+				if (needRemove = true){
+					parser.remove(j--);
 				}
 		}
 	}

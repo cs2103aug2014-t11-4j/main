@@ -329,7 +329,7 @@ public class TaskList {
 		// TODO Searches keyWords in the TaskList. Returns a list of Strings.
 		int floatSize = floatingTaskList.size();
 		int timeSize = timedTaskList.size();
-		if(task.numDates == 1 || task.numDates == 2){
+		if(task.getNumDates() == 1 || task.getNumDates() == 2){
 			for(int i=0; i<timeSize; i++){
 				if(timedTaskList.get(i).equals(task)){
 					return i;

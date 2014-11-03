@@ -47,7 +47,6 @@ public class Update extends CommandClass{
 	
 	
 	private String edit() throws ArrayIndexOutOfBoundsException{
-		index = taskListVar.search(toDoReplaced) + 1;
 		if (isValid==false){
 			return "Invalid index";
 		} else {
