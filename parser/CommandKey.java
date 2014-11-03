@@ -1,61 +1,49 @@
-package logic;
+package parser;
+public enum CommandKey {
+	CREATE, READ, UPDATE, DELETE, UNDO, COMPLETE, UNCOMPLETE, REDO, SEARCH, CLEAR, INVALID;
 
-
-public class Command{
-	private COMMAND_KEY key;
-	
-	public Command(){
-		this("view");
-	}
-	
-	public Command(String userInput){
-		key = identifyKey(userInput);
-	}
-	
-	public COMMAND_KEY identifyKey(String keyCommand){
+	public static CommandKey identifyKey(String keyCommand){
 		switch(keyCommand){
 			case "add":		//default command
 			case "addd":	//Spelling mistake
 			case "-a":		//Pro shortkey
-				return COMMAND_KEY.CREATE;
+				return CommandKey.CREATE;
 			case "view":	//default command
 			case "-v":		//pro shortkey
 			case "display": //Alternate name
 			case "veiw":	//spelling mistake
-				return COMMAND_KEY.READ;
+				return CommandKey.READ;
 			case "edit":	//default command
 			case "-e":		//Pro shortkey
-				return COMMAND_KEY.UPDATE;
+				return CommandKey.UPDATE;
 			case "delete":	//default command
 			case "del": 	//user shortkey
 			case "-d":		//pro shortkey
-				return COMMAND_KEY.DELETE;
+				return CommandKey.DELETE;
 			case "undo":	//default command
 			case "-u":		//pro shortkey
-				return COMMAND_KEY.UNDO;
+				return CommandKey.UNDO;
 			case "redo":	//default command
 			case "-r" :		//pro shortkey
-				return COMMAND_KEY.REDO;
+				return CommandKey.REDO;
 			case "complete"://default command
 			case "done":	//alternate name
 			case "-c":		//pro shortkey
-				return COMMAND_KEY.COMPLETE;
+				return CommandKey.COMPLETE;
 			case "uncomplete"://default command
 			case "undone":	//alternate name
 			case "-uc":		//pro shortkey
-				return COMMAND_KEY.UNCOMPLETE;
+				return CommandKey.UNCOMPLETE;
 			case "search":	//default command
 			case "-s" :		//pro shortkey
-				return COMMAND_KEY.SEARCH;
+				return CommandKey.SEARCH;
 			case "clear":	//default command
 			case "-z":		//pro shortkey
-				return COMMAND_KEY.CLEAR;
+				return CommandKey.CLEAR;
 			default:
-				return COMMAND_KEY.CREATE;
+				return CommandKey.INVALID;
 		}
 	}
 	
-	public COMMAND_KEY getKey(){
-		return this.key;
-	}
+	
 }

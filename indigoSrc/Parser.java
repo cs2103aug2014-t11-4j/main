@@ -10,6 +10,7 @@ package indigoSrc;
  *
  */
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,6 +21,9 @@ import java.util.regex.*;
 
 import org.joda.time.DateTime;
 
+import parser.CommandKey;
+import parser.StringDecipher;
+
 public class Parser {
 	private boolean isValid;
 	private String message;
@@ -28,7 +32,7 @@ public class Parser {
 	
 	private static Logger logger = Logger.getLogger("Parser");
 	private String sortedCommand;
-	String keyWord  			;  				//stores the key command "add"/"delete" to return to logic
+	CommandKey keyWord			;  				//stores the key command "add"/"delete" to return to logic
 	String commandWords  		; 				//stores the remaining words excluding key command
 	String [] commandSentence 	= new String[2]; 		//to help store the splited string command
 	String [] details 		  	; 				//store the remaining words excluding key command individually
@@ -210,22 +214,34 @@ public class Parser {
 		isValid = true;
 		message = "Command is sucessfully processed.";
 		
-		editIndex = -1;		
+		userCommand.trim();
+		if(userCommand.equals("")){
+			isValid = false;
+		}
 		
-		if (userCommand.contains(" ")){
+		String[] sentenceArray = userCommand.split("\\s+");
+		StringDecipher sentenceString = new StringDecipher(sentenceArray);
+		keyWord = sentenceString.getKey();
+		assert sentenceString.getWordsLeft() >= 0;
+		
+		editIndex = -1;
+		
+		if (sentenceString.getWordsLeft() > 1){
+			System.out.println(sentenceString.getWordsLeft());
+			System.out.println(userCommand);
 			commandSentence = userCommand.split(" ", 2);
-			keyWord = commandSentence[0];
 			commandWords = commandSentence[1];
-			location = parseLocation(commandSentence);
+			//location = parseLocation(commandSentence);
 			
 			switch(keyWord) { 
-			case "add":
-			case "delete":
-			case "edit" :
-			case "complete":
-			case "uncomplete":
-			case "search":
-			case "view":
+			case CREATE:
+			case DELETE:
+			case CLEAR:
+			case UPDATE:
+			case COMPLETE:
+			case UNCOMPLETE:
+			case SEARCH:
+			case READ:
 				details = commandWords.split(" ");
 				LOGGER.log(Level.FINE, "commandWords: " + commandWords);
 				try{
@@ -250,36 +266,17 @@ public class Parser {
 			LOGGER.log(Level.FINE, "editIndex " + editIndex);
 			break;
 			
-			case "undo" :
+			case UNDO :
+			case REDO :
 				break;
-			case "redo" :
-				break;
-				
 			default:
-				keyWord = "add";
+				keyWord = CommandKey.CREATE; //a default Create 
 				toDo = userCommand + "";
 			} 
-		}	else {
+		}	else { //sentenceString.getWordsLeft == 0
 			assert editIndex < 0;
-			switch (userCommand){
-			case "delete":
-				keyWord = "delete";
-				break;
-				
-			case "undo":
-				keyWord = "undo";
-				break;
-			case "redo":
-				keyWord = "redo";
-				break;
-			case "view":
-			case "search":
-				keyWord = "view";
-				break;
-			
-			default:
-				keyWord = "add";
-			}
+			assert sentenceString.getWordsLeft() == 0;
+
 			toDo = userCommand + "";
 		}
 		
@@ -305,7 +302,7 @@ public class Parser {
 		assert commandWords !=null;
 	}
 	
-	private String parseLocation(String[] words) {
+/*	private String parseLocation(String[] words) {
 		String place = new String("");
 		for (String str: words){
 			if (str.startsWith("@")){
@@ -315,8 +312,8 @@ public class Parser {
 		}
 		return null;
 	}
-
-	public String getKeyCommand() { 
+*/
+	public CommandKey getKeyCommand() { 
 		return keyWord;
 	}
 

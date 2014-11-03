@@ -1,9 +1,7 @@
 package indigoSrc;
-import logic.*;
 
 import java.util.ArrayList;
 
-import logic.Command;
 import logic.Complete;
 import logic.Create;
 import logic.Delete;
@@ -14,6 +12,8 @@ import logic.Update;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+
+import parser.CommandKey;
 
 /**
  * This a main program of Indigo. Indigo is a software that can store, process
@@ -52,7 +52,6 @@ public class LogicFacade {
 			Search sc = new Search(p, taskList);
 			sc.execute();
 			display = sc.searchResult;
-
 		}	else {
 			Read rc = new Read(p, taskList);
 			display = rc.view();
@@ -67,15 +66,10 @@ public class LogicFacade {
 		 * 2.execute Command
 		 */ // TODO simple input for testing
 		parser = new Parser(userCommand);
-		Command commandInput = new Command(parser.getKeyCommand());
-		if(userCommand.equals("clear")){
-			commandInput = new Command("clear");
-		}
-		
-		return executeCommand(commandInput);
+		return executeCommand(parser.getKeyCommand());
 	}
 
-	private String executeCommand(Command commandInput) {
+	private String executeCommand(CommandKey commandKey) {
 		/*
 		 * TODO 
 		 * 1.executeCommand 
@@ -83,7 +77,7 @@ public class LogicFacade {
 		 * 
 		 * A standardized command should have String systemMessage returned.
 		 */
-		switch (commandInput.getKey()){
+		switch (commandKey){
 			case CREATE:
 				Create classAdd = new Create(parser, taskList);
 				if(classAdd.isValid){
