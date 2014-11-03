@@ -35,10 +35,10 @@ public class TimeParser {
 	public TimeParser(String someCommand){
 		userCommand = someCommand.trim();
 		assert userCommand!=null;
-		 
-		for(int k=0;k<userCommand.length();k++) {  //deal with cases like op2/cs2103
-			if(Character.isDigit(userCommand.charAt(k))) { 
-				System.out.println(userCommand.charAt(k)); 
+		
+		//this for loop deals with cases like op2 and cs2103
+		for(int k=0;k<userCommand.length();k++) { 
+			if(Character.isDigit(userCommand.charAt(k))) {  
 				if(k==0) { 
 					break; 
 				}
@@ -54,21 +54,10 @@ public class TimeParser {
 			}
 		}
 		
-		String[] identifyInt = userCommand.split(" ");
-		for(int g=0;g<identifyInt.length;g++) { 
-			if(isInteger(identifyInt[g])) {
-                identifyInt[g] = "";
-		}
-		
-		String filteredCommand = "";
-		for(int f=0; f<identifyInt.length;f++) { 
-			filteredCommand = filteredCommand + " " + identifyInt[f]; 
-		}
-		
 		parser = new PrettyTimeParser().parseSyntax(userCommand);
-		filterParser();  
-		filterTimedTask(); 
-		filterDeadLineTask();
+		filterParser();  //removes "6" or "wed" but found in "wedding" and deals with "3 a" and "3 p" etc. 
+		filterTimedTask(); //deals with identifiers = 2 namely, "thursday" and "8pm-10pm" but refers to same day
+		filterDeadLineTask(); //deals with identifiers = 2 namely, "monday" and "9pm" but they're separated
 		
 		if (parser == null){
 			LOGGER.log(Level.FINE, "floating task detected.");
@@ -77,7 +66,6 @@ public class TimeParser {
 		} 
 		
 		if(filteredTimedTask == true) {
-			System.out.println("ENTERED 1111"); 
 			parseTime(); 
 		} 
 		
@@ -102,7 +90,7 @@ public class TimeParser {
 		}
 		assert sortedUserCommand!=null;
 	}
-	}
+	
 	private void filterTimedTask() { 
 		ArrayList<String> prepWordsList = new ArrayList<String>();
 		prepWordsList.add("to"); 
@@ -115,7 +103,6 @@ public class TimeParser {
 		 
 			if(second.contains("to")) { 
 				filteredTimedTask = true; 
-				System.out.println("ENTERED FIRST NEW PARSER"); 
 				descriptions = parser.get(1).getText().split("to"); //contains (5pm) and (6pm)
 				String date = parser.get(0).getText(); 
 				userCommand = userCommand.replace(date, date + " " + descriptions[0]);
@@ -129,21 +116,19 @@ public class TimeParser {
 				descriptions = parser.get(0).getText().split("to"); //contains (5pm) and (6pm)
 				String date = parser.get(1).getText(); 
 				userCommand = userCommand.replace(date, date + " " + descriptions[1]);
-				System.out.println(userCommand);
 				userCommand = userCommand.replace(first, date + " " + descriptions[0]); 
 				userCommand = userCommand.replaceAll("( )+", " ");
-				System.out.println(userCommand); 
 				parserNewTimedTask = new PrettyTimeParser().parseSyntax(userCommand); 
 			}
 						
-		}
+		}	
 	}
 	
 	private void filterDeadLineTask() { 
 		if(parser.size() == 2) { 
 			String start = parser.get(0).getText();
 			String end = parser.get(1).getText(); 
-			if((!(start.contains(" "))) && (!(end.contains(" ")))) {
+			if((!(start.contains(" "))) && (!(end.contains(" ")))) { //contains (5pm) and (thursday) or (12 dec 2015)
 				filteredDeadLineTask = true; 
 				userCommand = userCommand.replace(start,start + " " + end);  
 				parserNewDeadLineTask = new PrettyTimeParser().parseSyntax(userCommand); 
@@ -191,15 +176,15 @@ public class TimeParser {
 		
 		for (int j=0;j<parser.size();j++){
 				String identified = parser.get(j).getText();
-				if(isInteger(parser.get(j).getText())) { 
+				if(isInteger(parser.get(j).getText())) {  //removes stand alone integers like "6" identified
 					parser.remove(j); 
 				}
-				if((identified.length() ==3) && (identified.charAt(2) == 'a'))
+				if((identified.length() ==3) && (identified.charAt(2) == 'a')) //if "3 a" identified, remove it
 					parser.remove(j); 
-				if((identified.length() ==3) && (identified.charAt(2) == 'p'))
+				if((identified.length() ==3) && (identified.charAt(2) == 'p')) //if "3 p" identified, remove it
 					parser.remove(j); 
 				
-				if(filterWords.contains(identified)) { 
+				if(filterWords.contains(identified)) {  //remove "wed" if it is found in "wedding" 
 					if(!parser.get(j).getText().equals(regex1)) 
 					if(!parser.get(j).getText().equals(regex2)) 
 					if(!parser.get(j).getText().equals(regex3)) 
@@ -246,31 +231,29 @@ public class TimeParser {
 	}
 
 	private void parseTime() {
-		LOGGER.log(Level.FINE, "Time String dected:" + parser.get(0).getText());	
+		LOGGER.log(Level.FINE, "Time String detected:" + parser.get(0).getText());	
+		if(parser.size()==2) { 
+			LOGGER.log(Level.FINE, "Time String detected:" + parser.get(1).getText());
+		}
 		datesStart = parser.get(0).getDates();
 	
-		if(parser.size() ==2) {
+		if(parser.size() == 2) {
 			datesEnd = parser.get(1).getDates(); 
 		}
-		System.out.println(datesStart); 
-		System.out.println(datesEnd); 
 		
-		if(filteredTimedTask == true) {  //thursday 5pm to 7pm
+		if(filteredTimedTask == true) {  //"thursday" and "5pm to 7pm" as separate time instances
 			parseTimedTask3(); 
 		}
-		else if(filteredDeadLineTask == true) { 
+		else if(filteredDeadLineTask == true) { //"thursday" and "5pm" as separate time instances
 			parseDeadLineTask2(); 
 		}
-		else if(datesStart.size()==2) {  //thursday 5pm to friday 7pm 
+		else if(datesStart.size()==2) {  //"thursday 5pm to friday 7pm" together
 			parseTimedTask1(); 
 		}
-		else if(parser.size() ==2 && datesStart.size() ==1) { 
-			parseTimedTask2(); 
+		else if(parser.size()==2) { //"thursday 5pm" and "friday 7pm" as separate time instances
+			parseTimedTask2();
 		}
-		else if(parser.size() ==2 && datesEnd.size()==1) {  
-			parseTimedTask2(); 
-		}
-		else if(datesStart.size()==1) {  //thursday 5pm 
+		else if(datesStart.size()==1) {  //"thursday 5pm" together
 			parseDeadLineTask1(); 
 		}
 	}
@@ -366,7 +349,7 @@ public class TimeParser {
 	
 	
 	public boolean isFloatingTask(){
-		if (parser.size() == 0){
+		if (parser.size()==0){
 			return true;
 		} else {
 			return false;
@@ -387,10 +370,8 @@ public class TimeParser {
 		} else {
 			return false;
 		}
-	}
-	
-		
-	}
+	}	
+}
 /*	getDate:
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	output = sdf.format(mp.dateGroup.getDates().get(0));
