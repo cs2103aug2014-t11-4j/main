@@ -1,11 +1,12 @@
 package indigoSrc;
 
+import gui.GridViewTaskList;
+
 import java.util.ArrayList;
 
 import logic.Complete;
 import logic.Create;
 import logic.Delete;
-import logic.GridViewTaskList;
 import logic.Read;
 import logic.Search;
 import logic.UndoList;

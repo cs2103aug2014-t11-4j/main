@@ -1,4 +1,4 @@
-package logic;
+package gui;
 
 import indigoSrc.FloatingTask;
 import indigoSrc.TaskList;
@@ -22,11 +22,12 @@ public class GridViewTaskList {
 		rowOne = taskList.getTimedList().size();
 		rowTwo = taskList.getFloatingList().size();
 		maxRow = rowOne + rowTwo;
-		grid = new String[maxRow - 1][MAX_COL];
+		grid = new String[maxRow][MAX_COL];
 	}
 	
 	public void buildGrid(){
-		for(int i=0; i<rowOne; i++){
+		int i=0;
+		for(i=0; i<rowOne; i++){
 			FloatingTask fTask = new FloatingTask();
 			fTask = taskList.getTimedList().get(i);
 			grid[i][INDEX] = i+1 + "";
@@ -41,6 +42,21 @@ public class GridViewTaskList {
 				grid[i][START] = " - ";
 				grid[i][END] = " - ";
 			}
+			
+			if(fTask.isCompleted()){
+				grid[i][DONE] = "DONE";
+			} else {
+				grid[i][DONE] = " ";
+			}
+		}
+		
+		for(int j=0; j<rowTwo; i++, j++){
+			FloatingTask fTask = new FloatingTask();
+			fTask = taskList.getFloatingList().get(j);
+			grid[i][INDEX] = i+1 + "";
+			grid[i][NAME] = fTask.getDescription();
+			grid[i][START] = " - ";
+			grid[i][END] = " - ";
 			
 			if(fTask.isCompleted()){
 				grid[i][DONE] = "DONE";
