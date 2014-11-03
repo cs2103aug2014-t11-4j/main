@@ -58,7 +58,7 @@ public class FillUpMainWindow {
 		Container contentPane = mainWindow.getContentPane();
 		contentPane.add(displayLayers);
 		JPanel mainPanel = new JPanel();
-		mainPanel.setBounds(0, 0, 600, 400);
+		mainPanel.setBounds(0, 0, 600, 300);
 		mainPanel.setLayout(new GridBagLayout());
 		mainPanel.setOpaque(false);
 		
@@ -73,8 +73,9 @@ public class FillUpMainWindow {
 		try {
 			img = ImageIO.read(new File("src/gui/wood.jpg"));
 			JLabel background = new JLabel(new ImageIcon(img));
-			background.setBounds(0,0,600, 400);
-			displayLayers.add(background,new Integer(0));
+			background.setBounds(0,0,600, 300);
+		
+;			displayLayers.add(background,new Integer(0));
 		} catch (IOException e) {
 		}
 		
@@ -274,6 +275,8 @@ public class FillUpMainWindow {
         		readInput.setText("edit ");
         	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_F){
         		readInput.setText("search ");
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
+        		
         	}
         } 
         

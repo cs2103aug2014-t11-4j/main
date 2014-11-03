@@ -15,12 +15,12 @@ public class DefiningConstraints {
 	
 	public GridBagConstraints setConstraints(int componentIndex) {
 		GridBagConstraints constraints;
-		Insets topPanel = new Insets(10,0,5,10);
+		Insets topPanel = new Insets(20,10,5,10);
 		
 		
 		Insets insetsOfReadInput = new Insets(0,20,0,20);
 		Insets insetsOfUserFeedback = new Insets(0,20,0,20);		
-		Insets bottomPanel = new Insets(5,0,60,10);
+		Insets bottomPanel = new Insets(5,10,50,10);
 		Insets insetsOfTabbedPane = new Insets(10,20,5,10);
 		Insets insetsOfFloatingPanel = new Insets(10,10,5,20);
 		

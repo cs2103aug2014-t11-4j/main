@@ -30,11 +30,11 @@ public class TabbedPaneDisplay extends JPanel {
 		
 		tabbedPaneDisplay = new JTabbedPane();
 		JComponent allPanel = makeInboxTable(inboxTable, new LogicFacade("view -d").display);
-		tabbedPaneDisplay.addTab("   Inbox    ", null, allPanel, "Displays all tasks.");
+		tabbedPaneDisplay.addTab("   Inbox   ", null, allPanel, "Displays all tasks.");
 		tabbedPaneDisplay.setMnemonicAt(0, KeyEvent.VK_1);
 		
 		JComponent dailyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -t").display);
-		tabbedPaneDisplay.addTab("    Today    ", null, dailyPanel, "Displays daily tasks.");
+		tabbedPaneDisplay.addTab("   Today   ", null, dailyPanel, "Displays daily tasks.");
 		tabbedPaneDisplay.setMnemonicAt(1, KeyEvent.VK_2);
 		
 		JComponent weeklyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -w").display);
