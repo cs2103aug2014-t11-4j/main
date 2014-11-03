@@ -1,5 +1,6 @@
 package indigoSrc;
 
+import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 /**
@@ -18,17 +19,18 @@ import org.joda.time.format.DateTimeFormatter;
 public class FloatingTask extends Task{
 	
 	public static void main(String[] args){
-		FloatingTask task = new FloatingTask();
-		System.out.println(task.toString());
+		Task task = new FloatingTask();
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
+		System.out.println(task.toString(dtf));
+		System.out.println(task.getKeyTime());
 	}
 	
 	public FloatingTask(FloatingTask another){
-		this.taskDescription = another.taskDescription;
-		this.isDone = another.isDone;
-		this.isImportant = another.isImportant;
-		this.taskDetails = another.taskDetails;
-		this.numDates = another.numDates;
-		this.location = another.location;
+		super(another.getDescription());
+		this.isDone = another.isCompleted();
+		this.isImportant = another.isImportant();
+		this.numDates = another.getNumDates();
+		this.location = another.getLocation();
 	}
 	
 	public FloatingTask() {
@@ -37,53 +39,20 @@ public class FloatingTask extends Task{
 	}
 
 	public FloatingTask(String description) {
-		taskDescription = description + "";
-		isDone = false;
-		isImportant = false;
-		taskDetails = "";
-		numDates = 0;
-		this.location = "home";
+		super(description);
 	}
 	
 	public FloatingTask(String description, String place){
-		taskDescription = description + "";
+		super(description);
 		isDone = false;
 		isImportant = false;
-		taskDetails = "";
 		numDates = 0;
 		this.location = place + "";
-	}
-	
-
-	
-	public DeadlineTask toDeadlineTask(){
-		if (this instanceof DeadlineTask){
-			DeadlineTask temp = (DeadlineTask)this;
-			return temp;
-		} else {
-			return null;
-		}
-	}
-	
-	public TimedTask toTimedTask(){
-		if (this instanceof TimedTask){
-			TimedTask temp = (TimedTask)this;
-			return temp;
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public String toString(DateTimeFormatter dtf) {
-		StringBuilder result = new StringBuilder("");
-		result.append(taskDescription);
-		return result.toString();
 	}
 
 	@Override
 	public int compareTo(Task aTask) {
-		if (aTask.numDates==0){
+		if (aTask.getNumDates()==0){
 			return this.taskDescription.compareTo(aTask.taskDescription);
 		} else {
 			return -1;

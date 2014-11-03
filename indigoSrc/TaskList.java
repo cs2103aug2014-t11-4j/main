@@ -34,23 +34,23 @@ import org.w3c.dom.Element;
 public class TaskList {
 	
 	private static final int NOT_FOUND = -1;
-	private ArrayList<FloatingTask> floatingTaskList;
-	private ArrayList<FloatingTask> timedTaskList;
+	private ArrayList<Task> floatingTaskList;
+	private ArrayList<Task> timedTaskList;
 	
 	public String newLine = System.getProperty("line.separator");
 
 	public TaskList() {
-		floatingTaskList = new ArrayList<FloatingTask>();
-		timedTaskList = new ArrayList<FloatingTask>();
+		floatingTaskList = new ArrayList<Task>();
+		timedTaskList = new ArrayList<Task>();
 	}	
 	
 	// basic functions
 	// add
-	public FloatingTask addTask(FloatingTask newTask){
+	public Task addTask(Task newTask){
 		return addTask(1,newTask);
 	}
 	
-	public FloatingTask addTask(int index, FloatingTask newTask){
+	public Task addTask(int index, Task newTask){
 		if (newTask.numDates==0){
 			if ( index > timedTaskList.size()){
 				floatingTaskList.add(index-timedTaskList.size()-1,newTask);
@@ -60,8 +60,8 @@ public class TaskList {
 		} else {
 			// a timedtask should place at a position according to key time
 			for (int i=0; i<timedTaskList.size();){
-				DateTime timeToBeAdded = newTask.toDeadlineTask().getKeyTime();
-				DateTime timeInList = timedTaskList.get(i).toDeadlineTask().getKeyTime();
+				DateTime timeToBeAdded = newTask.getKeyTime();
+				DateTime timeInList = timedTaskList.get(i).getKeyTime();
 				if (timeToBeAdded.isBefore(timeInList)){
 					timedTaskList.add(i,newTask);
 					return newTask;
@@ -76,8 +76,8 @@ public class TaskList {
 	}
 	
 	// delete
-	public FloatingTask deleteTask(int index){
-		FloatingTask tempFloatingTask;
+	public Task deleteTask(int index){
+		Task tempFloatingTask;
 		if (index>timedTaskList.size()){
 			tempFloatingTask = floatingTaskList.remove(index-timedTaskList.size()-1);
 		} else {
@@ -85,19 +85,10 @@ public class TaskList {
 		}
 		return tempFloatingTask;
 	}
-	
-	public void deleteTask(FloatingTask toDo) {
-		// TODO Auto-generated method stub
-		if(floatingTaskList.contains(toDo)){
-			floatingTaskList.remove(toDo);
-		} else {
-			timedTaskList.remove(toDo);
-		}
-	}
 
 	// edit
-	public FloatingTask editTask(int index,  FloatingTask newTask){
-		FloatingTask tempFloatingTask = deleteTask(index);
+	public Task editTask(int index,  Task newTask){
+		Task tempFloatingTask = deleteTask(index);
 		addTask(index,newTask);
 		return tempFloatingTask;
 	}
@@ -106,7 +97,7 @@ public class TaskList {
 	public String viewFloatingTask(){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
 		for (int i=0,j=1;i<floatingTaskList.size();i++){
-			assert floatingTaskList.get(i).toDeadlineTask()==null;
+			assert floatingTaskList.get(i).numDates!=1;
 			result.append("[No." + j++ + "]" + floatingTaskList.get(i).toString() + newLine);
 		}
 		return result.toString();
@@ -115,7 +106,7 @@ public class TaskList {
 	public String viewDeadlineTask(DateTimeFormatter dtf){
 		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
 		for (int i=0,j=1;i<timedTaskList.size();i++){
-			DeadlineTask temp = (DeadlineTask) timedTaskList.get(i);
+			Task temp = timedTaskList.get(i);
 			result.append("[No." + j++ + "]" + temp.toString(dtf) + newLine);
 		}
 		return result.toString();
@@ -190,16 +181,16 @@ public class TaskList {
 	        			break;
 	        		case 1:
 	        			Element endTime = doc.createElement("DueDate");
-	        			endTime.appendChild(doc.createTextNode(timedTaskList.get(i).toDeadlineTask().endTime.toString()));
+	        			endTime.appendChild(doc.createTextNode(timedTaskList.get(i).endTime.toString()));
 	        			taskTag.appendChild(endTime);
 	        			break;
 	        		case 2:
 	        			Element startDate = doc.createElement("From");
-	        			startDate.appendChild(doc.createTextNode(timedTaskList.get(i).toTimedTask().startTime.toString()));
+	        			startDate.appendChild(doc.createTextNode(timedTaskList.get(i).startTime.toString()));
 	        			taskTag.appendChild(startDate);
 	        			
 	        			Element endDate = doc.createElement("To");
-	        			endDate.appendChild(doc.createTextNode(timedTaskList.get(i).toDeadlineTask().endTime.toString()));
+	        			endDate.appendChild(doc.createTextNode(timedTaskList.get(i).endTime.toString()));
 	        			taskTag.appendChild(endDate);
 	        			break;
 	        		default:
@@ -304,7 +295,7 @@ public class TaskList {
 	}
 
 	// index start from 1
-	public FloatingTask get(int index) {
+	public Task get(int index) {
 		if (index>timedTaskList.size()){
 			return floatingTaskList.get(index-1-timedTaskList.size());
 		} else {
@@ -312,34 +303,12 @@ public class TaskList {
 		}
 	}
 	
-	public ArrayList<FloatingTask> getTimedList(){
+	public ArrayList<Task> getTimedList(){
 		return timedTaskList;
 	}
 	
-	public ArrayList<FloatingTask> getFloatingList(){
+	public ArrayList<Task> getFloatingList(){
 		return floatingTaskList;
-	}
-
-	public int search(FloatingTask task) {
-		// TODO Searches keyWords in the TaskList. Returns a list of Strings.
-		int floatSize = floatingTaskList.size();
-		int timeSize = timedTaskList.size();
-		if(task.numDates == 1 || task.numDates == 2){
-			for(int i=0; i<timeSize; i++){
-				if(timedTaskList.get(i).equals(task)){
-					return i;
-				}
-			}
-		} else if(task.numDates == 0){
-			for(int j=0; j<floatSize; j++){
-				if(floatingTaskList.get(j).equals(task)){
-					return j + timeSize;
-				}
-			}
-		} else {
-			return NOT_FOUND;
-		}
-		return NOT_FOUND;
 	}
 	
 	public int getSize(){

@@ -6,14 +6,13 @@ import org.joda.time.format.DateTimeFormatter;
 
 
 public class DeadlineTask extends FloatingTask{
-	protected DateTime endTime;
-	protected DateTime currentTime = DateTime.now();
-	protected DateTime keyTime;
 	
 	public static void main(String[] args){
 		DeadlineTask time = new DeadlineTask("deadline task", new DateTime(2014,10,9,19,15,00));
+		Task time2 = time;
 		DateTimeFormatter dtf = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
 		System.out.println(time.toString(dtf));
+		System.out.println(time2.toString(dtf));
 	}
 
 	public DeadlineTask(String description, DateTime time) {
@@ -23,61 +22,26 @@ public class DeadlineTask extends FloatingTask{
 		keyTime = endTime;
 	}
 	
-	public DateTime editTime(DateTime newTime){
-		endTime = newTime;
-		return endTime;
-	}
+
 	
-	public DateTime getTime(){
-		return endTime;
-	}
-	
-	public boolean isOverdue(){
-		return endTime.isBefore(currentTime);
-	}
-	
+	@Override
 	public String toString(DateTimeFormatter format){
-		FloatingTask temp = new FloatingTask(this);
 		StringBuilder result = new StringBuilder("[" + format.print(endTime) + "] ");
-		result.append(temp.toString());
+		result.append(super.toString());
 		return result.toString();
-	}
-	public String toStringWODate(){
-		FloatingTask temp = new FloatingTask(this);
-		StringBuilder result = new StringBuilder();
-		result.append(temp.toString());
-		return result.toString();
-	}
-	
-	private Duration evaluateDuration(){
-		Duration duration = new Duration(currentTime, endTime);
-		return duration;
-	}
-	
-	public int evaluateMinutes(){
-		return evaluateDuration().toStandardMinutes().getMinutes();
-	}
-	
-	public int evaluateDays(){
-		return evaluateDuration().toStandardDays().getDays();
-	}
-	
-	public int evaluateHours(){
-		return evaluateDuration().toStandardHours().getHours();
-	}
-	
-	public DateTime getKeyTime(){
-		return keyTime;
 	}
 
 	@Override
-	public boolean equals(Object anotherTask) {
+	public int compareTo(Task aTask) {
 		// TODO Auto-generated method stub
-		if (anotherTask instanceof DeadlineTask){
-			DeadlineTask myTask = (DeadlineTask) anotherTask;
-			return super.equals(anotherTask) && this.endTime.equals(myTask.endTime);
-		} else{
-			return false;
+		if (aTask.getNumDates()==0){
+			return -1;
+		} else {
+			if (this.getKeyTime().isBefore(aTask.getKeyTime())){
+				return -1;
+			} else {
+				return 1;
+			}
 		}
 	}
 
