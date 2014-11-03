@@ -13,6 +13,11 @@ import org.ocpsoft.prettytime.nlp.parse.DateGroup;
 
 
 public class TimeParser {
+	private boolean isValid;
+	private String message;
+	private DateTime now;
+	private DateTime TimeRef;
+	
 	private String userCommand; // raw command from user
 	private String sortedUserCommand; // commands follows a format without a date:  e.g.add go to school
 	private DateTime endTime;
@@ -32,6 +37,8 @@ public class TimeParser {
 	private static Scanner sc;
 	
 	public TimeParser(String someCommand){
+		isValid = true;
+		message = "Command is sucessfully processed.";
 		userCommand = someCommand.trim();
 		assert userCommand!=null;
 		 
@@ -99,6 +106,7 @@ public class TimeParser {
 	    			parseTime();
 			}
 		}
+		smartParserCheck();
 		assert sortedUserCommand!=null;
 	}
 	}
@@ -363,6 +371,19 @@ public class TimeParser {
 		return endTime;
 	}
 	
+	public void smartParserCheck(){
+		now = new DateTime();
+		TimeRef = now.plusMinutes(2);
+		if (endTime.isBefore(now)){
+			isValid = false;
+			message = "The task added is overDue!";
+		} else if(endTime.isBefore(TimeRef)){
+			DateTime newDate = endTime.plusHours(1);
+			endTime = newDate;
+			isValid = false;
+		}
+	}
+	
 	public boolean isFloatingTask(){
 		if (parser.size() == 0){
 			return true;
@@ -385,6 +406,14 @@ public class TimeParser {
 		} else {
 			return false;
 		}
+	}
+	
+	public boolean isValid(){
+		return isValid;
+	}
+	
+	public String getMessage(){
+		return message;
 	}
 		
 	}
