@@ -36,7 +36,7 @@ public class DefiningConstraints {
 			return constraints;
 		}
 		else if(componentIndex == USER_FEEDBACK_INDEX){
-			constraints = new GridBagConstraints(0,2,3,1,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,insetsOfUserFeedback,0,0);
+			constraints = new GridBagConstraints(0,2,3,3,0.1,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,insetsOfUserFeedback,0,0);
 			return constraints;
 		}
 		
