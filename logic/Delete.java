@@ -59,10 +59,23 @@ public class Delete extends CommandClass{
 	private String delete() throws ArrayIndexOutOfBoundsException{
 		if (isValid==false){
 			return "Invalid index";
-		} else {
+		} 
+		taskListVar.deleteTask(index);
+		/*else {
 			if(byNum){
 				taskListVar.deleteTask(index);
 			} else {
+				//delete a floating task by float index
+				if(parserVar.getCommand().contains("-f")){
+					index = index + taskListVar.getTimedList().size();
+					System.out.println(index);
+					taskListVar.deleteTask(index);
+				} else if(parserVar.getCommand().contains("-d")){
+					System.out.println(index);
+					taskListVar.deleteTask(index);
+				} else {
+					return "Schortcut not recognised";
+				} */
 				FloatingTask task;
 				if (parserVar.isDeadlineTask()){
 					task = new DeadlineTask(parserVar.getCommand(),parserVar.getEndTime());
@@ -71,10 +84,10 @@ public class Delete extends CommandClass{
 				} else {
 					task = new FloatingTask(parserVar.getCommand(),parserVar.getLocation());
 				}
-				taskListVar.deleteTask(toDo);
-			}
+				//taskListVar.deleteTask(task); 
+			//}
 			return toDo.toString() + " is deleted";
-		}
+		//}
 	}
 	
 	public String undo(){

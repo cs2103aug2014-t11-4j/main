@@ -14,28 +14,44 @@ public class Command{
 	
 	public COMMAND_KEY identifyKey(String keyCommand){
 		switch(keyCommand){
-			case "add":
+			case "add":		//default command
+			case "addd":	//Spelling mistake
+			case "-a":		//Pro shortkey
 				return COMMAND_KEY.CREATE;
-			case "view":
+			case "view":	//default command
+			case "-v":		//pro shortkey
+			case "display": //Alternate name
+			case "veiw":	//spelling mistake
 				return COMMAND_KEY.READ;
-			case "edit":
+			case "edit":	//default command
+			case "-e":		//Pro shortkey
 				return COMMAND_KEY.UPDATE;
-			case "delete":
+			case "delete":	//default command
+			case "del": 	//user shortkey
+			case "-d":		//pro shortkey
 				return COMMAND_KEY.DELETE;
-			case "undo":
+			case "undo":	//default command
+			case "-u":		//pro shortkey
 				return COMMAND_KEY.UNDO;
-			case "redo":
+			case "redo":	//default command
+			case "-r" :		//pro shortkey
 				return COMMAND_KEY.REDO;
-			case "complete":
+			case "complete"://default command
+			case "done":	//alternate name
+			case "-c":		//pro shortkey
 				return COMMAND_KEY.COMPLETE;
-			case "uncomplete":
+			case "uncomplete"://default command
+			case "undone":	//alternate name
+			case "-uc":		//pro shortkey
 				return COMMAND_KEY.UNCOMPLETE;
-			case "search":
+			case "search":	//default command
+			case "-s" :		//pro shortkey
 				return COMMAND_KEY.SEARCH;
-			case "clear":
+			case "clear":	//default command
+			case "-z":		//pro shortkey
 				return COMMAND_KEY.CLEAR;
 			default:
-				return COMMAND_KEY.READ;
+				return COMMAND_KEY.CREATE;
 		}
 	}
 	
