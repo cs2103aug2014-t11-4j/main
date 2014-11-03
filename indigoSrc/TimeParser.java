@@ -128,7 +128,7 @@ public class TimeParser {
 		if(parser.size() == 2) { 
 			String start = parser.get(0).getText();
 			String end = parser.get(1).getText(); 
-			if((!(start.contains(" "))) && (!(end.contains(" ")))) { //contains (5pm) and (thursday) or (12 dec 2015)
+			if((!(start.contains(" "))) || (!(end.contains(" ")))) { //contains (5pm) and (thursday) or (12 dec 2015)
 				filteredDeadLineTask = true; 
 				userCommand = userCommand.replace(start,start + " " + end);  
 				parserNewDeadLineTask = new PrettyTimeParser().parseSyntax(userCommand); 
