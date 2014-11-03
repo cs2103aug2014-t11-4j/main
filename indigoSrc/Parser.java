@@ -21,6 +21,11 @@ import java.util.regex.*;
 import org.joda.time.DateTime;
 
 public class Parser {
+	private boolean isValid;
+	private String message;
+	private DateTime now;
+	private DateTime TimeRef;
+	
 	private static Logger logger = Logger.getLogger("Parser");
 	private String sortedCommand;
 	String keyWord  			;  				//stores the key command "add"/"delete" to return to logic
@@ -101,8 +106,9 @@ public class Parser {
 		for (int k=0;k<identifers.length;k++){
 			if(isInteger(identifers[k])) { 
 				identifers[k] = ""; 
-			}
 		}
+		}
+		
 		for(int j=0; j<size; j++) { 
 			if(monthsList.contains(identifers[j])) { 
 				String regex1 = "\bjan\b";
@@ -200,7 +206,10 @@ public class Parser {
 		return monthsList;
 	}
 
-	public Parser(String userCommand) {		
+	public Parser(String userCommand) {
+		isValid = true;
+		message = "Command is sucessfully processed.";
+		
 		editIndex = -1;		
 		
 		if (userCommand.contains(" ")){
@@ -288,6 +297,10 @@ public class Parser {
 			assert timeParser.isFloatingTask();
 			isFloatingTask = true;
 		}
+		
+		if (endTime !=null){
+			smartParserCheck();
+		}
 		assert keyWord !=null;
 		assert commandWords !=null;
 	}
@@ -332,6 +345,26 @@ public class Parser {
 	
 	public boolean isTimedTask(){
 		return isTimedTask;
+	}
+	
+	public void smartParserCheck(){
+		now = new DateTime();
+		TimeRef = now.plusMinutes(2);
+		if (endTime.isBefore(now)){
+			isValid = false;
+			message = "The task added is overDue!";
+		} else if(endTime.isBefore(TimeRef)){
+			DateTime newDate = endTime.plusHours(1);
+			endTime = newDate;
+		}
+	}
+	
+	public boolean isValid(){
+		return isValid;
+	}
+	
+	public String getMessage(){
+		return message;
 	}
 
 }
