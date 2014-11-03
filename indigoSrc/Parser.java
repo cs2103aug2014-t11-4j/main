@@ -101,8 +101,9 @@ public class Parser {
 		for (int k=0;k<identifers.length;k++){
 			if(isInteger(identifers[k])) { 
 				identifers[k] = ""; 
-			}
 		}
+		}
+		
 		for(int j=0; j<size; j++) { 
 			if(monthsList.contains(identifers[j])) { 
 				String regex1 = "\bjan\b";
