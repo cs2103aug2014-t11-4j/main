@@ -324,5 +324,36 @@ public class TaskList {
 		}
 		return "List is cleared";
 	}
+	
+	public int search(Task task) {
+		// TODO Searches keyWords in the TaskList. Returns a list of Strings.
+		int floatSize = floatingTaskList.size();
+		int timeSize = timedTaskList.size();
+		if(task.numDates == 1 || task.numDates == 2){
+			for(int i=0; i<timeSize; i++){
+				if(timedTaskList.get(i).equals(task)){
+					return i;
+				}
+			}
+		} else if(task.numDates == 0){
+			for(int j=0; j<floatSize; j++){
+				if(floatingTaskList.get(j).equals(task)){
+					return j + timeSize;
+				}
+			}
+		} else {
+			return NOT_FOUND;
+		}
+		return NOT_FOUND;
+	}
+	
+	public void deleteTask(Task toDo) {
+		// TODO Auto-generated method stub
+		if(floatingTaskList.contains(toDo)){
+			floatingTaskList.remove(toDo);
+		} else {
+			timedTaskList.remove(toDo);
+		}
+	}
 
 }

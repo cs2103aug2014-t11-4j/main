@@ -26,5 +26,15 @@ public class TimedTask extends DeadlineTask {
 		result.append(toString());
 		return result.toString();
 	}
+	
+	@Override
+	public boolean equals(Object anotherTask) {
+		if (anotherTask instanceof TimedTask){
+			TimedTask myTask = (TimedTask) anotherTask;
+			return super.equals(anotherTask) && this.startTime.equals(myTask.startTime);
+		} else{
+			return false;
+		}
+	}
 
 }

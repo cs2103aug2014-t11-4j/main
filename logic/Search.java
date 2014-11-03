@@ -3,6 +3,7 @@ package logic;
 import indigoSrc.DeadlineTask;
 import indigoSrc.FloatingTask;
 import indigoSrc.Parser;
+import indigoSrc.Task;
 import indigoSrc.TaskList;
 
 import java.util.ArrayList;
@@ -28,8 +29,8 @@ public class Search extends CommandClass {
 		StringBuilder StringList = new StringBuilder();
 		int found = 0;
 		String keyWords = parserVar.getCommand().trim().toLowerCase();
-		ArrayList<FloatingTask> floatTaskList = taskListVar.getFloatingList();
-		ArrayList<FloatingTask> timeTaskList = taskListVar.getTimedList();
+		ArrayList<Task> floatTaskList = taskListVar.getFloatingList();
+		ArrayList<Task> timeTaskList = taskListVar.getTimedList();
 		int floatTasks = floatTaskList.size();
 		int timeTasks = timeTaskList.size();
 		StringList.append("DeadLine Tasks found: " + "\n");
@@ -71,8 +72,8 @@ public class Search extends CommandClass {
 		StringBuilder StringList = new StringBuilder();
 		int found = 1;
 		String keyWords = parserVar.getCommand().trim().toLowerCase();
-		ArrayList<FloatingTask> floatTaskList = taskListVar.getFloatingList();
-		ArrayList<FloatingTask> timeTaskList = taskListVar.getTimedList();
+		ArrayList<Task> floatTaskList = taskListVar.getFloatingList();
+		ArrayList<Task> timeTaskList = taskListVar.getTimedList();
 		int floatTasks = floatTaskList.size();
 		int timeTasks = timeTaskList.size();
 		StringList.append("DeadLine Tasks found: " + "\n");

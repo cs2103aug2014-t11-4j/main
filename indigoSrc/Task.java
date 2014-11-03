@@ -121,4 +121,16 @@ public abstract class Task implements Comparable<Task>{
 		then it is arranged by taskDescription alphabetically
 		*/
 	abstract public int compareTo(Task aTask);
+	
+	@Override
+	public boolean equals(Object anotherTask) {
+		// TODO Auto-generated method stub
+		if (anotherTask instanceof FloatingTask){
+			FloatingTask myTask = (FloatingTask) anotherTask;
+			return this.getDescription().equals(myTask.getDescription()) &&
+					this.isDone == myTask.isDone && this.numDates == myTask.numDates;
+		} else {
+			return false;
+		}
+	}
 }

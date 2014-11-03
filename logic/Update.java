@@ -3,6 +3,7 @@ package logic;
 import indigoSrc.DeadlineTask;
 import indigoSrc.FloatingTask;
 import indigoSrc.Parser;
+import indigoSrc.Task;
 import indigoSrc.TaskList;
 import indigoSrc.TimedTask;
 /* This class is the update class which can update the task that user
@@ -14,8 +15,8 @@ import indigoSrc.TimedTask;
 
 public class Update extends CommandClass{
 	
-	FloatingTask toDo;
-	FloatingTask toDoReplaced;
+	Task toDo;
+	Task toDoReplaced;
 	int index;
 	
 	@Override

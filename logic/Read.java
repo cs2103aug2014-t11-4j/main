@@ -68,7 +68,7 @@ public class Read extends CommandClass{
 	public String viewFloatingTask(){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
 		for (int i=0,j=1;i<taskListVar.getFloatingList().size();i++){
-			assert taskListVar.getFloatingList().get(i).toDeadlineTask()==null;
+			assert taskListVar.getFloatingList().get(i).getNumDates()!=1;
 			result.append(j++ + ". " + 
 					taskListVar.getFloatingList().get(i).toString() + newLine);
 		}
@@ -79,7 +79,7 @@ public class Read extends CommandClass{
 	public String viewFloatingTask(int index){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
 		for (int i=0,j=index+1;i<taskListVar.getFloatingList().size();i++){
-			assert taskListVar.getFloatingList().get(i).toDeadlineTask()==null;
+			assert taskListVar.getFloatingList().get(i).getNumDates()!=1;
 			result.append(j++ + ". " + 
 					taskListVar.getFloatingList().get(i).toString() + newLine);
 		}

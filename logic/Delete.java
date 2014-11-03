@@ -3,6 +3,7 @@ package logic;
 import indigoSrc.DeadlineTask;
 import indigoSrc.FloatingTask;
 import indigoSrc.Parser;
+import indigoSrc.Task;
 import indigoSrc.TaskList;
 import indigoSrc.TimedTask;
 
@@ -15,7 +16,7 @@ import indigoSrc.TimedTask;
 
 public class Delete extends CommandClass{
 	
-	FloatingTask toDo;
+	Task toDo;
 	int index;
 	private boolean byNum;
 
@@ -63,7 +64,7 @@ public class Delete extends CommandClass{
 			if(byNum){
 				taskListVar.deleteTask(index);
 			} else {
-				FloatingTask task;
+				Task task;
 				if (parserVar.isDeadlineTask()){
 					task = new DeadlineTask(parserVar.getCommand(),parserVar.getEndTime());
 				} else if (parserVar.isTimedTask()){

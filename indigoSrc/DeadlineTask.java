@@ -44,5 +44,14 @@ public class DeadlineTask extends FloatingTask{
 			}
 		}
 	}
-
+	
+	@Override
+	public boolean equals(Object anotherTask) {
+		if (anotherTask instanceof DeadlineTask){
+			Task myTask = (DeadlineTask) anotherTask;
+			return super.equals(anotherTask) && this.endTime.equals(myTask.endTime);
+		} else {
+			return false;
+		}
+	}	
 }
