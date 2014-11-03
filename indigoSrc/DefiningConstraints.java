@@ -16,22 +16,17 @@ public class DefiningConstraints {
 	public GridBagConstraints setConstraints(int componentIndex) {
 		GridBagConstraints constraints;
 		Insets topPanel = new Insets(10,0,5,10);
-		Insets insetsOfCalendarField = new Insets(0,20,5,20);
-		Insets insetsOfFloatingTasks = new Insets(0,0,5,20);
+		
 		
 		Insets insetsOfReadInput = new Insets(0,20,0,20);
 		Insets insetsOfUserFeedback = new Insets(0,20,0,20);		
 		Insets bottomPanel = new Insets(5,0,60,10);
-		Insets insetsOfTabbedPane = new Insets(0,20,0,20);
-
+		Insets insetsOfTabbedPane = new Insets(10,20,5,10);
+		Insets insetsOfFloatingPanel = new Insets(10,10,5,20);
+		
 		if(componentIndex ==  TOP_PANEL_INDEX){
 			constraints = new GridBagConstraints(0,0,3,3,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,topPanel,0,0);
 
-			return constraints;
-		}
-		else if(componentIndex == CALENDAR_INDEX){
-			constraints = new GridBagConstraints(0,0,1,1,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,insetsOfCalendarField,0,0);
-			
 			return constraints;
 		}
 		
@@ -51,7 +46,7 @@ public class DefiningConstraints {
 			return constraints;
 		}
 		else if(componentIndex == FLOATING_TASKS_INDEX){
-			constraints = new GridBagConstraints(2,1,1,1,0.1,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,insetsOfFloatingTasks,0,0);
+			constraints = new GridBagConstraints(2,1,1,1,0.1,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,insetsOfFloatingPanel,0,0);
 
 			return constraints;
 		}

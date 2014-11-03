@@ -42,11 +42,7 @@ public class TabbedPaneDisplay extends JPanel {
 		JComponent monthlyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -m").display);
 		tabbedPaneDisplay.addTab("This Month", null, monthlyPanel, "Displays monthly tasks.");
 		tabbedPaneDisplay.setMnemonicAt(3, KeyEvent.VK_4);
-	
-/*		JComponent floatingPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -f").display);
-		tabbedPaneDisplay.addTab("Floating", null, floatingPanel, "Displays no-deadline tasks.");
-		tabbedPaneDisplay.setMnemonicAt(4, KeyEvent.VK_5);
-*/	
+
 		add(tabbedPaneDisplay);
 		
 		tabbedPaneDisplay.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -63,6 +59,7 @@ public class TabbedPaneDisplay extends JPanel {
 		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		textPaneTemp.setText(text);
 		textPaneTemp.setEditable(false);
+		textPaneTemp.setCaretPosition(0);
 		tabbedPanel.setLayout(new GridLayout(1,1));
 		tabbedPanel.add(scroll);
 		
@@ -78,28 +75,34 @@ public class TabbedPaneDisplay extends JPanel {
 			PaneArray.get(0).setText(new LogicFacade(text).display);
 		} else if(text.contains("search")){
 			setTab("other");
+		
 			PaneArray.get(0).setText(new LogicFacade(text).display);
 		} else{
 			setTab("other");
+			
 			PaneArray.get(0).setText(new LogicFacade("view -d").display);
 		}
 		PaneArray.get(1).setText(new LogicFacade("view -t").display);
 		PaneArray.get(2).setText(new LogicFacade("view -w").display);
 		PaneArray.get(3).setText(new LogicFacade("view -m").display);
-//		PaneArray.get(4).setText(new LogicFacade("view -f").display);
+		
+
 	}
 	
 	private void setTab(String index){
+		
 		if (index.contains("-t")){
 			tabbedPaneDisplay.setSelectedIndex(1);
+
 		} else if (index.contains("-w")){
 			tabbedPaneDisplay.setSelectedIndex(2);
+			
 		} else if (index.contains("-m")){
 			tabbedPaneDisplay.setSelectedIndex(3);
-/*		} else if (index.contains("-f")){
-			tabbedPaneDisplay.setSelectedIndex(4);
-*/		} else {
+			
+		} else {
 			tabbedPaneDisplay.setSelectedIndex(0);
+			
 		}
 	}
 }

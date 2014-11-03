@@ -8,7 +8,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -18,12 +17,12 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.jws.soap.SOAPBinding.Style;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -31,6 +30,10 @@ import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
+
 
 public class FillUpMainWindow {
 	
@@ -55,7 +58,7 @@ public class FillUpMainWindow {
 		Container contentPane = mainWindow.getContentPane();
 		contentPane.add(displayLayers);
 		JPanel mainPanel = new JPanel();
-		mainPanel.setBounds(0, 0, 700, 500);
+		mainPanel.setBounds(0, 0, 600, 400);
 		mainPanel.setLayout(new GridBagLayout());
 		mainPanel.setOpaque(false);
 		
@@ -70,7 +73,7 @@ public class FillUpMainWindow {
 		try {
 			img = ImageIO.read(new File("src/gui/wood.jpg"));
 			JLabel background = new JLabel(new ImageIcon(img));
-			background.setBounds(0,0,700, 500);
+			background.setBounds(0,0,600, 400);
 			displayLayers.add(background,new Integer(0));
 		} catch (IOException e) {
 		}
@@ -79,7 +82,7 @@ public class FillUpMainWindow {
 
 	private void createOutputPanel(Container mainPanel) {
 		JPanel bottomPanel = new JPanel(new GridBagLayout());
-		bottomPanel.setPreferredSize(new Dimension(600,200));
+		bottomPanel.setPreferredSize(new Dimension(500,150));
 		bottomPanel.setOpaque(false);
 		GridBagConstraints constraints;
 		constraints =  gridBag.setConstraints(BOTTOM_PANEL_INDEX);
@@ -89,6 +92,16 @@ public class FillUpMainWindow {
 		mainPanel.add(bottomPanel, constraints);
 
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	private void createFloatingPanel(JPanel bottomPanel){
 		GridBagConstraints constraints;
@@ -100,29 +113,33 @@ public class FillUpMainWindow {
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		floatingPanel.add(scroll);
+		floatingTextPane.setCaretPosition(0);
 		floatingPanel.setLayout(new GridLayout(1,1));
-		
 		bottomPanel.add(floatingPanel, constraints);
 		
 	}
 
 	private void addFloatingTextPane(JPanel floatingPanel) {
-		// TODO Auto-generated method stub
+		
 		GridBagConstraints constraints;
 		constraints =  gridBag.setConstraints(FLOATING_TASKS_INDEX);
-				floatingTextPane = new JTextPane();
-				
-		//----start---
-				//Added by Ken to test the floating task display.
-				//Can delete and update the code if needed.
-				LogicFacade lc = new LogicFacade("view -f");
-				String display = lc.display;
-				floatingTextPane.setText(display);
-				//---end---
-			
-				floatingPanel.add(floatingTextPane,constraints);
+		floatingTextPane = new JTextPane();
+		StyledDocument doc = floatingTextPane.getStyledDocument();
+		addStylesToDocument(doc);
+		
+		LogicFacade lc = new LogicFacade("view -f");
+		String display = lc.display;
+		
+		floatingTextPane.setText(display);
+		floatingTextPane.setEditable(false);
+		
+		floatingPanel.add(floatingTextPane,constraints);
 	}
-
+	
+	protected void addStylesToDocument(StyledDocument doc){
+	
+		
+	}
 	private void addTabbedPane(JPanel bottomPanel) {
 		GridBagConstraints constraints;
 		constraints =  gridBag.setConstraints(TABBED_PANE_INDEX);
@@ -130,6 +147,21 @@ public class FillUpMainWindow {
 		bottomPanel.add(taskDisplay, constraints);	
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	private void createUserInputPanel(Container mainPanel){
 		JPanel topPanel = new JPanel(new GridBagLayout());
 		topPanel.setPreferredSize(new Dimension(600,100));
@@ -138,23 +170,12 @@ public class FillUpMainWindow {
 
 		constraints =  gridBag.setConstraints(TOP_PANEL_INDEX);
 		
-		//Commented out by Ken as this is supposed to be scraped, right?
-		//Can uncomment if code update is needed. 
-		//addCalendar(topPanel);
+		
 		addReadInput(topPanel);
 		addLiveUserFeedback(topPanel);
 		mainPanel.add(topPanel, constraints);
 
 	
-	}
-
-	private void addCalendar(JPanel topPanel) {
-		GridBagConstraints constraints;
-		constraints =  gridBag.setConstraints(CALENDAR_INDEX);
-		calendarField = new JTextField();
-		calendarField.setOpaque(false);
-		topPanel.add(calendarField,constraints);
-			
 	}
 
 	private void addReadInput(JPanel topPanel) {
@@ -178,6 +199,25 @@ public class FillUpMainWindow {
 		topPanel.add(liveUserFeedback, constraints);
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public class readInputTextFieldListener implements ActionListener, KeyListener {
 
 		@Override
@@ -188,13 +228,12 @@ public class FillUpMainWindow {
 			liveUserFeedback.setText(controller.feedback);
 			taskDisplay.update(text);
 			
-			//----start---
-			//Added by Ken to test the floating task display.
-			//Can delete and update the code if needed.
+			
 			controller = new LogicFacade("view -f");
 			floatingTextPane.setText(controller.display);
-			//---end---
 			
+			floatingTextPane.setCaretPosition(0);
+		
 			readInput.requestFocusInWindow();
 		}
 
