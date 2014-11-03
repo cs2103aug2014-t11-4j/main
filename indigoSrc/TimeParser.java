@@ -35,10 +35,13 @@ public class TimeParser {
 		userCommand = someCommand.trim();
 		assert userCommand!=null;
 		 
-		for(int k=0;k<userCommand.length();k++) { 
+		for(int k=0;k<userCommand.length();k++) {  //deal with cases like op2/cs2103
 			if(Character.isDigit(userCommand.charAt(k))) { 
 				System.out.println(userCommand.charAt(k)); 
-				if(Character.isLetter(userCommand.charAt(k-1))) { 
+				if(k==0) { 
+					break; 
+				}
+				else if(Character.isLetter(userCommand.charAt(k-1))) { 
 					int digitInt = 0; 
 					char digitChar = (char)userCommand.charAt(k); 
 					digitInt = Character.getNumericValue(digitChar); 
@@ -50,7 +53,18 @@ public class TimeParser {
 			}
 		}
 		
-		parser = new PrettyTimeParser().parseSyntax(userCommand);
+		String[] identifyInt = userCommand.split(" ");
+		for(int g=0;g<identifyInt.length;g++) { 
+			if(isInteger(identifyInt[g])) {
+				identifyInt[g] = "";
+			}
+		}
+		String filteredCommand = "";
+		for(int f=0; f<identifyInt.length;f++) { 
+			filteredCommand = filteredCommand + " " + identifyInt[f]; 
+		}
+		
+		parser = new PrettyTimeParser().parseSyntax(filteredCommand);
 		filterParser();  
 		filterTimedTask(); 
 		filterDeadLineTask();
@@ -152,6 +166,7 @@ public class TimeParser {
 		filterWords.add("oct"); 
 		filterWords.add("nov"); 
 		filterWords.add("dec"); 
+		filterWords.add("eve"); 
 		
 		String regex1 = "\bmon\b";
 		String regex2 = "\btue\b";
@@ -170,6 +185,7 @@ public class TimeParser {
 		String regex15 = "\boct\b";
 		String regex16 = "\bnov\b";
 		String regex17 = "\bdec\b"; 
+		String regex18 = "\beve\b"; 
 		
 		for (int j=0;j<parser.size();j++){
 				String identified = parser.get(j).getText();
@@ -194,7 +210,8 @@ public class TimeParser {
 					if(!parser.get(j).getText().equals(regex14))
 					if(!parser.get(j).getText().equals(regex15)) 
 					if(!parser.get(j).getText().equals(regex16)) 
-					if(!parser.get(j).getText().equals(regex17)) { 
+					if(!parser.get(j).getText().equals(regex17)) 	
+					if(!parser.get(j).getText().equals(regex18)) { 
 						parser.remove(j);  
 					}
 				}
