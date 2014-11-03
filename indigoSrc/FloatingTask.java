@@ -1,5 +1,7 @@
 package indigoSrc;
 
+import org.joda.time.DateTime;
+
 /**
  * A floating task is a task with the following 4 fields
  * -isDone
@@ -96,6 +98,9 @@ public class FloatingTask implements Comparable<FloatingTask>{
 		return newPlace;
 	}
 
+	public int getNumDates(){
+		return numDates;
+	}
 
 	public String toString() {
 		StringBuilder result = new StringBuilder("");
@@ -175,6 +180,16 @@ public class FloatingTask implements Comparable<FloatingTask>{
 		} else {
 			return this.toDeadlineTask().endTime.compareTo(aTask.toDeadlineTask().endTime);
 		}
+	}
+
+	public DateTime getStartTime() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public DateTime getKeyTime() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

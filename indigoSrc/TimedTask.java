@@ -25,6 +25,7 @@ public class TimedTask extends DeadlineTask {
 		keyTime = beginTime;
 	}
 	
+	@Override
 	public DateTime getStartTime(){
 		return startTime;
 	}

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import logic.Complete;
 import logic.Create;
 import logic.Delete;
+import logic.GridViewTaskList;
 import logic.Read;
 import logic.Search;
 import logic.UndoList;
@@ -48,6 +49,9 @@ public class LogicFacade {
 			Read rc = new Read(p, taskList);
 			rc.execute();
 			display = rc.resultString;
+			GridViewTaskList grid = new GridViewTaskList(taskList);
+			grid.buildGrid();
+			display = grid.toString();
 		} else if(userInput.contains("search")) {
 			Search sc = new Search(p, taskList);
 			sc.execute();

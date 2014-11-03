@@ -33,7 +33,6 @@ public class Parser {
 	private static Logger logger = Logger.getLogger("Parser");
 	private String sortedCommand;
 	CommandKey keyWord			;  				//stores the key command "add"/"delete" to return to logic
-	String commandWords  		; 				//stores the remaining words excluding key command
 	String [] commandSentence 	= new String[2]; 		//to help store the splited string command
 	String [] details 		  	; 				//store the remaining words excluding key command individually
 	String toDo               	= "";//stores the final command to return to logic
@@ -213,6 +212,7 @@ public class Parser {
 	public Parser(String userCommand) {
 		isValid = true;
 		message = "Command is sucessfully processed.";
+		editIndex = -1;
 		
 		userCommand.trim();
 		if(userCommand.equals("")){
@@ -221,63 +221,52 @@ public class Parser {
 		
 		String[] sentenceArray = userCommand.split("\\s+");
 		StringDecipher sentenceString = new StringDecipher(sentenceArray);
+		
+		//The key word of the command must be either the first or last of the sentence.
 		keyWord = sentenceString.getKey();
+		
+		if(keyWord.equals(CommandKey.CLEAR) && sentenceString.getWordsLeft()!=0){
+			keyWord = CommandKey.DELETE;
+		}
+		
 		assert sentenceString.getWordsLeft() >= 0;
 		
-		editIndex = -1;
+	/*	If only the index is stated (apart from key word), index can be first 
+	 * 	or last. Unless it's an add which makes sense if user wants to add a 
+	 * 	number to tasklist. Or edit, which doesn't make sense as to which task
+	 *  to edit. Clear too cannot have number as it by default clears all. 
+	 *  editIndex by default is -1. 
+	 */
+		if(sentenceString.getWordsLeft() == 1 && 
+		  (!(keyWord.equals(CommandKey.CREATE) || keyWord.equals(CommandKey.UPDATE)))){
+			editIndex = sentenceString.getIndex();
+		}
+		//System.out.println(sentenceString.getWordsLeft());
+		//System.out.println(sentenceString.remainingToString());
 		
-		if (sentenceString.getWordsLeft() > 1){
-			System.out.println(sentenceString.getWordsLeft());
-			System.out.println(userCommand);
-			commandSentence = userCommand.split(" ", 2);
-			commandWords = commandSentence[1];
+	/*	=== editIndex status ===
+	 * 	If the command word is the first word, index of editing must be stated
+	 *	after it. Else if command word is not the first word, index must be the 
+	 *	first word. If it appears anywhere else, it is regarded as time. 
+	 *	Only when adding a task, index will not be considered.
+	 */
+		if (sentenceString.getWordsLeft() >= 1){
+			if(!(keyWord.equals(CommandKey.CREATE))){
+				editIndex = sentenceString.getIndex();
+			}
+			//commandSentence = sentenceString.returnTwoRemaining();
+			//commandWords = commandSentence[1];
 			//location = parseLocation(commandSentence);
 			
-			switch(keyWord) { 
-			case CREATE:
-			case DELETE:
-			case CLEAR:
-			case UPDATE:
-			case COMPLETE:
-			case UNCOMPLETE:
-			case SEARCH:
-			case READ:
-				details = commandWords.split(" ");
-				LOGGER.log(Level.FINE, "commandWords: " + commandWords);
-				try{
-					 editIndex = Integer.parseInt(details[0]);
-				} catch(NumberFormatException er){
-				}
-				 for(int i=0; i<details.length; i++) 
-					detailsList.add(details[i]);
-				 
- 					//floating task
-					 int b; 									// to see if there is a index
-
-					 if (editIndex >= 0){
-						 b=1;
-					 } else {
-						 b=0;
-					 }
-					 for(; b<details.length; b++) { 
-						toDo = toDo+ " " + details[b]; 
-					}
+			toDo = sentenceString.remainingToString();
+			
 			LOGGER.log(Level.FINE, "toDo: " + toDo);
 			LOGGER.log(Level.FINE, "editIndex " + editIndex);
-			break;
-			
-			case UNDO :
-			case REDO :
-				break;
-			default:
-				keyWord = CommandKey.CREATE; //a default Create 
-				toDo = userCommand + "";
-			} 
-		}	else { //sentenceString.getWordsLeft == 0
+		}	else {
+			//sentenceString.getWordsLeft == 0
 			assert editIndex < 0;
 			assert sentenceString.getWordsLeft() == 0;
-
-			toDo = userCommand + "";
+			isValid = keyWord.checkValidAlone();
 		}
 		
 		TimeParser timeParser = new TimeParser(toDo);
@@ -299,7 +288,6 @@ public class Parser {
 			smartParserCheck();
 		}
 		assert keyWord !=null;
-		assert commandWords !=null;
 	}
 	
 /*	private String parseLocation(String[] words) {

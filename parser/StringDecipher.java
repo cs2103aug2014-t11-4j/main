@@ -4,16 +4,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class StringDecipher {
-	private String[] remaining;
+	private ArrayList<String> remaining;
 	private int wordsLeft;
 	
 	public StringDecipher(String[] sentence){
-		remaining = sentence;
+		remaining = new ArrayList<String>(Arrays.asList(sentence));
 		wordsLeft = sentence.length;
 	}
 	
 	public String[] getRemaining(){
-		return remaining;
+		String[] sentence = remaining.toArray(new String[wordsLeft]);
+		return sentence;
 	}
 	
 	public int getWordsLeft(){
@@ -21,23 +22,41 @@ public class StringDecipher {
 	}
 	
 	public CommandKey getKey(){
-		ArrayList<String> sentence = new ArrayList<String>(Arrays.asList(remaining));
-		int arraySize = sentence.size();
-		CommandKey key = CommandKey.identifyKey(sentence.get(0));
+		int arraySize = wordsLeft;
+		CommandKey key = CommandKey.identifyKey(remaining.get(0));
 		if(key.equals(CommandKey.INVALID)){
-			key = CommandKey.identifyKey(sentence.get(arraySize-1));
+			key = CommandKey.identifyKey(remaining.get(arraySize-1));
 			if(key.equals(CommandKey.INVALID)){
 				key = CommandKey.CREATE;
 			} else {
-				sentence.remove(arraySize-1);
+				remaining.remove(arraySize-1);
 			}
 		} else {
-			sentence.remove(0);
+			remaining.remove(0);
 		}
 		
-		remaining = sentence.toArray(new String[sentence.size()]);
-		wordsLeft = remaining.length;
+		wordsLeft = remaining.size();
 		return key;
+	}
+	
+	public int getIndex(){
+		int index = -1;
+		try{
+			 index = Integer.parseInt(remaining.get(0));
+			 remaining.remove(0);
+		} catch(NumberFormatException er){
+			
+		}
+		wordsLeft = remaining.size();
+		return index;
+	}
+	
+	public String remainingToString(){
+		String printup = "";
+		for(int i=0; i<wordsLeft; i++){
+			printup += remaining.get(i) + " ";
+		}
+		return printup;
 	}
 
 }

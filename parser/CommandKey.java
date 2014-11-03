@@ -28,10 +28,12 @@ public enum CommandKey {
 				return CommandKey.REDO;
 			case "complete"://default command
 			case "done":	//alternate name
+			case "-com":	//user shortkey
 			case "-c":		//pro shortkey
 				return CommandKey.COMPLETE;
 			case "uncomplete"://default command
 			case "undone":	//alternate name
+			case "uncom":	//user shortkey
 			case "-uc":		//pro shortkey
 				return CommandKey.UNCOMPLETE;
 			case "search":	//default command
@@ -39,11 +41,18 @@ public enum CommandKey {
 				return CommandKey.SEARCH;
 			case "clear":	//default command
 			case "-z":		//pro shortkey
-				return CommandKey.CLEAR;
+			case "clr":		//user shortkey
+				return CommandKey.CLEAR; //Very specific. Must delete all.
 			default:
 				return CommandKey.INVALID;
 		}
 	}
 	
-	
+	//List down all the valid commands which can stand alone.
+	public boolean checkValidAlone(){
+		if(this.equals(READ) || this.equals(CLEAR) || this.equals(UNDO) || this.equals(REDO)){
+			return true;
+		}
+		return false;
+	}	
 }
