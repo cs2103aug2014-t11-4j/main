@@ -107,9 +107,9 @@ public class TabbedPaneDisplay extends JPanel {
 			
 			PaneArray.get(0).setText(new LogicFacade("view -d").display);
 		}
-		PaneArray.get(1).setText(new LogicFacade("view -t").display);
-		PaneArray.get(2).setText(new LogicFacade("view -w").display);
-		PaneArray.get(3).setText(new LogicFacade("view -m").display);
+		PaneArray.get(0).setText(new LogicFacade("view -t").display);
+		PaneArray.get(1).setText(new LogicFacade("view -w").display);
+		PaneArray.get(2).setText(new LogicFacade("view -m").display);
 		
 
 	}
