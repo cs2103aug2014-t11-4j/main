@@ -174,9 +174,7 @@ public class TimeParser {
 		String regex17 = "\bdec\b"; 
 		String regex18 = "\beve\b"; 
 		
-		boolean needRemove = false;
 		for (int j=0;j<parser.size();j++){
-			needRemove = false;
 				String identified = parser.get(j).getText();
 
 				if(isInteger(parser.get(j).getText())) {  //removes stand alone integers like "6" identified
@@ -209,9 +207,6 @@ public class TimeParser {
 					if(!parser.get(j).getText().equals(regex18)) { 
 						parser.remove(j);  
 					}
-				}
-				if (needRemove = true){
-					parser.remove(j--);
 				}
 		}
 	}
