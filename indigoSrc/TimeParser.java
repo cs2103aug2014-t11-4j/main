@@ -13,14 +13,18 @@ import org.ocpsoft.prettytime.nlp.parse.DateGroup;
 
 
 public class TimeParser {
-//	private DateTime startTime;
-//	private DateTime endTime;
+	
 	private String userCommand; // raw command from user
 	private String sortedUserCommand; // commands follows a format without a date:  e.g.add go to school
 	private DateTime endTime;
 	private DateTime startTime;
-	private List<Date> dates;
+	private List<Date> datesStart;
+	private List<Date> datesEnd;
 	static List<DateGroup> parser;
+	static List<DateGroup> parserNewTimedTask;
+	static List<DateGroup> parserNewDeadLineTask;
+	boolean filteredTimedTask = false;
+	boolean filteredDeadLineTask = false; 
 	ArrayList<String> filterWords = new ArrayList<String>();
 	
 	private final static Logger LOGGER = Logger.getLogger(TimeParser.class.getName()); 
@@ -31,30 +35,106 @@ public class TimeParser {
 	public TimeParser(String someCommand){
 		userCommand = someCommand.trim();
 		assert userCommand!=null;
+		
+		//this for loop deals with cases like op2 and cs2103
+		for(int k=0;k<userCommand.length();k++) { 
+			if(Character.isDigit(userCommand.charAt(k))) {  
+				if(k==0) { 
+					break; 
+				}
+				else if(Character.isLetter(userCommand.charAt(k-1))) { 
+					int digitInt = 0; 
+					char digitChar = (char)userCommand.charAt(k); 
+					digitInt = Character.getNumericValue(digitChar); 
+					ArrayList<Integer> digits = new ArrayList<Integer>(); 
+					digits.add(digitInt);  
+					int length = userCommand.length(); 
+					userCommand = userCommand.substring(0,k)+"DIGIT"+userCommand.substring(k+1,length);
+				}
+			}
+		}
+		
 		parser = new PrettyTimeParser().parseSyntax(userCommand);
-		filterParser();  
+		filterParser();  //removes "6" or "wed" but found in "wedding" and deals with "3 a" and "3 p" etc. 
+		filterTimedTask(); //deals with identifiers = 2 namely, "thursday" and "8pm-10pm" but refers to same day
+		filterDeadLineTask(); //deals with identifiers = 2 namely, "monday" and "9pm" but they're separated
+		
 		if (parser == null){
 			LOGGER.log(Level.FINE, "floating task detected.");
 			sortedUserCommand = userCommand + "";
 			assert isDateFree();
-		} else {
-	    switch (parser.size()){
-	    	case 0:
-	    		assert isDateFree();
-		    	break;
-	    	case 1: // continue
-	    	    parseTime();
-	    		break;
-	    	default:
-	    		LOGGER.log(Level.FINE, "multiple dateGroup detected.");
-	    		LOGGER.log(Level.FINE, listAllDates(parser));
-	    	    parseTime();
+		} 
+		
+		if(filteredTimedTask == true) {
+			parseTime(); 
+		} 
+		
+		if(filteredDeadLineTask == true) {
+			parseTime();
 		}
+		
+		else {
+			switch (parser.size()){
+	    		case 0:
+	    			assert isDateFree();
+	    			break;
+	    		case 1: 
+	    		case 2: 
+	    			parseTime();
+	    			break;
+	    		default:
+	    			LOGGER.log(Level.FINE, "more than 2 dateGroups detected.");
+	    			LOGGER.log(Level.FINE, listAllDates(parser));
+	    			parseTime();
+			}
 		}
-	    
 		assert sortedUserCommand!=null;
 	}
-
+	
+	private void filterTimedTask() { 
+		ArrayList<String> prepWordsList = new ArrayList<String>();
+		prepWordsList.add("to"); 
+		
+		String[] descriptions; 
+		
+		if(parser.size() ==2) {
+			String first = parser.get(0).getText();
+			String second = parser.get(1).getText();
+		 
+			if(second.contains("to")) { 
+				filteredTimedTask = true; 
+				descriptions = parser.get(1).getText().split("to"); //contains (5pm) and (6pm)
+				String date = parser.get(0).getText(); 
+				userCommand = userCommand.replace(date, date + " " + descriptions[0]);
+				userCommand = userCommand.replace(second, date + " " + descriptions[1]);			
+				userCommand = userCommand.replaceAll("( )+", " ");			
+				parserNewTimedTask = new PrettyTimeParser().parseSyntax(userCommand); 
+			}
+			
+			if(first.contains("to")) { 
+				filteredTimedTask = true; 
+				descriptions = parser.get(0).getText().split("to"); //contains (5pm) and (6pm)
+				String date = parser.get(1).getText(); 
+				userCommand = userCommand.replace(date, date + " " + descriptions[1]);
+				userCommand = userCommand.replace(first, date + " " + descriptions[0]); 
+				userCommand = userCommand.replaceAll("( )+", " ");
+				parserNewTimedTask = new PrettyTimeParser().parseSyntax(userCommand); 
+			}
+						
+		}	
+	}
+	
+	private void filterDeadLineTask() { 
+		if(parser.size() == 2) { 
+			String start = parser.get(0).getText();
+			String end = parser.get(1).getText(); 
+			if((!(start.contains(" "))) || (!(end.contains(" ")))) { //contains (5pm) and (thursday) or (12 dec 2015)
+				filteredDeadLineTask = true; 
+				userCommand = userCommand.replace(start,start + " " + end);  
+				parserNewDeadLineTask = new PrettyTimeParser().parseSyntax(userCommand); 
+			}
+		}
+	}
 	private void filterParser() { 
 		filterWords.add("mon"); 
 		filterWords.add("tue"); 
@@ -73,6 +153,7 @@ public class TimeParser {
 		filterWords.add("oct"); 
 		filterWords.add("nov"); 
 		filterWords.add("dec"); 
+		filterWords.add("eve"); 
 		
 		String regex1 = "\bmon\b";
 		String regex2 = "\btue\b";
@@ -91,31 +172,22 @@ public class TimeParser {
 		String regex15 = "\boct\b";
 		String regex16 = "\bnov\b";
 		String regex17 = "\bdec\b"; 
+		String regex18 = "\beve\b"; 
 		
 		boolean needRemove = false;
 		for (int j=0;j<parser.size();j++){
 			needRemove = false;
 				String identified = parser.get(j).getText();
-				if(isInteger(parser.get(j).getText())) { 
-					needRemove = true; 
+
+				if(isInteger(parser.get(j).getText())) {  //removes stand alone integers like "6" identified
+					parser.remove(j); 
 				}
-				if(identified.matches(".*\\d.*")) {				
-					for(int d=0; d<identified.length()-2;d++) { 
-						if(Character.isDigit(identified.charAt(d))){ 
-							if(!(identified.charAt(d+1) == 'a') && (!(identified.charAt(d+2) == 'm')))
-							if(!(identified.charAt(d+1) == 'p') && (!(identified.charAt(d+2) == 'm'))) { 
-								//op2 tomorrow, i need to remove the 2 and just have tomorrow only
-								needRemove = true; 
-								//String s = identified.charAt(d) + ""; 
-							//	identified = identified.replace(s, "");
-								//parser.add(identified); 
-							}
-								
-						}
-					}
-					
-				}
-				if(filterWords.contains(identified)) { 
+				if((identified.length() ==3) && (identified.charAt(2) == 'a')) //if "3 a" identified, remove it
+					parser.remove(j); 
+				if((identified.length() ==3) && (identified.charAt(2) == 'p')) //if "3 p" identified, remove it
+					parser.remove(j); 
+				
+				if(filterWords.contains(identified)) {  //remove "wed" if it is found in "wedding" 
 					if(!parser.get(j).getText().equals(regex1)) 
 					if(!parser.get(j).getText().equals(regex2)) 
 					if(!parser.get(j).getText().equals(regex3)) 
@@ -132,8 +204,10 @@ public class TimeParser {
 					if(!parser.get(j).getText().equals(regex14))
 					if(!parser.get(j).getText().equals(regex15)) 
 					if(!parser.get(j).getText().equals(regex16)) 
-					if(!parser.get(j).getText().equals(regex17)) { 
-						needRemove = true;
+
+					if(!parser.get(j).getText().equals(regex17)) 	
+					if(!parser.get(j).getText().equals(regex18)) { 
+						parser.remove(j);  
 					}
 				}
 				if (needRemove = true){
@@ -164,54 +238,91 @@ public class TimeParser {
 	}
 
 	private void parseTime() {
-		LOGGER.log(Level.FINE, "Time String dected:" + parser.get(0).getText());
-		dates = parser.get(0).getDates();
-		System.out.println("TESTTTTTT");
-		System.out.println(dates); 
-		numDate = dates.size();
-		sortedUserCommand = userCommand + "";
-		sortedUserCommand = sortedUserCommand.replaceAll(parser.get(0).getText(), "");
-		LOGGER.log(Level.FINE, "UserCommand after removing time info: " + sortedUserCommand);
-		System.out.println(numDate); 
-	    switch (numDate){
-	    case 1: // a deadLine task
-	    	parseDeadLineTask();
-	    	break;
-	    case 2://  a timed task
-	    	parseTimedTask();
-	    	break;
-	    default:
-	    	LOGGER.log(Level.FINE, "multiple dates detected.");
-	    	parseTimedTask();
-	    }
-	}
+		LOGGER.log(Level.FINE, "Time String detected:" + parser.get(0).getText());	
+		if(parser.size()==2) { 
+			LOGGER.log(Level.FINE, "Time String detected:" + parser.get(1).getText());
+		}
+		datesStart = parser.get(0).getDates();
 	
-	private void parseTimedTask() {
+		if(parser.size() == 2) {
+			datesEnd = parser.get(1).getDates(); 
+		}
+		
+		if(filteredTimedTask == true) {  //"thursday" and "5pm to 7pm" as separate time instances
+			parseTimedTask3(); 
+		}
+		else if(filteredDeadLineTask == true) { //"thursday" and "5pm" as separate time instances
+			parseDeadLineTask2(); 
+		}
+		else if(datesStart.size()==2) {  //"thursday 5pm to friday 7pm" together
+			parseTimedTask1(); 
+		}
+		else if(parser.size()==2) { //"thursday 5pm" and "friday 7pm" as separate time instances
+			parseTimedTask2();
+		}
+		else if(datesStart.size()==1) {  //"thursday 5pm" together
+			parseDeadLineTask1(); 
+		}
+	}
+	private void parseTimedTask1() {
 		// TODO Auto-generated method stub
-		LOGGER.log(Level.FINE, "Timed task detected.");
-		startTime = new DateTime(dates.get(0));
+		LOGGER.log(Level.FINE, "Timed task1 detected.");
+		startTime = new DateTime(datesStart.get(0));
 		LOGGER.log(Level.FINE, "startTime: " + startTime.toString());
-    	endTime = new DateTime(dates.get(1));
+    	endTime = new DateTime(datesStart.get(1));
 		LOGGER.log(Level.FINE, "endTime: " + endTime.toString());
 		assert isDateFree();
     	assert startTime != null;
     	assert endTime != null;
 	}
-
-	private void parseDeadLineTask() {
+	
+	private void parseTimedTask2() { 
 		// TODO Auto-generated method stub
-		LOGGER.log(Level.FINE, "DeadLine task detected.");
-		endTime = new DateTime(dates.get(0));
+			LOGGER.log(Level.FINE, "Timed task2 detected.");
+			startTime = new DateTime(datesStart.get(0));
+			LOGGER.log(Level.FINE, "startTime: " + startTime.toString());
+		   	endTime = new DateTime(datesEnd.get(0));
+			LOGGER.log(Level.FINE, "endTime: " + endTime.toString());
+			assert isDateFree();
+		   	assert startTime != null;
+		   	assert endTime != null;
+	}
+	
+	private void parseTimedTask3() {
+		// TODO Auto-generated method stub
+		LOGGER.log(Level.FINE, "Timed task3 detected.");		
+		startTime = new DateTime(parserNewTimedTask.get(0).getDates().get(0));
+		LOGGER.log(Level.FINE, "startTime: " + startTime.toString());
+    	endTime = new DateTime(parserNewTimedTask.get(1).getDates().get(0));
+		LOGGER.log(Level.FINE, "endTime: " + endTime.toString());
+		assert isDateFree();
+    	assert startTime != null;
+    	assert endTime != null;
+	}
+	
+	private void parseDeadLineTask1() {
+		// TODO Auto-generated method stub
+		LOGGER.log(Level.FINE, "DeadLine task1 detected.");
+		endTime = new DateTime(datesStart.get(0));
 		LOGGER.log(Level.FINE, "endTime: " + endTime.toString());
 		assert isDateFree();
 		assert endTime != null;
 	}
 
+	private void parseDeadLineTask2() {
+		// TODO Auto-generated method stub
+		LOGGER.log(Level.FINE, "DeadLine task2 detected.");
+		endTime = new DateTime(parserNewDeadLineTask.get(0).getDates().get(0));
+		LOGGER.log(Level.FINE, "endTime: " + endTime.toString());
+		assert isDateFree();
+		assert endTime != null;
+	}
+	
 	public boolean isDateFree() {
 		List<DateGroup> parse = new PrettyTimeParser().parseSyntax(userCommand);
 		int numDate = parse.get(0).getDates().size();
 		
-		if (numDate ==0){
+		if (numDate == 0) {
 			return true;
 		} else {
 			return false;
@@ -243,8 +354,9 @@ public class TimeParser {
 		return endTime;
 	}
 	
+	
 	public boolean isFloatingTask(){
-		if (numDate <1){
+		if (parser.size()==0){
 			return true;
 		} else {
 			return false;
@@ -252,7 +364,7 @@ public class TimeParser {
 	}
 	
 	public boolean isDeadLineTask(){
-		if (numDate == 1){
+		if (endTime != null){
 			return true;
 		} else {
 			return false;
@@ -260,16 +372,13 @@ public class TimeParser {
 	}
 	
 	public boolean isTimedTask(){
-		if (numDate > 1){
+		if (startTime != null && endTime != null){
 			return true;
 		} else {
 			return false;
 		}
-	}
-		
-	}
-
-	
+	}	
+}
 /*	getDate:
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	output = sdf.format(mp.dateGroup.getDates().get(0));

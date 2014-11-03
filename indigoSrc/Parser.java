@@ -21,16 +21,21 @@ import java.util.regex.*;
 import org.joda.time.DateTime;
 
 public class Parser {
+	private boolean isValid;
+	private String message;
+	private DateTime now;
+	private DateTime TimeRef;
+	
 	private static Logger logger = Logger.getLogger("Parser");
 	private String sortedCommand;
-	String keyWord  			;  				//stores the key command "add"/"delete" to return to logic
-	String commandWords  		; 				//stores the remaining words excluding key command
-	String [] commandSentence 	= new String[2]; 		//to help store the splited string command
-	String [] details 		  	; 				//store the remaining words excluding key command individually
-	String toDo               	= "";//stores the final command to return to logic
+	String keyWord  			;  					//stores the key command "add"/"delete" to return to logic
+	String commandWords  		; 					//stores the remaining words excluding key command
+	String [] commandSentence 	= new String[2]; 	//to help store the splited string command
+	String [] details 		  	; 					//store the remaining words excluding key command individually
+	String toDo               	= "";				//stores the final command to return to logic
 	private DateTime startTime;
 	private DateTime endTime;
-	boolean containConj 		= false;				//determine if it is a floating task
+	boolean containConj 		= false;			//determine if it is a floating task
 	private int editIndex;
 	private String location;
 	private boolean isFloatingTask;
@@ -73,7 +78,6 @@ public class Parser {
 	
 	public String getCommand() {
 		toDo = toDo.trim();
-		//int index = toDo.length();
 		
 		ArrayList<String> prepWordsList = new ArrayList<String>();
 		prepWordsList.add("on");
@@ -81,6 +85,7 @@ public class Parser {
 		prepWordsList.add("at");
 		prepWordsList.add("from");	
 		prepWordsList.add("in"); 
+		prepWordsList.add("until"); 
 	
 		ArrayList<String> monthsList = doMonthsList();
 				
@@ -95,8 +100,14 @@ public class Parser {
 		
 		for(int i=0; i<size;i++){ 
 			identifers[i] = TimeParser.parser.get(i).getText();
-			//System.out.println(identifers[i]);
+			System.out.println(identifers[i]);
 		} 
+		
+		for (int k=0;k<identifers.length;k++){
+			if(isInteger(identifers[k])) { 
+				identifers[k] = ""; 
+			}
+		}
 		
 		for(int j=0; j<size; j++) { 
 			if(monthsList.contains(identifers[j])) { 
@@ -114,6 +125,7 @@ public class Parser {
 				String regex12 = "\bdec\b";
 				String regex13 = "\bmon\b";
 				String regex14 = "\bwed\b";
+				String regex15 = "\beve\b"; 
 				
 					if(!identifers[j].equals(regex1)) 
 					if(!identifers[j].equals(regex2)) 
@@ -128,41 +140,52 @@ public class Parser {
 					if(!identifers[j].equals(regex11)) 
 					if(!identifers[j].equals(regex12)) 
 					if(!identifers[j].equals(regex13)) 
-					if(!identifers[j].equals(regex14)){  
+					if(!identifers[j].equals(regex14)) 
+					if(!identifers[j].equals(regex15)){  
 						identifers[j] = ""; 
 				}
 			}
 		}
 	
 		for(int k=0; k<size; k++) {
-			String word = identifers[k]; 
+			System.out.println(toDo);
 			toDo = toDo.replaceFirst(identifers[k], "IDENTIFIER"); 
 			description = toDo.split(" "); 
+			System.out.println("HERE"); 
+			System.out.println(toDo); 
 				for(int j=0; j<description.length; j++) { 
 					if(description[j].contains("IDENTIFIER") && j>0) { 
 						String prepWord = description[j-1]; 			
 							if(prepWordsList.contains(prepWord) && description[j].equals("IDENTIFIER")) {
 								String finaltoDo = "";  
 								description[j-1] ="";
-								for(int j1=0; j1<description.length; j1++) {
+								for(int j1=0; j1<description.length; j1++) { //removes prep word if there is
 									finaltoDo = finaltoDo + description[j1] + " "; 
 								}
 								toDo = finaltoDo; 
-								toDo = toDo.replace("IDENTIFIER", "");
+								toDo = toDo.replace("IDENTIFIER", ""); //removes the identifier
 								toDo = toDo.trim(); 
 								toDo = toDo.replaceAll("( )+", " ");
 								
 							}
 					} 
-							toDo = toDo.replace("IDENTIFIER", ""); 
+							toDo = toDo.replace("IDENTIFIER", ""); //if identifier does not have prep words before it
 							toDo = toDo.replaceAll("( )+", " ");
 							toDo = toDo.trim();
 						}
-					}
-		
+					}		
 		return toDo; 
 	}
 
+	public static boolean isInteger(String s) {
+	    try { 
+	        Integer.parseInt(s); 
+	    } catch(NumberFormatException e) { 
+	        return false; 
+	    }
+	    // only got here if we didn't return false
+	    return true;
+	}
 	public ArrayList<String> doMonthsList() {
 		ArrayList<String> monthsList = new ArrayList<String>();
 		monthsList.add("jan");
@@ -182,11 +205,10 @@ public class Parser {
 	}
 
 	public Parser(String userCommand) {
+		isValid = true;
+		message = "Command is sucessfully processed.";
 		
-		//conjWords.add("by"); 
-		//conjWords.add("on"); 							// words to filter out dates
-		editIndex = -1;
-		
+		editIndex = -1;		
 		
 		if (userCommand.contains(" ")){
 			commandSentence = userCommand.split(" ", 2);
@@ -195,7 +217,7 @@ public class Parser {
 			location = parseLocation(commandSentence);
 			
 			switch(keyWord) { 
-			case "add":// for instance add buy a cat on 23/12/2014
+			case "add":
 			case "delete":
 			case "edit" :
 			case "complete":
@@ -273,6 +295,10 @@ public class Parser {
 			assert timeParser.isFloatingTask();
 			isFloatingTask = true;
 		}
+		
+		if (endTime !=null){
+			smartParserCheck();
+		}
 		assert keyWord !=null;
 		assert commandWords !=null;
 	}
@@ -289,12 +315,10 @@ public class Parser {
 	}
 
 	public String getKeyCommand() { 
-		//System.out.println("Key command: " +keyWord);
 		return keyWord;
 	}
 
 	public int getEditIndex() { 
-		//System.out.println("Edit index: " +editIndex);
 		if (editIndex == -1){
 			return 1;
 		}
@@ -319,6 +343,26 @@ public class Parser {
 	
 	public boolean isTimedTask(){
 		return isTimedTask;
+	}
+	
+	public void smartParserCheck(){
+		now = new DateTime();
+		TimeRef = now.plusMinutes(2);
+		if (endTime.isBefore(now)){
+			isValid = false;
+			message = "The task added is overDue!";
+		} else if(endTime.isBefore(TimeRef)){
+			DateTime newDate = endTime.plusHours(1);
+			endTime = newDate;
+		}
+	}
+	
+	public boolean isValid(){
+		return isValid;
+	}
+	
+	public String getMessage(){
+		return message;
 	}
 
 }
