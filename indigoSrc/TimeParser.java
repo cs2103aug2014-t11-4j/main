@@ -338,7 +338,7 @@ public class TimeParser {
 		sc = new Scanner(System.in);
 		while (true){	
 			TimeParser mp = new TimeParser(sc.nextLine());
-			//System.out.println("numDateGroup:" + mp.parser.size());
+			System.out.println("numDateGroup:" + mp.parser.size());
 		}
 	}
 	
