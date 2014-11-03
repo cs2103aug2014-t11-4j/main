@@ -356,7 +356,6 @@ public class Parser {
 		} else if(endTime.isBefore(TimeRef)){
 			DateTime newDate = endTime.plusHours(1);
 			endTime = newDate;
-			isValid = false;
 		}
 	}
 	
