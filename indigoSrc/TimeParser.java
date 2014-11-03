@@ -63,15 +63,15 @@ public class TimeParser {
 		String[] identifyInt = userCommand.split(" ");
 		for(int g=0;g<identifyInt.length;g++) { 
 			if(isInteger(identifyInt[g])) {
-				identifyInt[g] = "";
-			}
+                identifyInt[g] = "";
 		}
+		
 		String filteredCommand = "";
 		for(int f=0; f<identifyInt.length;f++) { 
 			filteredCommand = filteredCommand + " " + identifyInt[f]; 
 		}
 		
-		parser = new PrettyTimeParser().parseSyntax(filteredCommand);
+		parser = new PrettyTimeParser().parseSyntax(userCommand);
 		filterParser();  
 		filterTimedTask(); 
 		filterDeadLineTask();
@@ -108,6 +108,7 @@ public class TimeParser {
 		}
 		smartParserCheck();
 		assert sortedUserCommand!=null;
+	}
 	}
 	private void filterTimedTask() { 
 		ArrayList<String> prepWordsList = new ArrayList<String>();
@@ -200,7 +201,11 @@ public class TimeParser {
 				if(isInteger(parser.get(j).getText())) { 
 					parser.remove(j); 
 				}
-
+				if((identified.length() ==3) && (identified.charAt(2) == 'a'))
+					parser.remove(j); 
+				if((identified.length() ==3) && (identified.charAt(2) == 'p'))
+					parser.remove(j); 
+				
 				if(filterWords.contains(identified)) { 
 					if(!parser.get(j).getText().equals(regex1)) 
 					if(!parser.get(j).getText().equals(regex2)) 
