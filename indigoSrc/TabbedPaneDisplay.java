@@ -23,6 +23,7 @@ public class TabbedPaneDisplay extends JPanel {
 	private JTable inboxTable;
 	public LogicFacade id = new LogicFacade();
 	public static ArrayList<JTextPane> PaneArray = new ArrayList<JTextPane>();
+	
 	public TabbedPaneDisplay(){
 		super(new GridLayout(1,1));
 		
