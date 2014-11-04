@@ -38,7 +38,7 @@ public class DeadlineTask extends FloatingTask{
 	
 	public String toString(DateTimeFormatter format){
 		FloatingTask temp = new FloatingTask(this);
-		StringBuilder result = new StringBuilder(format.print(endTime)+"");
+		StringBuilder result = new StringBuilder(format.print(endTime)+", ");
 		result.append(temp.toString());
 		return result.toString();
 	}
