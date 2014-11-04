@@ -30,12 +30,13 @@ public class Parser {
 	private String message;
 	private DateTime now;
 	private DateTime TimeRef;
-	public TaskIdentifiers taskWord = null;
+	public TaskIdentifiers taskWord;
 	
 	private static Logger logger = Logger.getLogger("Parser");
 	private String sortedCommand;
 	CommandKey keyWord			;  				//stores the key command "add"/"delete" to return to logic
 	String toDo               	= "";//stores the final command to return to logic
+	private String rawCommand;
 	private DateTime startTime;
 	private DateTime endTime;
 	boolean containConj 		= false;			//determine if it is a floating task
@@ -67,12 +68,15 @@ public class Parser {
 		} catch (IndexOutOfBoundsException err){
 			System.out.println("There are no such thing as time!");
 		}
-		System.out.println(test.getCommand());
+		System.out.println("Command:" + test.getRawCommand());
 	}
 	
 	public String getRawCommand(){
-		toDo = toDo.trim();
-		return toDo;
+		if (rawCommand !=null){
+			return rawCommand.trim();
+		} else {
+			return "";
+		}
 	}
 
 	public String getLocation(){
@@ -212,6 +216,9 @@ public class Parser {
 		editIndex = -1;
 		
 		String[] sentenceArray = userCommand.split("\\s+");
+		if (sentenceArray.length>1){
+			rawCommand = sentenceArray[1] + "";
+		}
 		StringDecipher sentenceString = new StringDecipher(sentenceArray);
 		
 		//The key word of the command must be either the first or last of the sentence.

@@ -68,7 +68,6 @@ public class Read extends CommandClass{
 				case TIMED:
 					return viewTimedTask();
 				default:
-					return viewAll();
 			}
 		}
 		
@@ -77,33 +76,34 @@ public class Read extends CommandClass{
 			DateTime dte = parserVar.getEndTime();
 			return viewAny(dts, dte);
 		}
+		System.out.println(parserVar.taskWord);
 		
-		if(parserVar.getCommand().contains("undone")){
+		if(parserVar.getRawCommand().contains("undone")){
 			feedback = "These are your undone tasks. You can do it!";
 			return viewUndone();
-		} else if(parserVar.getCommand().contains("done")){
+		} else if(parserVar.getRawCommand().contains("done")){
 			feedback = "Done tasks are shown. Good Job!";
 			return viewDone();
-		} else if (parserVar.getCommand().contains("-f")){
+		} else if (parserVar.getRawCommand().contains("-f")){
 			feedback = "All the floating tasks are shown";
 			return viewFloatingTask();
-		} else if (parserVar.getCommand().contains("-d")){
+		} else if (parserVar.getRawCommand().contains("-d")){
 			feedback = "All the deadline tasks are shown";
 			return viewDeadlineTask();
-		}  else if (parserVar.getCommand().contains("-overdue")){
+		}  else if (parserVar.getRawCommand().contains("-overdue")){
 			feedback = "All tasks overdue are shown";
 			return viewOverDue().trim();
-		}  	else if (parserVar.getCommand().contains("-t")){
+		}  	else if (parserVar.getRawCommand().contains("-t")){
 			feedback = "Today's tasks are shown";
 			tabNo = 1;
 			String result = viewOverDue() + newLine + viewToday();
 			return result.trim();
-		}  else if (parserVar.getCommand().contains("-w")){
+		}  else if (parserVar.getRawCommand().contains("-w")){
 			feedback = "This week's tasks are shown";
 			tabNo = 2;
 			String result = viewOverDue() + newLine + viewThisWeek();
 			return result.trim();
-		}  else if (parserVar.getCommand().contains("-m")){
+		}  else if (parserVar.getRawCommand().contains("-m")){
 			feedback = "This month's tasks are shown";
 			tabNo = 3;
 			return viewThisMonth();
@@ -115,8 +115,8 @@ public class Read extends CommandClass{
 	private String viewTimedTask() {
 		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
 		for (int i=0,j=1;i<taskListVar.getTimedList().size();i++){
-			TimedTask temp = (TimedTask) taskListVar.getTimedList().get(i);
-			result.append(j++ + ". " + temp.toString() + newLine);
+			DeadlineTask temp = (DeadlineTask) taskListVar.getTimedList().get(i);
+			result.append(j++ + ". " + temp.toString(LogicFacade.DATE_FORMAT) + newLine);
 		}
 		return result.toString().trim();
 	}

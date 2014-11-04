@@ -55,10 +55,9 @@ public class LogicFacade {
 			feedback = readCommand(userInput);
 		}
 		
-		if(!(now.equals(CommandKey.CREATE)) || (now.equals(CommandKey.SEARCH))){
+		/*if(!(now.equals(CommandKey.CREATE)) || (now.equals(CommandKey.SEARCH))){
 			Read rc = new Read(taskList);
-			display = rc.resultString;
-		}
+		}*/
 		saveData();
 	}
 
@@ -90,6 +89,7 @@ public class LogicFacade {
 			case READ:
 				Read classView = new Read(parser, taskList);
 				setTab = classView.tabNo;
+				display = classView.resultString;
 				return classView.feedback;
 			case UPDATE:
 				Update classEdit = new Update(parser, taskList);
