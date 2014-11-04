@@ -58,13 +58,25 @@ public class FillUpMainWindow {
 		Container contentPane = mainWindow.getContentPane();
 		contentPane.add(displayLayers);
 		JPanel mainPanel = new JPanel();
-		mainPanel.setBounds(0, 0, 600, 400);
+		mainPanel.setBounds(0, 0, 600, 300);
 		mainPanel.setLayout(new GridBagLayout());
 		mainPanel.setOpaque(false);
 		
+		
+		GridBagConstraints bottomPanelConstraints, topPanelConstraints;
+		bottomPanelConstraints =  gridBag.setConstraints(BOTTOM_PANEL_INDEX);
+		topPanelConstraints =  gridBag.setConstraints(TOP_PANEL_INDEX);
+		
 		setBackGroundImage();
-		createUserInputPanel(mainPanel);
-		createOutputPanel(mainPanel);
+		
+		JPanel inputPanel = createUserInputPanel();
+		mainPanel.add(inputPanel, topPanelConstraints);
+		
+		
+		JPanel outputPanel = createOutputPanel();
+		mainPanel.add(outputPanel, bottomPanelConstraints);
+		
+
 		displayLayers.add(mainPanel,new Integer(1)); 
 	}
 
@@ -73,56 +85,101 @@ public class FillUpMainWindow {
 		try {
 			img = ImageIO.read(new File("src/gui/wood.jpg"));
 			JLabel background = new JLabel(new ImageIcon(img));
-			background.setBounds(0,0,600, 400);
+			background.setBounds(0,0,600, 300);
 			displayLayers.add(background,new Integer(0));
 		} catch (IOException e) {
 		}
 		
 	}
+	
 
-	private void createOutputPanel(Container mainPanel) {
-		JPanel bottomPanel = new JPanel(new GridBagLayout());
-		bottomPanel.setPreferredSize(new Dimension(500,150));
-		bottomPanel.setOpaque(false);
-		GridBagConstraints constraints;
-		constraints =  gridBag.setConstraints(BOTTOM_PANEL_INDEX);
+	
+	
+	
+	private JPanel createUserInputPanel(){
+		JPanel topPanel = new JPanel(new GridBagLayout());
+		topPanel.setPreferredSize(new Dimension(600,100));
+		topPanel.setOpaque(false);	
+		
+		GridBagConstraints inputFieldConstraints, userFeedbackConstraints;
+		inputFieldConstraints =  gridBag.setConstraints(INPUT_FIELD_INDEX);
+		userFeedbackConstraints = gridBag.setConstraints(USER_FEEDBACK_INDEX);
+		
+		JTextField readInput = setReadInput(topPanel);
+		topPanel.add(readInput,inputFieldConstraints);	
+		JTextArea liveUserFeedback = setLiveUserFeedback(topPanel);
+		topPanel.add(liveUserFeedback, userFeedbackConstraints);
+		
+		return topPanel;
 
-		addTabbedPane(bottomPanel);
-		createFloatingPanel(bottomPanel);
-		mainPanel.add(bottomPanel, constraints);
+	
+	}
 
+	private JTextField setReadInput(JPanel topPanel) {
+	
+		readInput = new JTextField();
+		readInput.addActionListener(new readInputTextFieldListener());
+		readInput.addKeyListener(new readInputTextFieldListener());	
+		return readInput;
+	}
+	private JTextArea setLiveUserFeedback(JPanel topPanel) {
+	
+		liveUserFeedback = new JTextArea(3,1);
+		Border liveUserFeedbackBorder = new LineBorder(Color.white);
+		liveUserFeedback.setMaximumSize(liveUserFeedback.getSize());
+		liveUserFeedback.setBorder(liveUserFeedbackBorder);
+		liveUserFeedback.setLineWrap(true);
+		liveUserFeedback.setEditable(false);
+		liveUserFeedback.setText("Welcome to Indigo!");
+		
+		return liveUserFeedback;
 	}
 	
 	
 	
 	
 	
+	private JPanel createOutputPanel() {
+		JPanel bottomPanel = new JPanel(new GridBagLayout());
+		bottomPanel.setPreferredSize(new Dimension(500,150));
+		bottomPanel.setOpaque(false);
+		
+		GridBagConstraints floatingTasksConstraints, tabbedPaneConstraints;
+		floatingTasksConstraints =  gridBag.setConstraints(FLOATING_TASKS_INDEX);
+		tabbedPaneConstraints =  gridBag.setConstraints(TABBED_PANE_INDEX);
+		
+		
+		TabbedPaneDisplay taskDisply = addTabbedPane(bottomPanel);
+		bottomPanel.add(taskDisplay, tabbedPaneConstraints);	
+		
+		JPanel floatingPanel= addFloatingPanel();
+		bottomPanel.add(floatingPanel, floatingTasksConstraints);
+		return bottomPanel; 
+
+	}
 	
-	
-	
-	
-	
-	
-	private void createFloatingPanel(JPanel bottomPanel){
-		GridBagConstraints constraints;
-		constraints =  gridBag.setConstraints(FLOATING_TASKS_INDEX);
+	private JPanel addFloatingPanel(){
+
 		JPanel floatingPanel = new JPanel();
 		
-		addFloatingTextPane(floatingPanel);
+		JTextPane floatingTextPane = addFloatingTextPane(floatingPanel);
+		floatingPanel.add(floatingTextPane);
 		JScrollPane scroll = new JScrollPane(floatingTextPane);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		floatingPanel.add(scroll);
 		floatingTextPane.setCaretPosition(0);
 		floatingPanel.setLayout(new GridLayout(1,1));
-		bottomPanel.add(floatingPanel, constraints);
+		
+		
+		
+		return floatingPanel;
 		
 	}
 
-	private void addFloatingTextPane(JPanel floatingPanel) {
+	private JTextPane addFloatingTextPane(JPanel floatingPanel) {
 		
-		GridBagConstraints constraints;
-		constraints =  gridBag.setConstraints(FLOATING_TASKS_INDEX);
+	
 		floatingTextPane = new JTextPane();
 		StyledDocument doc = floatingTextPane.getStyledDocument();
 		addStylesToDocument(doc);
@@ -133,78 +190,24 @@ public class FillUpMainWindow {
 		floatingTextPane.setText(display);
 		floatingTextPane.setEditable(false);
 		
-		floatingPanel.add(floatingTextPane,constraints);
+		return floatingTextPane;
+		
 	}
 	
 	protected void addStylesToDocument(StyledDocument doc){
 	
 		
 	}
-	private void addTabbedPane(JPanel bottomPanel) {
-		GridBagConstraints constraints;
-		constraints =  gridBag.setConstraints(TABBED_PANE_INDEX);
-		taskDisplay = new TabbedPaneDisplay();	
-		bottomPanel.add(taskDisplay, constraints);	
-	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	private void createUserInputPanel(Container mainPanel){
-		JPanel topPanel = new JPanel(new GridBagLayout());
-		topPanel.setPreferredSize(new Dimension(600,100));
-		topPanel.setOpaque(false);
-		GridBagConstraints constraints;
-
-		constraints =  gridBag.setConstraints(TOP_PANEL_INDEX);
+	private TabbedPaneDisplay addTabbedPane(JPanel bottomPanel) {
 		
+		taskDisplay = new TabbedPaneDisplay();		
+		return taskDisplay;
 		
-		addReadInput(topPanel);
-		addLiveUserFeedback(topPanel);
-		mainPanel.add(topPanel, constraints);
-
-	
 	}
 
-	private void addReadInput(JPanel topPanel) {
-		GridBagConstraints constraints;
-		constraints =  gridBag.setConstraints(INPUT_FIELD_INDEX);
-		readInput = new JTextField();
-		topPanel.add(readInput, constraints);	
-		readInput.addActionListener(new readInputTextFieldListener());
-		readInput.addKeyListener(new readInputTextFieldListener());	
-	}
-	private void addLiveUserFeedback(JPanel topPanel) {
-		GridBagConstraints constraints;
-		constraints =  gridBag.setConstraints(USER_FEEDBACK_INDEX);
-		liveUserFeedback = new JTextArea(3,1);
-		Border liveUserFeedbackBorder = new LineBorder(Color.white);
-		liveUserFeedback.setMaximumSize(liveUserFeedback.getSize());
-		liveUserFeedback.setBorder(liveUserFeedbackBorder);
-		liveUserFeedback.setLineWrap(true);
-		liveUserFeedback.setEditable(false);
-		liveUserFeedback.setText("Welcome to Indigo!");
-		topPanel.add(liveUserFeedback, constraints);
-	}
 	
 	
-	
-	
-	
-	
-	
+
 	
 	
 	
@@ -273,6 +276,8 @@ public class FillUpMainWindow {
         		readInput.setText("edit ");
         	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_F){
         		readInput.setText("search ");
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
+        		
         	}
         } 
         

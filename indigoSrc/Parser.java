@@ -34,11 +34,19 @@ public class Parser {
 	
 	private static Logger logger = Logger.getLogger("Parser");
 	private String sortedCommand;
+<<<<<<< HEAD
 	CommandKey keyWord			;  				//stores the key command "add"/"delete" to return to logic
 	String toDo               	= "";//stores the final command to return to logic
+=======
+	String keyWord  			;  					//stores the key command "add"/"delete" to return to logic
+	String commandWords  		; 					//stores the remaining words excluding key command
+	String [] commandSentence 	= new String[2]; 	//to help store the splited string command
+	String [] details 		  	; 					//store the remaining words excluding key command individually
+	String toDo               	= "";				//stores the final command to return to logic
+>>>>>>> origin/master
 	private DateTime startTime;
 	private DateTime endTime;
-	boolean containConj 		= false;				//determine if it is a floating task
+	boolean containConj 		= false;			//determine if it is a floating task
 	private int editIndex;
 	private String location;
 	private boolean isFloatingTask;
@@ -109,7 +117,7 @@ public class Parser {
 		for (int k=0;k<identifers.length;k++){
 			if(isInteger(identifers[k])) { 
 				identifers[k] = ""; 
-		}
+			}
 		}
 		
 		for(int j=0; j<size; j++) { 
@@ -151,7 +159,6 @@ public class Parser {
 		}
 	
 		for(int k=0; k<size; k++) {
-			String word = identifers[k]; 
 			System.out.println(toDo);
 			toDo = toDo.replaceFirst(identifers[k], "IDENTIFIER"); 
 			description = toDo.split(" "); 
@@ -163,22 +170,21 @@ public class Parser {
 							if(prepWordsList.contains(prepWord) && description[j].equals("IDENTIFIER")) {
 								String finaltoDo = "";  
 								description[j-1] ="";
-								for(int j1=0; j1<description.length; j1++) {
+								for(int j1=0; j1<description.length; j1++) { //removes prep word if there is
 									finaltoDo = finaltoDo + description[j1] + " "; 
 								}
 								toDo = finaltoDo; 
-								toDo = toDo.replace("IDENTIFIER", "");
+								toDo = toDo.replace("IDENTIFIER", ""); //removes the identifier
 								toDo = toDo.trim(); 
 								toDo = toDo.replaceAll("( )+", " ");
 								
 							}
 					} 
-							toDo = toDo.replace("IDENTIFIER", ""); 
+							toDo = toDo.replace("IDENTIFIER", ""); //if identifier does not have prep words before it
 							toDo = toDo.replaceAll("( )+", " ");
 							toDo = toDo.trim();
 						}
-					}
-		
+					}		
 		return toDo; 
 	}
 
