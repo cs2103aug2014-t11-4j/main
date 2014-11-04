@@ -209,8 +209,8 @@ public class Parser {
 		message = "Command is sucessfully processed.";
 		
 		editIndex = -1;		
-		
-		if (userCommand.contains(" ")){
+				
+		if(userCommand.contains(" ")){
 			commandSentence = userCommand.split(" ", 2);
 			keyWord = commandSentence[0];
 			commandWords = commandSentence[1];
@@ -350,7 +350,8 @@ public class Parser {
 		TimeRef = now.plusMinutes(2);
 		if (endTime.isBefore(now)){
 			isValid = false;
-			message = "The task added is overDue!";
+			DateTime newDate = endTime.plusDays(1);
+			endTime = newDate; 
 		} else if(endTime.isBefore(TimeRef)){
 			DateTime newDate = endTime.plusHours(1);
 			endTime = newDate;
