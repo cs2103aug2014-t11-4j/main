@@ -52,18 +52,18 @@ public class GridViewTaskList {
 			}
 		}
 		
-		for(int j=0; j<rowTwo; i++, j++){
+		for(int j=0; j<rowTwo; j++){
 			FloatingTask fTask = new FloatingTask();
 			fTask = taskList.getFloatingList().get(j);
-			grid[j][INDEX] = j+1 + "";
-			grid[j][NAME] = fTask.getDescription();
-			grid[j][START] = " - ";
-			grid[j][END] = " - ";
+			grid[i+j][INDEX] = i+j+1 + "";
+			grid[i+j][NAME] = fTask.getDescription();
+			grid[i+j][START] = " - ";
+			grid[i+j][END] = " - ";
 			
 			if(fTask.isCompleted()){
-				grid[j][DONE] = "DONE";
+				grid[i+j][DONE] = "DONE";
 			} else {
-				grid[j][DONE] = " ";
+				grid[i+j][DONE] = " ";
 			}
 		}
 		
