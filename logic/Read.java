@@ -1,5 +1,6 @@
 package logic;
 import indigoSrc.DeadlineTask;
+import indigoSrc.LogicFacade;
 import indigoSrc.Parser;
 import indigoSrc.TaskList;
 import indigoSrc.TimedTask;
@@ -147,7 +148,7 @@ public class Read extends CommandClass{
 		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
 		for (int i=0,j=1;i<taskListVar.getTimedList().size();i++){
 			DeadlineTask temp = (DeadlineTask) taskListVar.getTimedList().get(i);
-			result.append(j++ + ". " + temp.toString() + newLine);
+			result.append(j++ + ". " + temp.toString(LogicFacade.DATE_FORMAT) + newLine);
 		}
 		return result.toString().trim();
 	}
