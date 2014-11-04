@@ -107,7 +107,7 @@ public class TaskList {
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
 		for (int i=0,j=1;i<floatingTaskList.size();i++){
 			assert floatingTaskList.get(i).toDeadlineTask()==null;
-			result.append("[No." + j++ + "]" + floatingTaskList.get(i).toString() + newLine);
+			result.append(j++ + ". " + floatingTaskList.get(i).toString() + newLine);
 		}
 		return result.toString();
 	}
@@ -116,7 +116,7 @@ public class TaskList {
 		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
 		for (int i=0,j=1;i<timedTaskList.size();i++){
 			DeadlineTask temp = (DeadlineTask) timedTaskList.get(i);
-			result.append("[No." + j++ + "]" + temp.toString(dtf) + newLine);
+			result.append(+ j++ + ". " + temp.toString(dtf) + newLine);
 		}
 		return result.toString();
 	}

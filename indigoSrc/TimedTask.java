@@ -32,7 +32,7 @@ public class TimedTask extends DeadlineTask {
 	
 	public String toString(DateTimeFormatter dtf){
 		FloatingTask temp = new FloatingTask(this);
-		StringBuilder result = new StringBuilder("[" + dtf.print(startTime) + " - " + dtf.print(endTime) + "]: "+newLine);
+		StringBuilder result = new StringBuilder(dtf.print(startTime) + " - " + dtf.print(endTime) + newLine);
 		result.append(temp.toString());
 		return result.toString();
 	}
