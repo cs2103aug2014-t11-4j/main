@@ -221,7 +221,6 @@ public class Parser {
 		}
 		assert sentenceString.getWordsLeft() >= 0;
 		
-<<<<<<< HEAD
 		if(sentenceString.getWordsLeft() == 0){
 			isValid = keyWord.checkValidAlone();
 		}
@@ -254,15 +253,6 @@ public class Parser {
 			//commandWords = commandSentence[1];
 			//location = parseLocation(commandSentence);
 			toDo = sentenceString.remainingToString();
-=======
-		editIndex = -1;		
-				
-		if(userCommand.contains(" ")){
-			commandSentence = userCommand.split(" ", 2);
-			keyWord = commandSentence[0];
-			commandWords = commandSentence[1];
-			location = parseLocation(commandSentence);
->>>>>>> origin/master
 			
 			LOGGER.log(Level.FINE, "toDo: " + toDo);
 			LOGGER.log(Level.FINE, "editIndex " + editIndex);
