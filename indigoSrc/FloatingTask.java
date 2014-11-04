@@ -182,6 +182,7 @@ public class FloatingTask implements Comparable<FloatingTask>{
 		}
 	}
 
+<<<<<<< HEAD
 	public DateTime getStartTime() {
 		// TODO Auto-generated method stub
 		return null;
@@ -191,5 +192,11 @@ public class FloatingTask implements Comparable<FloatingTask>{
 		// TODO Auto-generated method stub
 		return null;
 	}
+=======
+	public int getNumDates() {
+		return numDates;
+	}
+
+>>>>>>> origin/master
 
 }

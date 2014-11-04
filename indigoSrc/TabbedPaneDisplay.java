@@ -20,9 +20,12 @@ import parser.CommandKey;
 
 public class TabbedPaneDisplay extends JPanel {
 	
+	private static final int MAX_ROW = 100;
+	private static final int MAX_COL = 5;
 	private JTabbedPane tabbedPaneDisplay;
 	private JTextPane taskDisplayPane; 
 	private JTable inboxTable;
+	private Object[][] inboxData;
 	public LogicFacade id = new LogicFacade();
 	public static ArrayList<JTextPane> PaneArray = new ArrayList<JTextPane>();
 	
@@ -76,13 +79,13 @@ public class TabbedPaneDisplay extends JPanel {
 		
 	} 
 	
-	private JComponent makeInboxTable(JTable inboxTable, String text){
+	private JComponent makeInboxTable(JTable inbox, String text){
 		JPanel tabbedPanel = new JPanel();
 		
 		 String[] columnNames = {"Index", "Task    ", "Start","End"};
-		 Object[][] data = {};
+		 inboxData = new String[MAX_ROW][MAX_COL];
 		 
-		 final JTable table = new JTable(data, columnNames);
+		 final JTable table = new JTable(inboxData, columnNames);
 			
 			//	table.setPreferredScrollableViewportSize(new Dimension(280, 250));
 		 table.setFillsViewportHeight(true);
@@ -93,12 +96,14 @@ public class TabbedPaneDisplay extends JPanel {
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		tabbedPanel.setLayout(new GridLayout(1,1));
 		tabbedPanel.add(scrollPane);
+		inboxTable = table;
 		return tabbedPanel;
 	}
 	
 	
-	public void update(String text){
+	public void update(String text, String[][] grid){
 		//TODO
+<<<<<<< HEAD
 		Parser parse = new Parser(text + "");
 		if(parse.getKeyCommand().equals(CommandKey.READ)){
 			LogicFacade lf = new LogicFacade(text);
@@ -109,8 +114,19 @@ public class TabbedPaneDisplay extends JPanel {
 			PaneArray.get(0).setText(new LogicFacade(text).display);
 		} else {
 			setTab(0);
+=======
+		if(text.contains("view")){
+			setTab(text);
+			updateTable(grid);
+		} else if(text.contains("search")){
+			setTab("other");
+		
+			updateTable(grid);
+		} else{
+			setTab("other");
+>>>>>>> origin/master
 			
-			PaneArray.get(0).setText(new LogicFacade("view -d").display);
+			updateTable(grid);
 		}
 		PaneArray.get(0).setText(new LogicFacade("view -t").display);
 		PaneArray.get(1).setText(new LogicFacade("view -w").display);
@@ -118,7 +134,20 @@ public class TabbedPaneDisplay extends JPanel {
 
 	}
 	
+<<<<<<< HEAD
 	private void setTab(int index){
+=======
+	private void updateTable(String[][] grid) {
+		for (int i=0;i<grid.length;i++){
+			for (int j=0;j<grid[i].length;j++){
+				inboxData[i][j]=grid[i][j]+"";
+			}
+		}
+		
+	}
+
+	private void setTab(String index){
+>>>>>>> origin/master
 		
 		if (index == 1){
 			tabbedPaneDisplay.setSelectedIndex(1);
