@@ -76,7 +76,6 @@ public class Read extends CommandClass{
 			DateTime dte = parserVar.getEndTime();
 			return viewAny(dts, dte);
 		}
-		System.out.println(parserVar.taskWord);
 		
 		if(parserVar.getRawCommand().contains("undone")){
 			feedback = "These are your undone tasks. You can do it!";
@@ -309,7 +308,7 @@ public class Read extends CommandClass{
 				}
 			}
 		}
-		System.out.println(result.toString().trim() + newLine);
+		//System.out.println(result.toString().trim() + newLine);
 		return result.toString().trim() + newLine;
 	}
 	
