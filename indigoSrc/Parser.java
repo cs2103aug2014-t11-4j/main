@@ -316,6 +316,10 @@ public class Parser {
 		return editIndex; 
 	}
 	
+	public int getRawEditIndex(){
+		return editIndex;
+	}
+	
 	public DateTime getStartTime(){
 		return startTime;
 	}

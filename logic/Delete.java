@@ -27,9 +27,8 @@ public class Delete extends CommandClass{
 	public Delete(Parser parsing, TaskList taskList){
 		parserVar = parsing;
 		taskListVar = taskList;
-		byNum = deleteByNum(parserVar.getRawCommand());
 		int totalSize = taskListVar.getSize();
-		index = parserVar.getEditIndex();
+		index = parserVar.getRawEditIndex();
 		if (index > totalSize || index < 1){
 			toDo = null;
 			isValid = false;

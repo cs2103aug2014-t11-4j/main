@@ -46,13 +46,13 @@ public class LogicFacade {
 		loadData();
 		String userInput = userCommand;
 		Parser p = new Parser(userInput);
+		Read rc = new Read(p, taskList);
+		display = rc.view();
 		if(p.isValid()==false){
 			feedback = "Invalid input";
 		}else{
 			feedback = readCommand(userInput);
 		}
-		Read rc = new Read(p, taskList);
-		display = rc.view();
 		saveData();
 	}
 
