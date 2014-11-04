@@ -28,7 +28,7 @@ public enum CommandKey {
 				return CommandKey.REDO;
 			case "complete"://default command
 			case "done":	//alternate name
-			case "-com":	//user shortkey
+			case "com":	//user shortkey
 			case "-c":		//pro shortkey
 				return CommandKey.COMPLETE;
 			case "uncomplete"://default command

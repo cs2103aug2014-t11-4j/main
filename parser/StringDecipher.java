@@ -23,9 +23,9 @@ public class StringDecipher {
 	
 	public CommandKey getKey(){
 		int arraySize = wordsLeft;
-		CommandKey key = CommandKey.identifyKey(remaining.get(0));
+		CommandKey key = CommandKey.identifyKey(remaining.get(0).toLowerCase());
 		if(key.equals(CommandKey.INVALID)){
-			key = CommandKey.identifyKey(remaining.get(arraySize-1));
+			key = CommandKey.identifyKey(remaining.get(arraySize-1).toLowerCase());
 			if(key.equals(CommandKey.INVALID)){
 				key = CommandKey.CREATE;
 			} else {

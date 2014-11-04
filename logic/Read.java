@@ -18,6 +18,9 @@ public class Read extends CommandClass{
 	static final String newLine = System.getProperty("line.separator");
 	String feedback = "ViewClass";
 	public String resultString = new String();
+	
+	DateTime start = null;
+	DateTime end = null;
 
 	@Override
 	public String execute() {
@@ -30,9 +33,22 @@ public class Read extends CommandClass{
 		parserVar = parsing;
 		taskListVar = taskList;
 		resultString = this.view();
+		if (parserVar.isTimedTask()){
+			start = parserVar.getStartTime();
+			end = parserVar.getEndTime();
+		} else if(parserVar.isDeadlineTask()){
+			end = parserVar.getEndTime();
+		} else {
+			assert parserVar.isFloatingTask();
+		}
 	}
 	
 	public String view(){
+		if(parserVar.isDeadlineTask()){
+			DateTime dts = parserVar.getStartTime();
+			DateTime dte = parserVar.getEndTime();
+			return viewAny(dts, dte);
+		}
 		if(parserVar.getCommand().contains("undone")){
 			feedback = "These are your undone tasks. You can do it!";
 			return viewUndone();
@@ -48,7 +64,7 @@ public class Read extends CommandClass{
 		}  else if (parserVar.getCommand().contains("-overdue")){
 			feedback = "All tasks overdue are shown";
 			return viewOverDue().trim();
-		}  else if (parserVar.getCommand().contains("-t")){
+		}  	else if (parserVar.getCommand().contains("-t")){
 			feedback = "Today's tasks are shown";
 			String result = viewOverDue() + newLine + viewToday();
 			return result.trim();
@@ -118,6 +134,7 @@ public class Read extends CommandClass{
 	//This method is to find tasks which are due today.
 	public static String viewToday(){
 		DateTime now = new DateTime();
+		DateTime dts = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
 		
@@ -179,6 +196,41 @@ public class Read extends CommandClass{
 				String timeKeeper = dayLeft(now, tempDate);
 				int tempMonth = tempDate.getMonthOfYear();
 				if((tempDate.getYear() == yearNow) && (tempMonth == monthNow)){
+					if(!timeKeeperCompare.equals(timeKeeper)){
+						result.append(newLine + timeKeeper + newLine);
+						timeKeeperCompare = timeKeeper;
+					}
+					result.append(temp.toStringWODate() + newLine);
+				}
+		}
+		return result.toString().trim();
+	}
+	
+	
+	public static String viewAny(DateTime start, DateTime end){
+		DateTime now = new DateTime();
+		int yearNow = now.getYear();
+		int monthNow = now.getMonthOfYear();
+		int dayNow = now.getDayOfMonth();
+		
+		if(start==null){
+			start = new DateTime();
+		}
+		int yearEnd = end.getYear();
+		int monthEnd = end.getMonthOfYear();
+		int dayEnd = end.getDayOfYear();
+		
+		StringBuilder result = new StringBuilder();
+		int tlSize = taskListVar.getTimedList().size();
+		String timeKeeperCompare = dayLeft(now, start);
+		result.append(timeKeeperCompare + newLine);
+		for (int i=1; i<=tlSize; i++){
+				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
+				DateTime tempDate = temp.getTime();
+				String timeKeeper = dayLeft(now, tempDate);
+				int tempMonth = tempDate.getMonthOfYear();
+				if((tempDate.getYear() == yearEnd) && (tempMonth == monthEnd) &&
+						(tempDate.getDayOfYear() == dayEnd)){
 					if(!timeKeeperCompare.equals(timeKeeper)){
 						result.append(newLine + timeKeeper + newLine);
 						timeKeeperCompare = timeKeeper;
