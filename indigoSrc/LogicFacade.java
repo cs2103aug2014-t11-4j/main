@@ -43,10 +43,6 @@ public class LogicFacade {
 		this("view");
 	}
 	
-	public String[][] getGrid(){
-		return grid.getGrid();
-	}
-	
 	public LogicFacade(String userCommand){
 		loadData();
 		String userInput = userCommand;

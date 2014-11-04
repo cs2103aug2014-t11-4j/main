@@ -101,7 +101,7 @@ public class TabbedPaneDisplay extends JPanel {
 	}
 	
 	
-	public void update(String text, String[][] grid){
+	public void update(String text){
 		//TODO
 		Parser parse = new Parser(text + "");
 		if(parse.getKeyCommand().equals(CommandKey.READ)){
@@ -113,7 +113,6 @@ public class TabbedPaneDisplay extends JPanel {
 			PaneArray.get(0).setText(new LogicFacade(text).display);
 		} else {
 			setTab(0);
-			updateTable(grid);
 		}
 		PaneArray.get(0).setText(new LogicFacade("view -t").display);
 		PaneArray.get(1).setText(new LogicFacade("view -w").display);
