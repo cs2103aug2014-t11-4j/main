@@ -20,23 +20,18 @@ import parser.CommandKey;
 
 public class TabbedPaneDisplay extends JPanel {
 	
-	private static final int MAX_ROW = 100;
-	private static final int MAX_COL = 5;
 	private JTabbedPane tabbedPaneDisplay;
 	private JTextPane taskDisplayPane; 
 	private JTable inboxTable;
-	private Object[][] inboxData;
 	public LogicFacade id = new LogicFacade();
 	public static ArrayList<JTextPane> PaneArray = new ArrayList<JTextPane>();
 	
 	public TabbedPaneDisplay(){
 		super(new GridLayout(1,1));
-		
-		
-		
+
 		tabbedPaneDisplay = new JTabbedPane();
 
-		JComponent allPanel = makeInboxTable(inboxTable, new LogicFacade("view -d").display);
+		JComponent allPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view").display);
 		tabbedPaneDisplay.addTab("   Inbox   ", null, allPanel, "Displays all tasks.");
 		tabbedPaneDisplay.setMnemonicAt(0, KeyEvent.VK_1);
 		
@@ -61,13 +56,11 @@ public class TabbedPaneDisplay extends JPanel {
 		
 		JPanel tabbedPanel = new JPanel();
 		
-		
 		textPaneTemp = new JTextPane();
 		PaneArray.add(textPaneTemp);
 
 		JScrollPane scroll = new JScrollPane(textPaneTemp);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		textPaneTemp.setText(text);
 		textPaneTemp.setEditable(false);
 		textPaneTemp.setCaretPosition(0);
@@ -82,21 +75,21 @@ public class TabbedPaneDisplay extends JPanel {
 	private JComponent makeInboxTable(JTable inbox, String text){
 		JPanel tabbedPanel = new JPanel();
 		
-		 String[] columnNames = {"Index", "Task    ", "Start","End"};
-		 inboxData = new String[MAX_ROW][MAX_COL];
+//		 String[] columnNames = {"Index", "Task    ", "Start","End"};
+//		 inboxData = new String[MAX_ROW][MAX_COL];
 		 
-		 final JTable table = new JTable(inboxData, columnNames);
+//		 final JTable table = new JTable(inboxData, columnNames);
 			
-			//	table.setPreferredScrollableViewportSize(new Dimension(280, 250));
-		 table.setFillsViewportHeight(true);
+//		 table.setPreferredScrollableViewportSize(new Dimension(280, 250));
+//		 table.setFillsViewportHeight(true);
 		 
 		//Create the scroll pane and add the table to it.
-		JScrollPane scrollPane = new JScrollPane(table);
+		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		tabbedPanel.setLayout(new GridLayout(1,1));
+//		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+//		tabbedPanel.setLayout(new GridLayout(1,1));
 		tabbedPanel.add(scrollPane);
-		inboxTable = table;
+//		inboxTable = table;
 		return tabbedPanel;
 	}
 	
@@ -120,7 +113,7 @@ public class TabbedPaneDisplay extends JPanel {
 
 	}
 	
-	private void updateTable(String[][] grid) {
+/*	private void updateTable(String[][] grid) {
 		for (int i=0;i<grid.length;i++){
 			for (int j=0;j<grid[i].length;j++){
 				inboxData[i][j]=grid[i][j]+"";
@@ -128,7 +121,7 @@ public class TabbedPaneDisplay extends JPanel {
 		}
 		
 	}
-
+*/
 	private void setTab(int index){
 		
 		if (index == 1){

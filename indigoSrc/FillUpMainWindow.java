@@ -1,7 +1,5 @@
 package indigoSrc;
 
-
-
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -34,7 +32,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
-
 public class FillUpMainWindow {
 	
 	private static final int BOTTOM_PANEL_INDEX = 1;
@@ -62,7 +59,6 @@ public class FillUpMainWindow {
 		mainPanel.setLayout(new GridBagLayout());
 		mainPanel.setOpaque(false);
 		
-		
 		GridBagConstraints bottomPanelConstraints, topPanelConstraints;
 		bottomPanelConstraints =  gridBag.setConstraints(BOTTOM_PANEL_INDEX);
 		topPanelConstraints =  gridBag.setConstraints(TOP_PANEL_INDEX);
@@ -76,7 +72,6 @@ public class FillUpMainWindow {
 		JPanel outputPanel = createOutputPanel();
 		mainPanel.add(outputPanel, bottomPanelConstraints);
 		
-
 		displayLayers.add(mainPanel,new Integer(1)); 
 	}
 
@@ -85,17 +80,13 @@ public class FillUpMainWindow {
 		try {
 			img = ImageIO.read(new File("src/gui/wood.jpg"));
 			JLabel background = new JLabel(new ImageIcon(img));
-			background.setBounds(0,0,600, 300);
+			background.setBounds(-100,-100, 550, 750);
 			displayLayers.add(background,new Integer(0));
 		} catch (IOException e) {
 		}
 		
 	}
-	
 
-	
-	
-	
 	private JPanel createUserInputPanel(){
 		JPanel topPanel = new JPanel(new GridBagLayout());
 		topPanel.setPreferredSize(new Dimension(600,100));
@@ -111,8 +102,7 @@ public class FillUpMainWindow {
 		topPanel.add(liveUserFeedback, userFeedbackConstraints);
 		
 		return topPanel;
-
-	
+		
 	}
 
 	private JTextField setReadInput(JPanel topPanel) {
@@ -134,11 +124,7 @@ public class FillUpMainWindow {
 		
 		return liveUserFeedback;
 	}
-	
-	
-	
-	
-	
+
 	private JPanel createOutputPanel() {
 		JPanel bottomPanel = new JPanel(new GridBagLayout());
 		bottomPanel.setPreferredSize(new Dimension(500,150));
@@ -148,79 +134,22 @@ public class FillUpMainWindow {
 		floatingTasksConstraints =  gridBag.setConstraints(FLOATING_TASKS_INDEX);
 		tabbedPaneConstraints =  gridBag.setConstraints(TABBED_PANE_INDEX);
 		
-		
 		TabbedPaneDisplay taskDisply = addTabbedPane(bottomPanel);
 		bottomPanel.add(taskDisplay, tabbedPaneConstraints);	
-		
-		JPanel floatingPanel= addFloatingPanel();
-		bottomPanel.add(floatingPanel, floatingTasksConstraints);
 		return bottomPanel; 
-
-	}
 	
-	private JPanel addFloatingPanel(){
-
-		JPanel floatingPanel = new JPanel();
-		
-		JTextPane floatingTextPane = addFloatingTextPane(floatingPanel);
-		floatingPanel.add(floatingTextPane);
-		JScrollPane scroll = new JScrollPane(floatingTextPane);
-		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		floatingPanel.add(scroll);
-		floatingTextPane.setCaretPosition(0);
-		floatingPanel.setLayout(new GridLayout(1,1));
-		
-		
-		
-		return floatingPanel;
-		
 	}
 
-	private JTextPane addFloatingTextPane(JPanel floatingPanel) {
-		
-	
-		floatingTextPane = new JTextPane();
-		StyledDocument doc = floatingTextPane.getStyledDocument();
-		addStylesToDocument(doc);
-		
-		LogicFacade lc = new LogicFacade("view -f");
-		String display = lc.display;
-		
-		floatingTextPane.setText(display);
-		floatingTextPane.setEditable(false);
-		
-		return floatingTextPane;
-		
-	}
-	
 	protected void addStylesToDocument(StyledDocument doc){
 	
 		
 	}
 	private TabbedPaneDisplay addTabbedPane(JPanel bottomPanel) {
-		
 		taskDisplay = new TabbedPaneDisplay();		
 		return taskDisplay;
 		
 	}
 
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public class readInputTextFieldListener implements ActionListener, KeyListener {
 
 		@Override
@@ -257,11 +186,8 @@ public class FillUpMainWindow {
 	}
 	private void displayInfo(KeyEvent e, String command) {
         int id = e.getID();
-        if (id == KeyEvent.KEY_TYPED) {
-        	
-        }
-
-        else if(id == KeyEvent.KEY_PRESSED) {	
+        if (id == KeyEvent.KEY_TYPED) {	
+        } else if(id == KeyEvent.KEY_PRESSED) {	
         	if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Z) {
         		LogicFacade lc = new LogicFacade("undo");
         		taskDisplay.update(lc.display);

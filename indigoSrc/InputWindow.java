@@ -36,7 +36,7 @@ public class InputWindow extends JFrame {
 
 	public void initialize(JFrame mainWindow){	
 		mainWindow.setTitle("Indigo");
-		mainWindow.setBounds(300, 150, 600, 300);
+		mainWindow.setBounds(875, 40, 450, 650);
 		mainWindow.setResizable(false);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setIconImage(new ImageIcon("src/gui/goindigologo.jpg").getImage());
