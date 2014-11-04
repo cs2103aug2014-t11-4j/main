@@ -51,6 +51,25 @@ public class StringDecipher {
 		return index;
 	}
 	
+	public TaskIdentifiers checkTaskWords() {
+		TaskIdentifiers taskWord = null;
+		assert this.getWordsLeft() >=0 && this.getWordsLeft() <=2;
+		if(this.getWordsLeft() == 0){
+			taskWord = TaskIdentifiers.ALL;
+		} else if(this.getWordsLeft() == 1){
+			String word = remainingToString().toLowerCase().trim();
+			if(!TaskIdentifiers.indentifyWords(word).equals(TaskIdentifiers.INVALID)){
+				taskWord = TaskIdentifiers.indentifyWords(word);
+			}
+		} else if(this.getWordsLeft() == 2){
+			TaskIdentifiers all = TaskIdentifiers.indentifyWords(remaining.get(0).toLowerCase().trim());
+			if(all.equals(TaskIdentifiers.ALL)){
+				taskWord = TaskIdentifiers.indentifyWords(remaining.get(1).toLowerCase().trim());
+			}
+		}
+		return taskWord;
+	}
+	
 	public String remainingToString(){
 		String printup = "";
 		for(int i=0; i<wordsLeft; i++){

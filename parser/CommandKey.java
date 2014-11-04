@@ -6,6 +6,7 @@ public enum CommandKey {
 		switch(keyCommand){
 			case "add":		//default command
 			case "addd":	//Spelling mistake
+			case "create":	//default
 			case "-a":		//Pro shortkey
 				return CommandKey.CREATE;
 			case "view":	//default command
@@ -14,6 +15,7 @@ public enum CommandKey {
 			case "veiw":	//spelling mistake
 				return CommandKey.READ;
 			case "edit":	//default command
+			case "update": 	//
 			case "-e":		//Pro shortkey
 				return CommandKey.UPDATE;
 			case "delete":	//default command

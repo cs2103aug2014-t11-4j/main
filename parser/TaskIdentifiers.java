@@ -3,7 +3,8 @@ package parser;
 public enum TaskIdentifiers {
 	ALL, OVERDUE, FLOATING, DEADLINE, TIMED, INVALID;
 	
-	public TaskIdentifiers indentifyWords(String usedWords){
+	public static TaskIdentifiers indentifyWords(String usedWords){
+		usedWords = usedWords.trim();
 		switch(usedWords){
 			case "all":
 			case "a":
@@ -28,6 +29,17 @@ public enum TaskIdentifiers {
 				return TaskIdentifiers.TIMED;			
 			default:
 				return TaskIdentifiers.INVALID;
+		}
+	}
+	
+	public static String toString(TaskIdentifiers Ti){
+		switch(Ti){
+			case ALL:
+				return "all";
+			case FLOATING:
+				return "float";
+			default:
+				return "bla";
 		}
 	}
 }

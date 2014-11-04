@@ -23,18 +23,18 @@ import org.joda.time.DateTime;
 
 import parser.CommandKey;
 import parser.StringDecipher;
+import parser.TaskIdentifiers;
 
 public class Parser {
 	private boolean isValid;
 	private String message;
 	private DateTime now;
 	private DateTime TimeRef;
+	public TaskIdentifiers taskWord = null;
 	
 	private static Logger logger = Logger.getLogger("Parser");
 	private String sortedCommand;
 	CommandKey keyWord			;  				//stores the key command "add"/"delete" to return to logic
-	String [] commandSentence 	= new String[2]; 		//to help store the splited string command
-	String [] details 		  	; 				//store the remaining words excluding key command individually
 	String toDo               	= "";//stores the final command to return to logic
 	private DateTime startTime;
 	private DateTime endTime;
@@ -210,25 +210,18 @@ public class Parser {
 	}
 
 	public Parser(String userCommand) {
-		isValid = true;
+		isValid = checkEmpty(userCommand);
 		message = "Command is sucessfully processed.";
 		editIndex = -1;
-		
-		userCommand.trim();
-		if(userCommand.equals("")){
-			isValid = false;
-		}
 		
 		String[] sentenceArray = userCommand.split("\\s+");
 		StringDecipher sentenceString = new StringDecipher(sentenceArray);
 		
 		//The key word of the command must be either the first or last of the sentence.
 		keyWord = sentenceString.getKey();
-		
 		if(keyWord.equals(CommandKey.CLEAR) && sentenceString.getWordsLeft()!=0){
 			keyWord = CommandKey.DELETE;
 		}
-		
 		assert sentenceString.getWordsLeft() >= 0;
 		
 	/*	If only the index is stated (apart from key word), index can be first 
@@ -241,8 +234,11 @@ public class Parser {
 		  (!(keyWord.equals(CommandKey.CREATE) || keyWord.equals(CommandKey.UPDATE)))){
 			editIndex = sentenceString.getIndex();
 		}
-		//System.out.println(sentenceString.getWordsLeft());
-		//System.out.println(sentenceString.remainingToString());
+		if(keyWord.equals(CommandKey.DELETE) || keyWord.equals(CommandKey.COMPLETE) ||
+		   keyWord.equals(CommandKey.READ) || keyWord.equals(CommandKey.UNCOMPLETE)) {
+			taskWord = sentenceString.checkTaskWords();
+			System.out.println("getTaskWord");
+		}
 		
 	/*	=== editIndex status ===
 	 * 	If the command word is the first word, index of editing must be stated
@@ -288,6 +284,15 @@ public class Parser {
 			smartParserCheck();
 		}
 		assert keyWord !=null;
+	}
+
+	public boolean checkEmpty(String userCommand) {
+		userCommand.trim();
+		if(userCommand.equals("")){
+			return false;
+		} else {
+			return true;
+		}
 	}
 	
 /*	private String parseLocation(String[] words) {

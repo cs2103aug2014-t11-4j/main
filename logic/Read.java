@@ -2,8 +2,11 @@ package logic;
 import indigoSrc.DeadlineTask;
 import indigoSrc.Parser;
 import indigoSrc.TaskList;
+import indigoSrc.TimedTask;
 
 import org.joda.time.DateTime;
+
+import parser.TaskIdentifiers;
 
 /* This class is the read class which will display the list that user
  * would want to see. This class has different types of views that user
@@ -44,42 +47,80 @@ public class Read extends CommandClass{
 	}
 	
 	public String view(){
+		if(parserVar.taskWord!=null){
+			TaskIdentifiers word = parserVar.taskWord;
+			System.out.println(word.toString());
+			switch(word){
+				case ALL:
+					return viewAll();
+				case OVERDUE:
+					return viewOverDue();
+				case FLOATING:
+					return viewFloatingTask();
+				case DEADLINE:
+					return viewDeadlineTask();
+				case TIMED:
+					return viewTimedTask();
+				default:
+					return viewAll();
+			}
+		}
+		
 		if(parserVar.isDeadlineTask()){
 			DateTime dts = parserVar.getStartTime();
 			DateTime dte = parserVar.getEndTime();
 			return viewAny(dts, dte);
 		}
+		
 		if(parserVar.getCommand().contains("undone")){
+			System.out.println("un");
 			feedback = "These are your undone tasks. You can do it!";
 			return viewUndone();
 		} else if(parserVar.getCommand().contains("done")){
+			System.out.println("do");
 			feedback = "Done tasks are shown. Good Job!";
 			return viewDone();
 		} else if (parserVar.getCommand().contains("-f")){
+			System.out.println("fl");
 			feedback = "All the floating tasks are shown";
 			return viewFloatingTask();
 		} else if (parserVar.getCommand().contains("-d")){
+			System.out.println("dl");
 			feedback = "All the deadline tasks are shown";
 			return viewDeadlineTask();
 		}  else if (parserVar.getCommand().contains("-overdue")){
+			System.out.println("ov");
 			feedback = "All tasks overdue are shown";
 			return viewOverDue().trim();
 		}  	else if (parserVar.getCommand().contains("-t")){
+			System.out.println("tod");
 			feedback = "Today's tasks are shown";
 			String result = viewOverDue() + newLine + viewToday();
 			return result.trim();
 		}  else if (parserVar.getCommand().contains("-w")){
+			System.out.println("wk");
 			feedback = "This week's tasks are shown";
 			String result = viewOverDue() + newLine + viewThisWeek();
 			return result.trim();
 		}  else if (parserVar.getCommand().contains("-m")){
+			System.out.println("mt");
 			feedback = "This month's tasks are shown";
 			return viewThisMonth();
 		} else
+			System.out.println("else");
 			feedback = "All the tasks are shown!";
 			return viewAll();
 	}
 	
+	private String viewTimedTask() {
+		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
+		for (int i=0,j=1;i<taskListVar.getTimedList().size();i++){
+			TimedTask temp = (TimedTask) taskListVar.getTimedList().get(i);
+			result.append(j++ + ". " + temp.toString() + newLine);
+		}
+		return result.toString().trim();
+	}
+
 	//The view of all tasks in floating tasklist
 	public String viewFloatingTask(){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);

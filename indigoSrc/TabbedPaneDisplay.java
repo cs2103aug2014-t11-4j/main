@@ -27,7 +27,7 @@ public class TabbedPaneDisplay extends JPanel {
 		
 		
 		tabbedPaneDisplay = new JTabbedPane();
-		JComponent allPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -d").display);
+		JComponent allPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view all").display);
 		tabbedPaneDisplay.addTab("Inbox", null, allPanel, "Displays all tasks.");
 		tabbedPaneDisplay.setMnemonicAt(0, KeyEvent.VK_1);
 		
