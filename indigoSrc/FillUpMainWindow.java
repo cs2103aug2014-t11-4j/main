@@ -229,11 +229,7 @@ public class FillUpMainWindow {
 			readInput.selectAll();
 			LogicFacade controller = new LogicFacade(text);
 			liveUserFeedback.setText(controller.feedback);
-<<<<<<< HEAD
-			taskDisplay.update(controller.display);		
-=======
 			taskDisplay.update(text,controller.getGrid());
->>>>>>> origin/master
 			
 			controller = new LogicFacade("view -f");
 			floatingTextPane.setText(controller.display);

@@ -103,7 +103,6 @@ public class TabbedPaneDisplay extends JPanel {
 	
 	public void update(String text, String[][] grid){
 		//TODO
-<<<<<<< HEAD
 		Parser parse = new Parser(text + "");
 		if(parse.getKeyCommand().equals(CommandKey.READ)){
 			LogicFacade lf = new LogicFacade(text);
@@ -114,18 +113,6 @@ public class TabbedPaneDisplay extends JPanel {
 			PaneArray.get(0).setText(new LogicFacade(text).display);
 		} else {
 			setTab(0);
-=======
-		if(text.contains("view")){
-			setTab(text);
-			updateTable(grid);
-		} else if(text.contains("search")){
-			setTab("other");
-		
-			updateTable(grid);
-		} else{
-			setTab("other");
->>>>>>> origin/master
-			
 			updateTable(grid);
 		}
 		PaneArray.get(0).setText(new LogicFacade("view -t").display);
@@ -134,9 +121,6 @@ public class TabbedPaneDisplay extends JPanel {
 
 	}
 	
-<<<<<<< HEAD
-	private void setTab(int index){
-=======
 	private void updateTable(String[][] grid) {
 		for (int i=0;i<grid.length;i++){
 			for (int j=0;j<grid[i].length;j++){
@@ -146,8 +130,7 @@ public class TabbedPaneDisplay extends JPanel {
 		
 	}
 
-	private void setTab(String index){
->>>>>>> origin/master
+	private void setTab(int index){
 		
 		if (index == 1){
 			tabbedPaneDisplay.setSelectedIndex(1);

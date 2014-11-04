@@ -77,5 +77,10 @@ public class GridViewTaskList {
 		}
 		return result;
 	}
+
+	public String[][] getGrid() {
+		// TODO Auto-generated method stub
+		return grid;
+	}
 	
 }

@@ -49,7 +49,6 @@ public class LogicFacade {
 	
 	public LogicFacade(String userCommand){
 		loadData();
-<<<<<<< HEAD
 		String userInput = userCommand;
 		Parser parse = new Parser(userInput);
 		CommandKey now = parse.getKeyCommand();
@@ -61,15 +60,6 @@ public class LogicFacade {
 		
 		if(!(now.equals(CommandKey.CREATE)) || (now.equals(CommandKey.SEARCH))){
 			Read rc = new Read(taskList);
-=======
-		String userInput = userCommand + "";
-		feedback = readCommand(userInput);
-		Parser p = new Parser(userInput);
-		grid = new GridViewTaskList(taskList);
-		if(userInput.contains("view")){
-			Read rc = new Read(p, taskList);
-			rc.execute();
->>>>>>> origin/master
 			display = rc.resultString;
 		}
 		saveData();
@@ -117,17 +107,23 @@ public class LogicFacade {
 				}
 				return classDelete.execute();
 			case UNDO:
-				if(uList.isUndoAble()){
-					return uList.undo().undo();
-				} else {
-					return "Nothing to undo";
+				if(parser.getEditIndex()>0){
+					int count = parser.getEditIndex();
+					while(count > 0 && uList.isUndoAble()){
+						undoFunction();
+					}
+					return "undo " + count + " times.";
 				}
+				return undoFunction();
 			case REDO:
-				if(uList.isRedoAble()){
-					return uList.redo().execute();
-				} else {
-					return "Nothing to redo";
+				if(parser.getEditIndex()>0){
+					int count = parser.getEditIndex();
+					while(count > 0 && uList.isRedoAble()){
+						redoFunction();
+					}
+					return "redo " + count + " times.";
 				}
+				return redoFunction();
 			case COMPLETE:
 				Complete classCheck = new Complete(parser, taskList, true);
 				if(classCheck.isValid){
@@ -150,6 +146,22 @@ public class LogicFacade {
 				System.exit(0);
 		}
 		return "Saved";
+	}
+
+	public String redoFunction() {
+		if(uList.isRedoAble()){
+			return uList.redo().execute();
+		} else {
+			return "Nothing to redo";
+		}
+	}
+
+	public String undoFunction() {
+		if(uList.isUndoAble()){
+			return uList.undo().undo();
+		} else {
+			return "Nothing to undo";
+		}
 	}
 
 	private static void saveData() {
