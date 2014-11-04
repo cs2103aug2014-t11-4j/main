@@ -47,6 +47,11 @@ public class Read extends CommandClass{
 		}
 	}
 	
+	public Read(TaskList taskList){
+		taskListVar = taskList;
+		resultString = viewAll();
+	}
+	
 	public String view(){
 		if(parserVar.taskWord!=null){
 			TaskIdentifiers word = parserVar.taskWord;

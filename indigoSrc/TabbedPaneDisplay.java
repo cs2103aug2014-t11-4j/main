@@ -68,16 +68,14 @@ public class TabbedPaneDisplay extends JPanel {
 		
 	} 
 	
-	public String update(String text){
+	public void update(int tab, String text){
 		//TODO
-		LogicFacade control = new LogicFacade(text);
-		setTab(control.setTab);
-		PaneArray.get(0).setText(control.display);
+		setTab(tab);
+		PaneArray.get(0).setText(text);
 		PaneArray.get(1).setText(new LogicFacade("view -t").display);
 		PaneArray.get(2).setText(new LogicFacade("view -w").display);
 		PaneArray.get(3).setText(new LogicFacade("view -m").display);
-		
-		return control.feedback;
+
 	}
 	
 	private void setTab(int index){

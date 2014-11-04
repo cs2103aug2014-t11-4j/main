@@ -45,13 +45,17 @@ public class LogicFacade {
 	public LogicFacade(String userCommand){
 		loadData();
 		String userInput = userCommand;
-		Parser p = new Parser(userInput);
-		Read rc = new Read(p, taskList);
-		display = rc.view();
-		if(p.isValid()==false){
+		Parser parse = new Parser(userInput);
+		CommandKey now = parse.getKeyCommand();
+		if(parse.isValid()==false){
 			feedback = "Invalid input";
 		}else{
 			feedback = readCommand(userInput);
+		}
+		
+		if(!(now.equals(CommandKey.CREATE)) || (now.equals(CommandKey.SEARCH))){
+			Read rc = new Read(taskList);
+			display = rc.resultString;
 		}
 		saveData();
 	}
