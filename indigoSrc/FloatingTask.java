@@ -177,4 +177,9 @@ public class FloatingTask implements Comparable<FloatingTask>{
 		}
 	}
 
+	public int getNumDates() {
+		return numDates;
+	}
+
+
 }
