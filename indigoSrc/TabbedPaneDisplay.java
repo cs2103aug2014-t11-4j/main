@@ -15,6 +15,8 @@ import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 
+import parser.CommandKey;
+
 
 public class TabbedPaneDisplay extends JPanel {
 	
@@ -33,6 +35,7 @@ public class TabbedPaneDisplay extends JPanel {
 		
 		
 		tabbedPaneDisplay = new JTabbedPane();
+
 		JComponent allPanel = makeInboxTable(inboxTable, new LogicFacade("view -d").display);
 		tabbedPaneDisplay.addTab("   Inbox   ", null, allPanel, "Displays all tasks.");
 		tabbedPaneDisplay.setMnemonicAt(0, KeyEvent.VK_1);
@@ -100,22 +103,21 @@ public class TabbedPaneDisplay extends JPanel {
 	
 	public void update(String text, String[][] grid){
 		//TODO
-		if(text.contains("view")){
-			setTab(text);
-			updateTable(grid);
-		} else if(text.contains("search")){
-			setTab("other");
-		
-			updateTable(grid);
-		} else{
-			setTab("other");
-			
+		Parser parse = new Parser(text + "");
+		if(parse.getKeyCommand().equals(CommandKey.READ)){
+			LogicFacade lf = new LogicFacade(text);
+			setTab(lf.setTab);
+			PaneArray.get(0).setText(lf.display);
+		} else if(parse.getKeyCommand().equals(CommandKey.SEARCH)){
+			setTab(0);
+			PaneArray.get(0).setText(new LogicFacade(text).display);
+		} else {
+			setTab(0);
 			updateTable(grid);
 		}
 		PaneArray.get(0).setText(new LogicFacade("view -t").display);
 		PaneArray.get(1).setText(new LogicFacade("view -w").display);
 		PaneArray.get(2).setText(new LogicFacade("view -m").display);
-		
 
 	}
 	
@@ -128,15 +130,15 @@ public class TabbedPaneDisplay extends JPanel {
 		
 	}
 
-	private void setTab(String index){
+	private void setTab(int index){
 		
-		if (index.contains("-t")){
+		if (index == 1){
 			tabbedPaneDisplay.setSelectedIndex(1);
 
-		} else if (index.contains("-w")){
+		} else if (index == 2){
 			tabbedPaneDisplay.setSelectedIndex(2);
 			
-		} else if (index.contains("-m")){
+		} else if (index == 3){
 			tabbedPaneDisplay.setSelectedIndex(3);
 			
 		} else {

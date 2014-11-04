@@ -10,6 +10,7 @@ package indigoSrc;
  *
  */
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,19 +21,21 @@ import java.util.regex.*;
 
 import org.joda.time.DateTime;
 
+import parser.CommandKey;
+import parser.StringDecipher;
+import parser.TaskIdentifiers;
+
 public class Parser {
 	private boolean isValid;
 	private String message;
 	private DateTime now;
 	private DateTime TimeRef;
+	public TaskIdentifiers taskWord = null;
 	
 	private static Logger logger = Logger.getLogger("Parser");
 	private String sortedCommand;
-	String keyWord  			;  					//stores the key command "add"/"delete" to return to logic
-	String commandWords  		; 					//stores the remaining words excluding key command
-	String [] commandSentence 	= new String[2]; 	//to help store the splited string command
-	String [] details 		  	; 					//store the remaining words excluding key command individually
-	String toDo               	= "";				//stores the final command to return to logic
+	CommandKey keyWord			;  				//stores the key command "add"/"delete" to return to logic
+	String toDo               	= "";//stores the final command to return to logic
 	private DateTime startTime;
 	private DateTime endTime;
 	boolean containConj 		= false;			//determine if it is a floating task
@@ -151,7 +154,6 @@ public class Parser {
 			System.out.println(toDo);
 			toDo = toDo.replaceFirst(identifers[k], "IDENTIFIER"); 
 			description = toDo.split(" "); 
-			System.out.println("HERE"); 
 			System.out.println(toDo); 
 				for(int j=0; j<description.length; j++) { 
 					if(description[j].contains("IDENTIFIER") && j>0) { 
@@ -205,9 +207,54 @@ public class Parser {
 	}
 
 	public Parser(String userCommand) {
-		isValid = true;
+		isValid = checkEmpty(userCommand);
 		message = "Command is sucessfully processed.";
+		editIndex = -1;
 		
+		String[] sentenceArray = userCommand.split("\\s+");
+		StringDecipher sentenceString = new StringDecipher(sentenceArray);
+		
+		//The key word of the command must be either the first or last of the sentence.
+		keyWord = sentenceString.getKey();
+		if(keyWord.equals(CommandKey.CLEAR) && sentenceString.getWordsLeft()!=0){
+			keyWord = CommandKey.DELETE;
+		}
+		assert sentenceString.getWordsLeft() >= 0;
+		
+<<<<<<< HEAD
+		if(sentenceString.getWordsLeft() == 0){
+			isValid = keyWord.checkValidAlone();
+		}
+		
+	/*	If only the index is stated (apart from key word), index can be first 
+	 * 	or last. Unless it's an add which makes sense if user wants to add a 
+	 * 	number to tasklist. Or edit, which doesn't make sense as to which task
+	 *  to edit. Clear too cannot have number as it by default clears all. 
+	 *  editIndex by default is -1. 
+	 */
+		if(sentenceString.getWordsLeft() == 1 && 
+		  (!(keyWord.equals(CommandKey.CREATE) || keyWord.equals(CommandKey.UPDATE)))){
+			editIndex = sentenceString.getIndex();
+		}
+		if(keyWord.equals(CommandKey.DELETE) || keyWord.equals(CommandKey.COMPLETE) ||
+		   keyWord.equals(CommandKey.READ) || keyWord.equals(CommandKey.UNCOMPLETE)) {
+			taskWord = sentenceString.checkTaskWords();
+		}
+	/*	=== editIndex status ===
+	 * 	If the command word is the first word, index of editing must be stated
+	 *	after it. Else if command word is not the first word, index must be the 
+	 *	first word. If it appears anywhere else, it is regarded as time. 
+	 *	Only when adding a task, index will not be considered.
+	 */
+		if (sentenceString.getWordsLeft() >= 1){
+			if(!(keyWord.equals(CommandKey.CREATE))){
+				editIndex = sentenceString.getIndex();
+			}
+			//commandSentence = sentenceString.returnTwoRemaining();
+			//commandWords = commandSentence[1];
+			//location = parseLocation(commandSentence);
+			toDo = sentenceString.remainingToString();
+=======
 		editIndex = -1;		
 				
 		if(userCommand.contains(" ")){
@@ -215,70 +262,13 @@ public class Parser {
 			keyWord = commandSentence[0];
 			commandWords = commandSentence[1];
 			location = parseLocation(commandSentence);
+>>>>>>> origin/master
 			
-			switch(keyWord) { 
-			case "add":
-			case "delete":
-			case "edit" :
-			case "complete":
-			case "uncomplete":
-			case "search":
-			case "view":
-				details = commandWords.split(" ");
-				LOGGER.log(Level.FINE, "commandWords: " + commandWords);
-				try{
-					 editIndex = Integer.parseInt(details[0]);
-				} catch(NumberFormatException er){
-				}
-				 for(int i=0; i<details.length; i++) 
-					detailsList.add(details[i]);
-				 
- 					//floating task
-					 int b; 									// to see if there is a index
-
-					 if (editIndex >= 0){
-						 b=1;
-					 } else {
-						 b=0;
-					 }
-					 for(; b<details.length; b++) { 
-						toDo = toDo+ " " + details[b]; 
-					}
 			LOGGER.log(Level.FINE, "toDo: " + toDo);
 			LOGGER.log(Level.FINE, "editIndex " + editIndex);
-			break;
-			
-			case "undo" :
-				break;
-			case "redo" :
-				break;
-				
-			default:
-				keyWord = "add";
-				toDo = userCommand + "";
-			} 
 		}	else {
-			assert editIndex < 0;
-			switch (userCommand){
-			case "delete":
-				keyWord = "delete";
-				break;
-				
-			case "undo":
-				keyWord = "undo";
-				break;
-			case "redo":
-				keyWord = "redo";
-				break;
-			case "view":
-			case "search":
-				keyWord = "view";
-				break;
-			
-			default:
-				keyWord = "add";
-			}
-			toDo = userCommand + "";
+			//sentenceString.getWordsLeft == 0
+			assert sentenceString.getWordsLeft() == 0;
 		}
 		
 		TimeParser timeParser = new TimeParser(toDo);
@@ -300,10 +290,18 @@ public class Parser {
 			smartParserCheck();
 		}
 		assert keyWord !=null;
-		assert commandWords !=null;
+	}
+
+	public boolean checkEmpty(String userCommand) {
+		userCommand.trim();
+		if(userCommand.equals("")){
+			return false;
+		} else {
+			return true;
+		}
 	}
 	
-	private String parseLocation(String[] words) {
+/*	private String parseLocation(String[] words) {
 		String place = new String("");
 		for (String str: words){
 			if (str.startsWith("@")){
@@ -313,8 +311,8 @@ public class Parser {
 		}
 		return null;
 	}
-
-	public String getKeyCommand() { 
+*/
+	public CommandKey getKeyCommand() { 
 		return keyWord;
 	}
 
@@ -323,6 +321,10 @@ public class Parser {
 			return 1;
 		}
 		return editIndex; 
+	}
+	
+	public int getRawEditIndex(){
+		return editIndex;
 	}
 	
 	public DateTime getStartTime(){

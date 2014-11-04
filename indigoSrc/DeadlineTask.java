@@ -66,6 +66,7 @@ public class DeadlineTask extends FloatingTask{
 		return evaluateDuration().toStandardHours().getHours();
 	}
 	
+	@Override
 	public DateTime getKeyTime(){
 		return keyTime;
 	}

@@ -24,12 +24,20 @@ public class Delete extends CommandClass{
 		return delete();
 	}
 	
+	public void main(String arg[]){
+		Delete del = new Delete(new Parser("delete 3"), new TaskList());
+		int index = parserVar.getEditIndex();
+		System.out.println(index +"getmain");
+		index = parserVar.getRawEditIndex();
+		System.out.println(index +"getrawmain");
+	}
+	
 	public Delete(Parser parsing, TaskList taskList){
 		parserVar = parsing;
 		taskListVar = taskList;
-		byNum = deleteByNum(parserVar.getRawCommand());
 		int totalSize = taskListVar.getSize();
 		index = parserVar.getEditIndex();
+		System.out.println(index +"get");
 		if (index > totalSize || index < 1){
 			toDo = null;
 			isValid = false;
@@ -38,56 +46,14 @@ public class Delete extends CommandClass{
 		}
 	}
 	
-	private boolean deleteByNum(String input){
-		input = input.trim();
-		if(input.length()==1){
-			try{
-				Integer num = Integer.parseInt(input);
-				return true;
-			} catch(Exception err) {
-			}
-		}
-		return false;
-	}
-	
-	private int searchForTasks(){
-		Search findClass = new Search(parserVar, taskListVar);
-		return findClass.getFound();
-	}
-	 
-	
 	private String delete() throws ArrayIndexOutOfBoundsException{
 		if (isValid==false){
 			return "Invalid index";
 		} 
+		System.out.println(index + "getRaw");
 		taskListVar.deleteTask(index);
-		/*else {
-			if(byNum){
-				taskListVar.deleteTask(index);
-			} else {
-				//delete a floating task by float index
-				if(parserVar.getCommand().contains("-f")){
-					index = index + taskListVar.getTimedList().size();
-					System.out.println(index);
-					taskListVar.deleteTask(index);
-				} else if(parserVar.getCommand().contains("-d")){
-					System.out.println(index);
-					taskListVar.deleteTask(index);
-				} else {
-					return "Schortcut not recognised";
-				} */
-				FloatingTask task;
-				if (parserVar.isDeadlineTask()){
-					task = new DeadlineTask(parserVar.getCommand(),parserVar.getEndTime());
-				} else if (parserVar.isTimedTask()){
-					task = new TimedTask(parserVar.getCommand(),parserVar.getStartTime(),parserVar.getEndTime());
-				} else {
-					task = new FloatingTask(parserVar.getCommand(),parserVar.getLocation());
-				}
-				//taskListVar.deleteTask(task); 
-			//}
-			return toDo.toString() + " is deleted";
-		//}
+	
+		return toDo.toString() + " is deleted";
 	}
 	
 	public String undo(){
