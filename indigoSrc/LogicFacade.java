@@ -35,6 +35,7 @@ public class LogicFacade {
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yy, HH:mm");
 	public static final String FILE_NAME = "myTask";
 	private static TaskList taskList = new TaskList();
+	public int setTab = 0;
 	
 	//Default constructor
 	public LogicFacade(){
@@ -50,18 +51,8 @@ public class LogicFacade {
 		}else{
 			feedback = readCommand(userInput);
 		}
-		if(userInput.contains("view")){
-			Read rc = new Read(p, taskList);
-			rc.execute();
-			display = rc.resultString;
-		} else if(userInput.contains("search")) {
-			Search sc = new Search(p, taskList);
-			sc.execute();
-			display = sc.searchResult;
-		}	else {
-			Read rc = new Read(p, taskList);
-			display = rc.view();
-		}
+		Read rc = new Read(p, taskList);
+		display = rc.view();
 		saveData();
 	}
 
@@ -92,7 +83,8 @@ public class LogicFacade {
 				return classAdd.execute();
 			case READ:
 				Read classView = new Read(parser, taskList);
-				return classView.execute();
+				setTab = classView.tabNo;
+				return classView.feedback;
 			case UPDATE:
 				Update classEdit = new Update(parser, taskList);
 				if(classEdit.isValid){
@@ -128,6 +120,7 @@ public class LogicFacade {
 				taskList.get(indexU).unComplete();
 				return "Task marked as uncomplete";	
 			case SEARCH:
+				System.out.println("come to me");
 				Search classSearch = new Search(parser, taskList);
 				String result = classSearch.execute();
 				display = classSearch.searchResult;

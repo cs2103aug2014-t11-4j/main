@@ -47,7 +47,7 @@ public class StringDecipher {
 		} catch(NumberFormatException er){
 			
 		}
-		wordsLeft = remaining.size();
+		this.wordsLeft = remaining.size();
 		return index;
 	}
 	

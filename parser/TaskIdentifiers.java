@@ -16,6 +16,7 @@ public enum TaskIdentifiers {
 			case "floating":
 			case "flaoting":
 			case "float":
+			case "flaot":
 			case "-f":
 				return TaskIdentifiers.FLOATING;
 			case "deadline":
@@ -33,6 +34,9 @@ public enum TaskIdentifiers {
 	}
 	
 	public static String toString(TaskIdentifiers Ti){
+		if(Ti==null){
+			return "null";
+		}
 		switch(Ti){
 			case ALL:
 				return "all";

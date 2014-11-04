@@ -68,36 +68,27 @@ public class TabbedPaneDisplay extends JPanel {
 		
 	} 
 	
-	public void update(String text){
+	public String update(String text){
 		//TODO
-		if(text.contains("view")){
-			setTab(text);
-			PaneArray.get(0).setText(new LogicFacade(text).display);
-		} else if(text.contains("search")){
-			setTab("other");
-		
-			PaneArray.get(0).setText(new LogicFacade(text).display);
-		} else{
-			setTab("other");
-			
-			PaneArray.get(0).setText(new LogicFacade("view -d").display);
-		}
+		LogicFacade control = new LogicFacade(text);
+		setTab(control.setTab);
+		PaneArray.get(0).setText(control.display);
 		PaneArray.get(1).setText(new LogicFacade("view -t").display);
 		PaneArray.get(2).setText(new LogicFacade("view -w").display);
 		PaneArray.get(3).setText(new LogicFacade("view -m").display);
 		
-
+		return control.feedback;
 	}
 	
-	private void setTab(String index){
+	private void setTab(int index){
 		
-		if (index.contains("-t")){
+		if (index == 1){
 			tabbedPaneDisplay.setSelectedIndex(1);
 
-		} else if (index.contains("-w")){
+		} else if (index == 2){
 			tabbedPaneDisplay.setSelectedIndex(2);
 			
-		} else if (index.contains("-m")){
+		} else if (index == 3){
 			tabbedPaneDisplay.setSelectedIndex(3);
 			
 		} else {

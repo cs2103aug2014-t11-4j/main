@@ -237,7 +237,6 @@ public class Parser {
 		if(keyWord.equals(CommandKey.DELETE) || keyWord.equals(CommandKey.COMPLETE) ||
 		   keyWord.equals(CommandKey.READ) || keyWord.equals(CommandKey.UNCOMPLETE)) {
 			taskWord = sentenceString.checkTaskWords();
-			System.out.println("getTaskWord");
 		}
 		
 	/*	=== editIndex status ===

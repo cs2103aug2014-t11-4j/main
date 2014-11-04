@@ -19,8 +19,9 @@ import parser.TaskIdentifiers;
 public class Read extends CommandClass{
 	
 	static final String newLine = System.getProperty("line.separator");
-	String feedback = "ViewClass";
+	public String feedback = "ViewClass";
 	public String resultString = new String();
+	public int tabNo = 0;
 	
 	DateTime start = null;
 	DateTime end = null;
@@ -35,7 +36,7 @@ public class Read extends CommandClass{
 	public Read(Parser parsing, TaskList taskList){
 		parserVar = parsing;
 		taskListVar = taskList;
-		resultString = this.view();
+		resultString = view();
 		if (parserVar.isTimedTask()){
 			start = parserVar.getStartTime();
 			end = parserVar.getEndTime();
@@ -49,7 +50,6 @@ public class Read extends CommandClass{
 	public String view(){
 		if(parserVar.taskWord!=null){
 			TaskIdentifiers word = parserVar.taskWord;
-			System.out.println(word.toString());
 			switch(word){
 				case ALL:
 					return viewAll();
@@ -73,41 +73,35 @@ public class Read extends CommandClass{
 		}
 		
 		if(parserVar.getCommand().contains("undone")){
-			System.out.println("un");
 			feedback = "These are your undone tasks. You can do it!";
 			return viewUndone();
 		} else if(parserVar.getCommand().contains("done")){
-			System.out.println("do");
 			feedback = "Done tasks are shown. Good Job!";
 			return viewDone();
 		} else if (parserVar.getCommand().contains("-f")){
-			System.out.println("fl");
 			feedback = "All the floating tasks are shown";
 			return viewFloatingTask();
 		} else if (parserVar.getCommand().contains("-d")){
-			System.out.println("dl");
 			feedback = "All the deadline tasks are shown";
 			return viewDeadlineTask();
 		}  else if (parserVar.getCommand().contains("-overdue")){
-			System.out.println("ov");
 			feedback = "All tasks overdue are shown";
 			return viewOverDue().trim();
 		}  	else if (parserVar.getCommand().contains("-t")){
-			System.out.println("tod");
 			feedback = "Today's tasks are shown";
+			tabNo = 1;
 			String result = viewOverDue() + newLine + viewToday();
 			return result.trim();
 		}  else if (parserVar.getCommand().contains("-w")){
-			System.out.println("wk");
 			feedback = "This week's tasks are shown";
+			tabNo = 2;
 			String result = viewOverDue() + newLine + viewThisWeek();
 			return result.trim();
 		}  else if (parserVar.getCommand().contains("-m")){
-			System.out.println("mt");
 			feedback = "This month's tasks are shown";
+			tabNo = 3;
 			return viewThisMonth();
 		} else
-			System.out.println("else");
 			feedback = "All the tasks are shown!";
 			return viewAll();
 	}
@@ -309,6 +303,7 @@ public class Read extends CommandClass{
 				}
 			}
 		}
+		System.out.println(result.toString().trim() + newLine);
 		return result.toString().trim() + newLine;
 	}
 	

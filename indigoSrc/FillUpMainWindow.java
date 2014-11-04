@@ -224,12 +224,11 @@ public class FillUpMainWindow {
 		public void actionPerformed(ActionEvent e) {
 			String text = readInput.getText();
 			readInput.selectAll();
-			LogicFacade controller = new LogicFacade(text);
-			liveUserFeedback.setText(controller.feedback);
-			taskDisplay.update(text);
+			String fb = taskDisplay.update(text);
+			liveUserFeedback.setText(fb);
+			//taskDisplay.update(text);			
 			
-			
-			controller = new LogicFacade("view -f");
+			LogicFacade controller = new LogicFacade("view -f");
 			floatingTextPane.setText(controller.display);
 			
 			floatingTextPane.setCaretPosition(0);
