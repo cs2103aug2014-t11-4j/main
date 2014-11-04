@@ -179,8 +179,10 @@ public class TimeParser {
 				if(isInteger(parser.get(j).getText())) {  //removes stand alone integers like "6" identified
 					parser.remove(j); 
 				}
-				if((identified.length() ==3) && (identified.charAt(2) == 'a')) //if "3 a" identified, remove it
+				if((identified.length() ==3) && (identified.charAt(2) == 'a')) { //if "3 a" identified, remove it
+					System.out.println("DID IT ENTER"); 
 					parser.remove(j); 
+				}
 				if((identified.length() ==3) && (identified.charAt(2) == 'p')) //if "3 p" identified, remove it
 					parser.remove(j); 
 				
