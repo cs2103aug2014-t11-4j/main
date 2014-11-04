@@ -16,6 +16,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import parser.CommandKey;
+import parser.TaskIdentifiers;
 
 /**
  * This a main program of Indigo. Indigo is a software that can store, process
@@ -103,19 +104,41 @@ public class LogicFacade {
 				}
 				return classDelete.execute();
 			case UNDO:
+				if(parser.taskWord.equals(TaskIdentifiers.ALL)){
+					int count = 0;
+					while(uList.isUndoAble()){
+						uList.undo().undo();
+						count++;
+					}
+					return "undo " + count + " times.";
+				}
 				if(parser.getEditIndex()>0){
-					int count = parser.getEditIndex();
-					while(count > 0 && uList.isUndoAble()){
+					int index = parser.getEditIndex();
+					int count = 0; 
+					while(index > 0 && uList.isUndoAble()){
 						undoFunction();
+						index--;
+						count++;
 					}
 					return "undo " + count + " times.";
 				}
 				return undoFunction();
 			case REDO:
+				if(parser.taskWord.equals(TaskIdentifiers.ALL)){
+					int count = 0;
+					while(uList.isRedoAble()){
+						uList.redo().execute();
+						count++;
+					}
+					return "undo " + count + " times.";
+				}
 				if(parser.getEditIndex()>0){
-					int count = parser.getEditIndex();
-					while(count > 0 && uList.isRedoAble()){
+					int index = parser.getEditIndex();
+					int count = 0; 
+					while(index > 0 && uList.isRedoAble()){
 						redoFunction();
+						index--;
+						count++;
 					}
 					return "redo " + count + " times.";
 				}

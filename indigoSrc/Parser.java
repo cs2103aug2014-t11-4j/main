@@ -236,7 +236,8 @@ public class Parser {
 			editIndex = sentenceString.getIndex();
 		}
 		if(keyWord.equals(CommandKey.DELETE) || keyWord.equals(CommandKey.COMPLETE) ||
-		   keyWord.equals(CommandKey.READ) || keyWord.equals(CommandKey.UNCOMPLETE)) {
+		   keyWord.equals(CommandKey.READ) || keyWord.equals(CommandKey.UNCOMPLETE) ||
+		   keyWord.equals(CommandKey.UNDO) || keyWord.equals(CommandKey.REDO)) {
 			taskWord = sentenceString.checkTaskWords();
 		}
 	/*	=== editIndex status ===
