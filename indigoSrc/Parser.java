@@ -107,7 +107,7 @@ public class Parser {
 		
 		for(int i=0; i<size;i++){ 
 			identifers[i] = TimeParser.parser.get(i).getText();
-			System.out.println(identifers[i]);
+		//	System.out.println(identifers[i]);
 		} 
 		
 		for (int k=0;k<identifers.length;k++){
@@ -155,10 +155,10 @@ public class Parser {
 		}
 	
 		for(int k=0; k<size; k++) {
-			System.out.println(toDo);
+			//System.out.println(toDo);
 			toDo = toDo.replaceFirst(identifers[k], "IDENTIFIER"); 
 			description = toDo.split(" "); 
-			System.out.println(toDo); 
+			//System.out.println(toDo); 
 				for(int j=0; j<description.length; j++) { 
 					if(description[j].contains("IDENTIFIER") && j>0) { 
 						String prepWord = description[j-1]; 			
