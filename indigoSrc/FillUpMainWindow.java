@@ -229,7 +229,7 @@ public class FillUpMainWindow {
 			readInput.selectAll();
 			LogicFacade controller = new LogicFacade(text);
 			liveUserFeedback.setText(controller.feedback);
-			taskDisplay.update(controller.setTab, controller.display);		
+			taskDisplay.update(controller.display);		
 			
 			controller = new LogicFacade("view -f");
 			floatingTextPane.setText(controller.display);
@@ -264,10 +264,10 @@ public class FillUpMainWindow {
         else if(id == KeyEvent.KEY_PRESSED) {	
         	if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Z) {
         		LogicFacade lc = new LogicFacade("undo");
-        		taskDisplay.update(0, lc.display);
+        		taskDisplay.update(lc.display);
         	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Y){
         		LogicFacade lc = new LogicFacade("redo");
-        		taskDisplay.update(0, lc.display);
+        		taskDisplay.update(lc.display);
         	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_D){
         		readInput.setText("delete ");
         	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_N){

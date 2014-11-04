@@ -67,6 +67,7 @@ public class StringDecipher {
 				taskWord = TaskIdentifiers.indentifyWords(remaining.get(1).toLowerCase().trim());
 			}
 		}
+		wordsLeft = 0;
 		return taskWord;
 	}
 	

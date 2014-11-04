@@ -15,6 +15,8 @@ import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 
+import parser.CommandKey;
+
 
 public class TabbedPaneDisplay extends JPanel {
 	
@@ -30,13 +32,9 @@ public class TabbedPaneDisplay extends JPanel {
 		
 		
 		tabbedPaneDisplay = new JTabbedPane();
-<<<<<<< HEAD
-		JComponent allPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view all").display);
-		tabbedPaneDisplay.addTab("Inbox", null, allPanel, "Displays all tasks.");
-=======
+
 		JComponent allPanel = makeInboxTable(inboxTable, new LogicFacade("view -d").display);
 		tabbedPaneDisplay.addTab("   Inbox   ", null, allPanel, "Displays all tasks.");
->>>>>>> origin/master
 		tabbedPaneDisplay.setMnemonicAt(0, KeyEvent.VK_1);
 		
 		JComponent dailyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -t").display);
@@ -78,15 +76,6 @@ public class TabbedPaneDisplay extends JPanel {
 		
 	} 
 	
-<<<<<<< HEAD
-	public void update(int tab, String text){
-		//TODO
-		setTab(tab);
-		PaneArray.get(0).setText(text);
-		PaneArray.get(1).setText(new LogicFacade("view -t").display);
-		PaneArray.get(2).setText(new LogicFacade("view -w").display);
-		PaneArray.get(3).setText(new LogicFacade("view -m").display);
-=======
 	private JComponent makeInboxTable(JTable inboxTable, String text){
 		JPanel tabbedPanel = new JPanel();
 		
@@ -110,23 +99,22 @@ public class TabbedPaneDisplay extends JPanel {
 	
 	public void update(String text){
 		//TODO
-		if(text.contains("view")){
-			setTab(text);
+		Parser parse = new Parser(text + "");
+		if(parse.getKeyCommand().equals(CommandKey.READ)){
+			LogicFacade lf = new LogicFacade(text);
+			setTab(lf.setTab);
+			PaneArray.get(0).setText(lf.display);
+		} else if(parse.getKeyCommand().equals(CommandKey.SEARCH)){
+			setTab(0);
 			PaneArray.get(0).setText(new LogicFacade(text).display);
-		} else if(text.contains("search")){
-			setTab("other");
-		
-			PaneArray.get(0).setText(new LogicFacade(text).display);
-		} else{
-			setTab("other");
+		} else {
+			setTab(0);
 			
 			PaneArray.get(0).setText(new LogicFacade("view -d").display);
 		}
 		PaneArray.get(0).setText(new LogicFacade("view -t").display);
 		PaneArray.get(1).setText(new LogicFacade("view -w").display);
 		PaneArray.get(2).setText(new LogicFacade("view -m").display);
-		
->>>>>>> origin/master
 
 	}
 	

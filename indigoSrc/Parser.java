@@ -34,16 +34,8 @@ public class Parser {
 	
 	private static Logger logger = Logger.getLogger("Parser");
 	private String sortedCommand;
-<<<<<<< HEAD
 	CommandKey keyWord			;  				//stores the key command "add"/"delete" to return to logic
 	String toDo               	= "";//stores the final command to return to logic
-=======
-	String keyWord  			;  					//stores the key command "add"/"delete" to return to logic
-	String commandWords  		; 					//stores the remaining words excluding key command
-	String [] commandSentence 	= new String[2]; 	//to help store the splited string command
-	String [] details 		  	; 					//store the remaining words excluding key command individually
-	String toDo               	= "";				//stores the final command to return to logic
->>>>>>> origin/master
 	private DateTime startTime;
 	private DateTime endTime;
 	boolean containConj 		= false;			//determine if it is a floating task
@@ -162,7 +154,6 @@ public class Parser {
 			System.out.println(toDo);
 			toDo = toDo.replaceFirst(identifers[k], "IDENTIFIER"); 
 			description = toDo.split(" "); 
-			System.out.println("HERE"); 
 			System.out.println(toDo); 
 				for(int j=0; j<description.length; j++) { 
 					if(description[j].contains("IDENTIFIER") && j>0) { 
@@ -230,6 +221,10 @@ public class Parser {
 		}
 		assert sentenceString.getWordsLeft() >= 0;
 		
+		if(sentenceString.getWordsLeft() == 0){
+			isValid = keyWord.checkValidAlone();
+		}
+		
 	/*	If only the index is stated (apart from key word), index can be first 
 	 * 	or last. Unless it's an add which makes sense if user wants to add a 
 	 * 	number to tasklist. Or edit, which doesn't make sense as to which task
@@ -244,7 +239,6 @@ public class Parser {
 		   keyWord.equals(CommandKey.READ) || keyWord.equals(CommandKey.UNCOMPLETE)) {
 			taskWord = sentenceString.checkTaskWords();
 		}
-		
 	/*	=== editIndex status ===
 	 * 	If the command word is the first word, index of editing must be stated
 	 *	after it. Else if command word is not the first word, index must be the 
@@ -258,16 +252,13 @@ public class Parser {
 			//commandSentence = sentenceString.returnTwoRemaining();
 			//commandWords = commandSentence[1];
 			//location = parseLocation(commandSentence);
-			
 			toDo = sentenceString.remainingToString();
 			
 			LOGGER.log(Level.FINE, "toDo: " + toDo);
 			LOGGER.log(Level.FINE, "editIndex " + editIndex);
 		}	else {
 			//sentenceString.getWordsLeft == 0
-			assert editIndex < 0;
 			assert sentenceString.getWordsLeft() == 0;
-			isValid = keyWord.checkValidAlone();
 		}
 		
 		TimeParser timeParser = new TimeParser(toDo);

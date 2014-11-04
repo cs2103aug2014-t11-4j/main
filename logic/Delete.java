@@ -24,11 +24,20 @@ public class Delete extends CommandClass{
 		return delete();
 	}
 	
+	public void main(String arg[]){
+		Delete del = new Delete(new Parser("delete 3"), new TaskList());
+		int index = parserVar.getEditIndex();
+		System.out.println(index +"getmain");
+		index = parserVar.getRawEditIndex();
+		System.out.println(index +"getrawmain");
+	}
+	
 	public Delete(Parser parsing, TaskList taskList){
 		parserVar = parsing;
 		taskListVar = taskList;
 		int totalSize = taskListVar.getSize();
-		index = parserVar.getRawEditIndex();
+		index = parserVar.getEditIndex();
+		System.out.println(index +"get");
 		if (index > totalSize || index < 1){
 			toDo = null;
 			isValid = false;
@@ -37,28 +46,11 @@ public class Delete extends CommandClass{
 		}
 	}
 	
-	private boolean deleteByNum(String input){
-		input = input.trim();
-		if(input.length()==1){
-			try{
-				Integer num = Integer.parseInt(input);
-				return true;
-			} catch(Exception err) {
-			}
-		}
-		return false;
-	}
-	
-	private int searchForTasks(){
-		Search findClass = new Search(parserVar, taskListVar);
-		return findClass.getFound();
-	}
-	 
-	
 	private String delete() throws ArrayIndexOutOfBoundsException{
 		if (isValid==false){
 			return "Invalid index";
 		} 
+		System.out.println(index + "getRaw");
 		taskListVar.deleteTask(index);
 	
 		return toDo.toString() + " is deleted";
