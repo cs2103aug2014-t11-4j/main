@@ -1,5 +1,7 @@
 package logic;
 
+import org.joda.time.DateTime;
+
 import indigoSrc.DeadlineTask;
 import indigoSrc.FloatingTask;
 import indigoSrc.Parser;
@@ -30,19 +32,42 @@ public class Update extends CommandClass{
 		taskListVar = taskList; 
 		int totalSize = taskListVar.getSize();
 		index = parserVar.getEditIndex();
-		if (parserVar.isDeadlineTask()){
-			toDo = new DeadlineTask(parserVar.getCommand(),parserVar.getEndTime());
-		} else if (parserVar.isTimedTask()){
-			toDo = new TimedTask(parserVar.getCommand(),parserVar.getStartTime(),parserVar.getEndTime());
-		} else {
-			toDo = new FloatingTask(parserVar.getCommand());
-		}
 		if (index > totalSize || index < 1){
 			isValid = false;
 			toDoReplaced = null;
 		} else {
 			toDoReplaced = taskListVar.get(index);
 		}
+		
+		String newTaskDescription = parserVar.getCommand();
+		DateTime newStartTime = parserVar.getStartTime();
+		if(newStartTime == null){
+			System.out.print("Is it null");
+		}
+		DateTime newEndTime = parserVar.getEndTime();
+		if(newTaskDescription.equals("")){
+			newTaskDescription = toDoReplaced.getDescription();
+		}
+		if(newEndTime==null){
+			newEndTime = toDoReplaced.getKeyTime();
+		}
+		if(newStartTime==null){
+			newStartTime = toDoReplaced.getStartTime();
+			System.out.print("Is it null");
+		}
+		toDo = getTask(newTaskDescription, newEndTime, newStartTime);
+	}
+
+	public Task getTask(String details, DateTime end, DateTime start) {
+		Task toDo = null;
+		if (start == null && end == null){
+			toDo = new FloatingTask(details);
+		} else if (start == null){
+			toDo = new DeadlineTask(details, end);
+		} else {
+			toDo = new TimedTask(details, start, end);
+		}
+		return toDo;
 	}
 	
 	
