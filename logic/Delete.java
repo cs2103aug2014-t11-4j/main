@@ -39,8 +39,10 @@ public class Delete extends CommandClass{
 		} else if ((index <= totalSize) && (index >= 1)){
 			toDo = taskListVar.get(index);
 		} else {
-			toDo = null;
-			isValid = false;
+			index = taskListVar.getRecentIndex();
+			toDo = taskListVar.get(index);
+			//toDo = null;
+			//isValid = false;
 		}
 	}
 	

@@ -52,7 +52,8 @@ public enum CommandKey {
 	
 	//List down all the valid commands which can stand alone.
 	public boolean checkValidAlone(){
-		if(this.equals(READ) || this.equals(CLEAR) || this.equals(UNDO) || this.equals(REDO)){
+		if(this.equals(READ) || this.equals(CLEAR) || this.equals(UNDO) || this.equals(REDO) /*||
+			this.equals(DELETE) || this.equals(COMPLETE) || this.equals(UNCOMPLETE)*/){
 			return true;
 		}
 		return false;
