@@ -57,7 +57,7 @@ public class TaskList {
 				indexRecentTask = index;
 				floatingTaskList.add(index-timedTaskList.size()-1,newTask);
 			}	else {
-				indexRecentTask = timedTaskList.size();
+				indexRecentTask = timedTaskList.size()+1;
 				floatingTaskList.add(0,newTask);
 			}
 		} else {
@@ -87,6 +87,7 @@ public class TaskList {
 	// delete
 	public Task deleteTask(int index){
 		Task tempFloatingTask;
+		indexRecentTask = -1;
 		if (index>timedTaskList.size()){
 			tempFloatingTask = floatingTaskList.remove(index-timedTaskList.size()-1);
 		} else {

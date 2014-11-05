@@ -114,9 +114,9 @@ public class Read extends CommandClass{
 	public String viewFloatingTask(){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
 
-		for (int i=0,j=1;i<taskListVar.getFloatingList().size();i++){
+		for (int i=0,j=1;i<taskListVar.getFloatingList().size();i++,j++){
 			assert taskListVar.getFloatingList().get(i).getNumDates()!=1;
-			result.append(j++ + ". " + 
+			result.append(j + ". " + 
 					taskListVar.getFloatingList().get(i).toString());
 			if(taskListVar.getRecentIndex() == j){
 				result.append(" \u2605");
@@ -129,9 +129,9 @@ public class Read extends CommandClass{
 	//The view of all tasks in floating tasklist with index addendum.
 	public String viewFloatingTask(int index){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
-		for (int i=0,j=index+1;i<taskListVar.getFloatingList().size();i++){
+		for (int i=0,j=index+1;i<taskListVar.getFloatingList().size();i++,j++){
 			assert taskListVar.getFloatingList().get(i).getNumDates()!=1;
-			result.append(j++ + ". " + taskListVar.getFloatingList().get(i).toString());
+			result.append(j + ". " + taskListVar.getFloatingList().get(i).toString());
 			if(taskListVar.getRecentIndex() == j){
 				result.append(" \u2605");
 			}
