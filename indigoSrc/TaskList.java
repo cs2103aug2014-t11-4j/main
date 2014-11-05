@@ -102,36 +102,41 @@ public class TaskList {
 		return tempFloatingTask;
 	}
 	
-	// view the taskList in a particular format
+/*	// view the taskList in a particular format
 	public String viewFloatingTask(){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
-		for (int i=0,j=1;i<floatingTaskList.size();i++){
+		for (int i=0,j=1;i<floatingTaskList.size();i++,j++){
 			assert floatingTaskList.get(i).toDeadlineTask()==null;
-			result.append(j++ + ". " + floatingTaskList.get(i).toString() + newLine);
+			if (!timedTaskList.get(i).isCompleted()){
+				result.append(j + ". " + floatingTaskList.get(i).toString() + newLine);
+			}
 		}
 		return result.toString();
 	}
 	
 	public String viewDeadlineTask(DateTimeFormatter dtf){
 		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
-		for (int i=0,j=1;i<timedTaskList.size();i++){
-			DeadlineTask temp = (DeadlineTask) timedTaskList.get(i);
-			result.append(+ j++ + ". " + temp.toString(dtf) + newLine);
+		for (int i=0,j=1;i<timedTaskList.size();i++,j++){
+			if (!timedTaskList.get(i).isCompleted()){
+				DeadlineTask temp = (DeadlineTask) timedTaskList.get(i);
+				result.append(j + ". " + temp.toString(dtf) + newLine);
+			}
 		}
 		return result.toString();
 	}
+	*/
 	
 	public String viewDone(){
 		StringBuilder str = new StringBuilder("Tasks Completed: " + newLine);
 		int j=1; // for indexing
-		for (int i=0; i<timedTaskList.size();i++){
+		for (int i=0; i<timedTaskList.size();i++,j++){
 			if (timedTaskList.get(i).isCompleted()){
-				str.append( j++ + ". " + timedTaskList.get(i).toString() + newLine);
+				str.append( j + ". " + timedTaskList.get(i).toString() + newLine);
 			}
 		}
-		for (int i=0; i<floatingTaskList.size();i++){
+		for (int i=0; i<floatingTaskList.size();i++,j++){
 			if (floatingTaskList.get(i).isCompleted()){
-				str.append( j++ + ". " + floatingTaskList.get(i).toString() + newLine);
+				str.append( j + ". " + floatingTaskList.get(i).toString() + newLine);
 			}
 		}
 		return str.toString();
@@ -140,25 +145,25 @@ public class TaskList {
 	public String viewUndone(){
 		StringBuilder str = new StringBuilder("FloatingTasks Due: " + newLine);
 		int j = 1;
-		for (int i=0; i<timedTaskList.size();i++){
+		for (int i=0; i<timedTaskList.size();i++,j++){
 			if (!timedTaskList.get(i).isCompleted()){
-				str.append( j++ + ". " + timedTaskList.get(i).toString() + newLine);
+				str.append( j + ". " + timedTaskList.get(i).toString() + newLine);
 			}
 		}
-		for (int i=0; i<floatingTaskList.size();i++){
+		for (int i=0; i<floatingTaskList.size();i++,j++){
 			if (!floatingTaskList.get(i).isCompleted()){
-				str.append( j++ + ". " + floatingTaskList.get(i).toString() + newLine);
+				str.append( j + ". " + floatingTaskList.get(i).toString() + newLine);
 			}
 		}
 		return str.toString();
 	}
-	
+	/*
 	public String viewAll(DateTimeFormatter dtf){
 		int sum = floatingTaskList.size() + timedTaskList.size();
 		StringBuilder result = new StringBuilder("There are " + sum + " tasks listed:" + newLine);
 		result.append(viewDeadlineTask(dtf) + viewFloatingTask());
 		return result.toString();
-	} 
+	} */
 	
 	
 	// write and read

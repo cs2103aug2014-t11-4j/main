@@ -58,12 +58,16 @@ public class Read extends CommandClass{
 			TaskIdentifiers word = parserVar.taskWord;
 			switch(word){
 				case ALL:
+					feedback = "All tasks are shown";
 					return viewAll();
 				case OVERDUE:
+					feedback = "All tasks overdue are shown";
 					return viewOverDue();
 				case FLOATING:
+					feedback = "All the floating tasks are shown";
 					return viewFloatingTask();
 				case DEADLINE:
+					feedback = "All the deadline tasks are shown";
 					return viewDeadlineTask();
 				case TIMED:
 					return viewTimedTask();
@@ -123,10 +127,12 @@ public class Read extends CommandClass{
 	//The view of all tasks in floating tasklist
 	public String viewFloatingTask(){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
-		for (int i=0,j=1;i<taskListVar.getFloatingList().size();i++){
+		for (int i=0,j=1;i<taskListVar.getFloatingList().size();i++,j++){
+			if (!taskListVar.getFloatingList().get(i).isCompleted()){
 			assert taskListVar.getFloatingList().get(i).toDeadlineTask()==null;
-			result.append(j++ + ". " + 
+			result.append(j + ". " + 
 					taskListVar.getFloatingList().get(i).toString() + newLine);
+			}
 		}
 		return result.toString().trim();
 	}
@@ -145,9 +151,11 @@ public class Read extends CommandClass{
 	//The view of all tasks in deadline tasklist
 	public String viewDeadlineTask(){
 		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
-		for (int i=0,j=1;i<taskListVar.getTimedList().size();i++){
+		for (int i=0,j=1;i<taskListVar.getTimedList().size();i++,j++){
+			if (!taskListVar.getTimedList().get(i).isCompleted()){
 			DeadlineTask temp = (DeadlineTask) taskListVar.getTimedList().get(i);
-			result.append(j++ + ". " + temp.toString(LogicFacade.DATE_FORMAT) + newLine);
+			result.append(j + ". " + temp.toString(LogicFacade.DATE_FORMAT) + newLine);
+			}
 		}
 		return result.toString().trim();
 	}

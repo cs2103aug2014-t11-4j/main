@@ -158,12 +158,13 @@ public class FillUpMainWindow {
 			readInput.selectAll();
 			LogicFacade controller = new LogicFacade(text);
 			liveUserFeedback.setText(controller.feedback);
-			taskDisplay.update(text);
+			taskDisplay.update(controller.display);
+			taskDisplay.setTab(controller.setTab);
 			
-			controller = new LogicFacade("view -f");
-			floatingTextPane.setText(controller.display);
+			//controller = new LogicFacade("view -f");
+			//floatingTextPane.setText(controller.display);
 			
-			floatingTextPane.setCaretPosition(0);
+			//floatingTextPane.setCaretPosition(0);
 		
 			readInput.requestFocusInWindow();
 		}
@@ -212,8 +213,8 @@ public class FillUpMainWindow {
         		liveUserFeedback.setText( "add (index) <some task>");
         	else if (command.equals("d") ||command.equals("de") || command.equals("del") || command.equals("dele")|| command.equals("delet")|| command.equals("delete"))
         		liveUserFeedback.setText( "delete <index>");
-        	else if (command.equals("v") || command.equals("vi") || command.equals("vie") || command.equals("view"))
-        		liveUserFeedback.setText( "view <today/this week/this month/over due>");
+        	else if (command.equals("v") || command.equals("vi") || command.equals("vie"))
+        		liveUserFeedback.setText( "view <-t/-w/-m/done/undone>");
         	else if (command.equals("e") || command.equals("ed") || command.equals("edi") || command.equals("edit"))
         		liveUserFeedback.setText( "edit <index> <some task>");
         	else if (command.equals("c")||command.equals("co")||command.equals("com")||command.equals("comp")||command.equals("compl")
