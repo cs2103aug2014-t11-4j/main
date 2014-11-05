@@ -69,9 +69,36 @@ public class Read extends CommandClass{
 				case DEADLINE:
 					feedback = "All the deadline tasks are shown";
 					return viewDeadlineTask();
-				case TIMED:
-					return viewTimedTask();
+				case COMPLETED:
+					feedback = "All the completed tasks are shown";
+					return viewDone();
+				case UNCOMPLETED:
+					feedback = "All the uncompleted tasks are shown";
+					return viewUndone();
+				case TODAY:
+					feedback = "All today's tasks are shown";
+					tabNo = 1;
+					String resultTod = viewOverDue() + newLine + viewToday();
+					return resultTod.trim();
+				case TOMORROW:
+					feedback = "All tomorrow's tasks are shown";
+					String resultTom = viewTomorrow();
+					return resultTom.trim();
+				case THIS_WEEK:
+					feedback = "All this week's tasks are shown";
+					tabNo = 2;
+					String resultWk = viewOverDue() + newLine + viewThisWeek();
+					return resultWk.trim();
+				case NEXT_WEEK:
+					feedback = "All next week's tasks are shown";
+					String resultNw = viewNextWeek();
+					return resultNw.trim();
+				case THIS_MONTH:
+					feedback = "All this month's tasks are shown";
+					tabNo = 3;
+					return viewThisMonth();
 				default:
+					return viewAll();
 			}
 		}
 		
@@ -80,48 +107,7 @@ public class Read extends CommandClass{
 			DateTime dte = parserVar.getEndTime();
 			return viewAny(dts, dte);
 		}
-		
-		if(parserVar.getRawCommand().contains("undone")){
-			feedback = "These are your undone tasks. You can do it!";
-			return viewUndone();
-		} else if(parserVar.getRawCommand().contains("done")){
-			feedback = "Done tasks are shown. Good Job!";
-			return viewDone();
-		} else if (parserVar.getRawCommand().contains("-f")){
-			feedback = "All the floating tasks are shown";
-			return viewFloatingTask();
-		} else if (parserVar.getRawCommand().contains("-d")){
-			feedback = "All the deadline tasks are shown";
-			return viewDeadlineTask();
-		}  else if (parserVar.getRawCommand().contains("-overdue")){
-			feedback = "All tasks overdue are shown";
-			return viewOverDue().trim();
-		}  	else if (parserVar.getRawCommand().contains("-t")){
-			feedback = "Today's tasks are shown";
-			tabNo = 1;
-			String result = viewOverDue() + newLine + viewToday();
-			return result.trim();
-		}  else if (parserVar.getRawCommand().contains("-w")){
-			feedback = "This week's tasks are shown";
-			tabNo = 2;
-			String result = viewOverDue() + newLine + viewThisWeek();
-			return result.trim();
-		}  else if (parserVar.getRawCommand().contains("-m")){
-			feedback = "This month's tasks are shown";
-			tabNo = 3;
-			return viewThisMonth();
-		} else
-			feedback = "All the tasks are shown!";
-			return viewAll();
-	}
-	
-	private String viewTimedTask() {
-		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
-		for (int i=0,j=1;i<taskListVar.getTimedList().size();i++){
-			DeadlineTask temp = (DeadlineTask) taskListVar.getTimedList().get(i);
-			result.append(j++ + ". " + temp.toString(LogicFacade.DATE_FORMAT) + newLine);
-		}
-		return result.toString().trim();
+		return viewAll();
 	}
 
 	//The view of all tasks in floating tasklist
@@ -205,6 +191,23 @@ public class Read extends CommandClass{
 		return result.toString().trim();
 	}
 	
+	private static String viewTomorrow() {
+		DateTime now = new DateTime();
+		now = now.plusDays(1);
+		int yearNow = now.getYear();
+		int dayNow = now.getDayOfYear();
+		
+		StringBuilder result = new StringBuilder("Tomorrow's tasks are: " + newLine);
+		int tlSize = taskListVar.getTimedList().size();
+		for (int i=1; i<=tlSize; i++){
+				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
+				if((temp.getKeyTime().getYear() == yearNow) && (temp.getKeyTime().getDayOfYear() == dayNow)){
+					result.append(temp.toStringWODate() + newLine);
+			}
+		}
+		return result.toString().trim();
+	}
+
 	//This method is to find tasks which are due this week. 
 	//It does not follow the pattern on Monday to Sunday. It takes tasks of
 	//the next seven days.
@@ -217,7 +220,7 @@ public class Read extends CommandClass{
 		StringBuilder result = new StringBuilder();
 		int tlSize = taskListVar.getTimedList().size();
 		String timeKeeperCompare = dayLeft(now, now);
-		result.append(timeKeeperCompare + newLine);
+		//result.append(timeKeeperCompare + newLine);
 		for (int i=1; i<=tlSize; i++){
 				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
 				DateTime tempDate = temp.getTime();
@@ -235,6 +238,35 @@ public class Read extends CommandClass{
 		return result.toString().trim();
 	}
 	
+	private static String viewNextWeek() {
+		// TODO Auto-generated method stub
+		DateTime now = new DateTime();
+		now = now.plusDays(7);
+		int yearNow = now.getYear();
+		int dayNow = now.getDayOfYear();
+		int day7 = dayNow + 7;
+		
+		StringBuilder result = new StringBuilder();
+		int tlSize = taskListVar.getTimedList().size();
+		String timeKeeperCompare = dayLeft(now, now);
+		//result.append(timeKeeperCompare + newLine);
+		for (int i=1; i<=tlSize; i++){
+				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
+				DateTime tempDate = temp.getTime();
+				String timeKeeper = dayLeft(now, tempDate);
+				int tempDateDay = tempDate.getDayOfYear();
+				if((tempDate.getYear() == yearNow) && 
+					((tempDateDay >= dayNow) && (tempDateDay <= day7))){
+					if(!timeKeeperCompare.equals(timeKeeper)){
+						result.append(newLine + timeKeeper + newLine);
+						timeKeeperCompare = timeKeeper;
+					}
+						result.append(temp.toStringWODate() + newLine);
+				}
+		}
+		return result.toString().trim();
+	}
+
 	//This method is to find the tasks which are due this current month. Taking Overdue tasks 
 	//for the month into consideration as well.
 	public static String viewThisMonth(){
@@ -245,7 +277,7 @@ public class Read extends CommandClass{
 		StringBuilder result = new StringBuilder();
 		int tlSize = taskListVar.getTimedList().size();
 		String timeKeeperCompare = dayLeft(now, now);
-		result.append(timeKeeperCompare + newLine);
+		//result.append(timeKeeperCompare + newLine);
 		for (int i=1; i<=tlSize; i++){
 				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
 				DateTime tempDate = temp.getTime();
