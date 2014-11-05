@@ -45,6 +45,10 @@ public class TabbedPaneDisplay extends JPanel {
 		JComponent monthlyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -m").display);
 		tabbedPaneDisplay.addTab("    This Month    ", null, monthlyPanel, "Displays monthly tasks.");
 		tabbedPaneDisplay.setMnemonicAt(3, KeyEvent.VK_4);
+		
+		JComponent floatingPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -f").display);
+		tabbedPaneDisplay.addTab("    Floating    ", null, floatingPanel, "Displays floating tasks.");
+		tabbedPaneDisplay.setMnemonicAt(4, KeyEvent.VK_5);
 
 		add(tabbedPaneDisplay);
 		
@@ -71,28 +75,7 @@ public class TabbedPaneDisplay extends JPanel {
 		
 	} 
 	
-	/*private JComponent makeInboxTable(JTable inbox, String text){
-		JPanel tabbedPanel = new JPanel();
-		
-//		 String[] columnNames = {"Index", "Task    ", "Start","End"};
-//		 inboxData = new String[MAX_ROW][MAX_COL];
-		 
-//		 final JTable table = new JTable(inboxData, columnNames);
-			
-//		 table.setPreferredScrollableViewportSize(new Dimension(280, 250));
-//		 table.setFillsViewportHeight(true);
-		 
-		//Create the scroll pane and add the table to it.
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-//		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-//		tabbedPanel.setLayout(new GridLayout(1,1));
-		tabbedPanel.add(scrollPane);
-//		inboxTable = table;
-		return tabbedPanel;
-	}*/
-	
-	
+
 	public void update(String text){
 		//TODO
 
@@ -111,18 +94,11 @@ public class TabbedPaneDisplay extends JPanel {
 		PaneArray.get(1).setText(new LogicFacade("view -t").display);
 		PaneArray.get(2).setText(new LogicFacade("view -w").display);
 		PaneArray.get(3).setText(new LogicFacade("view -m").display);
+		PaneArray.get(4).setText(new LogicFacade("view -f").display);
 
 	}
 	
-/*	private void updateTable(String[][] grid) {
-		for (int i=0;i<grid.length;i++){
-			for (int j=0;j<grid[i].length;j++){
-				inboxData[i][j]=grid[i][j]+"";
-			}
-		}
-		
-	}
-*/
+
 	public void setTab(int index){
 		
 		if (index == 1){
@@ -133,6 +109,9 @@ public class TabbedPaneDisplay extends JPanel {
 			
 		} else if (index == 3){
 			tabbedPaneDisplay.setSelectedIndex(3);
+			
+		} else if (index == 4){
+			tabbedPaneDisplay.setSelectedIndex(4);
 			
 		} else {
 			tabbedPaneDisplay.setSelectedIndex(0);
