@@ -71,7 +71,7 @@ public abstract class Task implements Comparable<Task>{
 	}
 	
 	public boolean isOverdue(){
-		return endTime.isBefore(currentTime);
+		return endTime.isBefore(currentTime) && (isDone);
 	}
 	
 	public String editLocation(String newPlace){

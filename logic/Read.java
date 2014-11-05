@@ -176,7 +176,6 @@ public class Read extends CommandClass{
 	//This method is to find tasks which are due today.
 	public static String viewToday(){
 		DateTime now = new DateTime();
-		//DateTime dts = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
 		
@@ -220,7 +219,7 @@ public class Read extends CommandClass{
 		StringBuilder result = new StringBuilder();
 		int tlSize = taskListVar.getTimedList().size();
 		String timeKeeperCompare = dayLeft(now, now);
-		//result.append(timeKeeperCompare + newLine);
+		result.append(timeKeeperCompare + newLine);
 		for (int i=1; i<=tlSize; i++){
 				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
 				DateTime tempDate = temp.getTime();
@@ -249,7 +248,7 @@ public class Read extends CommandClass{
 		StringBuilder result = new StringBuilder();
 		int tlSize = taskListVar.getTimedList().size();
 		String timeKeeperCompare = dayLeft(now, now);
-		//result.append(timeKeeperCompare + newLine);
+		result.append(timeKeeperCompare + newLine);
 		for (int i=1; i<=tlSize; i++){
 				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
 				DateTime tempDate = temp.getTime();
@@ -277,7 +276,7 @@ public class Read extends CommandClass{
 		StringBuilder result = new StringBuilder();
 		int tlSize = taskListVar.getTimedList().size();
 		String timeKeeperCompare = dayLeft(now, now);
-		//result.append(timeKeeperCompare + newLine);
+		result.append(timeKeeperCompare + newLine);
 		for (int i=1; i<=tlSize; i++){
 				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
 				DateTime tempDate = temp.getTime();
@@ -344,8 +343,8 @@ public class Read extends CommandClass{
 			String timeKeeper = dayLeft(now, tempDate);
 			int tempDateDay = tempDate.getDayOfYear();
 			int tempDateYear = tempDate.getYear();
-			if((tempDateYear < yearNow) || 
-				((tempDateDay < dayNow) && (tempDateYear <= yearNow))){
+			if(((tempDateYear < yearNow)  && !temp.isCompleted()) || 
+				((tempDateDay < dayNow) && (tempDateYear <= yearNow) && !temp.isCompleted())){
 				if(!timeKeeperCompare.equals(timeKeeper)){
 					result.append(newLine + timeKeeper + newLine);
 					timeKeeperCompare = timeKeeper;
@@ -356,7 +355,6 @@ public class Read extends CommandClass{
 				}
 			}
 		}
-		//System.out.println(result.toString().trim() + newLine);
 		return result.toString().trim() + newLine;
 	}
 	
