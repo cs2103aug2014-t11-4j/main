@@ -55,7 +55,7 @@ public class FillUpMainWindow {
 		Container contentPane = mainWindow.getContentPane();
 		contentPane.add(displayLayers);
 		JPanel mainPanel = new JPanel();
-		mainPanel.setBounds(0, 0, 600, 300);
+		mainPanel.setBounds(0, 0, 450, 650);
 		mainPanel.setLayout(new GridBagLayout());
 		mainPanel.setOpaque(false);
 		

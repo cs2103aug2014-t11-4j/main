@@ -53,7 +53,7 @@ public class LogicFacade {
 		}else{
 			feedback = readCommand(userInput);
 		}
-		System.out.println(display);
+		//System.out.println(display);
 		if (display==null){
 			display = new Read(taskList).resultString;
 		}
