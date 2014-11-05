@@ -53,10 +53,11 @@ public class TaskList {
 	
 	public Task addTask(int index, Task newTask){
 		if (newTask.numDates==0){
-			indexRecentTask = index;
 			if ( index > timedTaskList.size()){
+				indexRecentTask = index;
 				floatingTaskList.add(index-timedTaskList.size()-1,newTask);
 			}	else {
+				indexRecentTask = timedTaskList.size();
 				floatingTaskList.add(0,newTask);
 			}
 		} else {
