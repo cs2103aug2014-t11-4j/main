@@ -2,6 +2,7 @@ package logic;
 
 import indigoSrc.DeadlineTask;
 import indigoSrc.FloatingTask;
+import indigoSrc.Task;
 import indigoSrc.Parser;
 import indigoSrc.TaskList;
 import indigoSrc.TimedTask;
@@ -15,7 +16,7 @@ import indigoSrc.TimedTask;
 
 public class Create extends CommandClass {
 
-	FloatingTask toDo;
+	Task toDo;
 	int index;
 	
 	@Override

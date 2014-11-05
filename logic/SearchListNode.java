@@ -2,12 +2,13 @@ package logic;
 
 import indigoSrc.DeadlineTask;
 import indigoSrc.FloatingTask;
+import indigoSrc.Task;
 
 public class SearchListNode {
-	private FloatingTask task;
+	private Task task;
 	private int originalIndex;
 	
-	public SearchListNode(FloatingTask task, int index){
+	public SearchListNode(Task task, int index){
 		this.task = task;
 		originalIndex = index;
 	}
@@ -18,7 +19,7 @@ public class SearchListNode {
 		originalIndex = index;
 	}
 
-	public FloatingTask getTask(){
+	public Task getTask(){
 		return task;
 	}
 	

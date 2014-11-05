@@ -1,7 +1,5 @@
 package indigoSrc;
 
-import gui.GridViewTaskList;
-
 import java.util.ArrayList;
 
 import logic.Complete;
@@ -33,7 +31,7 @@ public class LogicFacade {
 	public String feedback;
 	private static UndoList uList = new UndoList();;
 	private static Parser parser;
-	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yy, HH:mm");
+	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yyyy, HH:mm");
 	public static final String FILE_NAME = "myTask";
 	private static TaskList taskList = new TaskList();
 	public int setTab = 0;

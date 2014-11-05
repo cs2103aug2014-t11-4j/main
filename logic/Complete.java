@@ -1,12 +1,12 @@
 package logic;
 
-import indigoSrc.FloatingTask;
+import indigoSrc.Task;
 import indigoSrc.Parser;
 import indigoSrc.TaskList;
 
 public class Complete extends CommandClass {
 	
-	FloatingTask toDo;
+	Task toDo;
 	int index;
 	boolean toCheck;
 	
