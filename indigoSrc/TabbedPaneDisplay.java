@@ -1,4 +1,5 @@
 package indigoSrc;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -60,10 +61,13 @@ public class TabbedPaneDisplay extends JPanel {
 		JPanel tabbedPanel = new JPanel();
 		
 		textPaneTemp = new JTextPane();
+		Font font = new Font("Serif", Font.ITALIC,20);
 		PaneArray.add(textPaneTemp);
 
 		JScrollPane scroll = new JScrollPane(textPaneTemp);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		
+		textPaneTemp.setFont(font);
 		textPaneTemp.setText(text);
 		textPaneTemp.setEditable(false);
 		textPaneTemp.setCaretPosition(0);
