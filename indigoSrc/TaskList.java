@@ -36,6 +36,7 @@ public class TaskList {
 	private static final int NOT_FOUND = -1;
 	private ArrayList<Task> floatingTaskList;
 	private ArrayList<Task> timedTaskList;
+	private int indexRecentTask;
 	
 	public String newLine = System.getProperty("line.separator");
 
@@ -53,8 +54,10 @@ public class TaskList {
 	public Task addTask(int index, Task newTask){
 		if (newTask.numDates==0){
 			if ( index > timedTaskList.size()){
+				indexRecentTask = index-timedTaskList.size();
 				floatingTaskList.add(index-timedTaskList.size()-1,newTask);
 			}	else {
+				indexRecentTask = 1;
 				floatingTaskList.add(0,newTask);
 			}
 		} else {
@@ -63,16 +66,22 @@ public class TaskList {
 				DateTime timeToBeAdded = newTask.getKeyTime();
 				DateTime timeInList = timedTaskList.get(i).getKeyTime();
 				if (timeToBeAdded.isBefore(timeInList)){
+					indexRecentTask = i+1;
 					timedTaskList.add(i,newTask);
 					return newTask;
 				} else {
 					i++;
 				}
 			}
+			indexRecentTask = timedTaskList.size()+1;
 			timedTaskList.add(timedTaskList.size(),newTask);
 			return newTask;
 		}
 		return newTask;
+	}
+	
+	public int getRecentIndex(){
+		return indexRecentTask;
 	}
 	
 	// delete
