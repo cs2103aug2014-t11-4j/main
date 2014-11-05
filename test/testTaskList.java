@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import indigoSrc.DeadlineTask;
 import indigoSrc.FloatingTask;
 import indigoSrc.LogicFacade;
+import indigoSrc.Task;
 import indigoSrc.TaskList;
 import indigoSrc.TimedTask;
 
@@ -40,10 +41,10 @@ public class testTaskList {
 		testList = new TaskList();
 		// add 5 floatingTask
 		for (String str: testStr){
-			FloatingTask testTask = new FloatingTask(str);
+			Task testTask = new FloatingTask(str);
 			testList.addTask(testTask);
 		}
-		FloatingTask newTask = new FloatingTask();
+		Task newTask = new FloatingTask();
 		testList.complete(2);
 		testList.editTask(2,newTask);
 		//add 3 deadlineTask, 3 timedTask
@@ -54,7 +55,7 @@ public class testTaskList {
 			testList.addTask(testTask2);
 		}
 		DateTime now = DateTime.now();
-		FloatingTask anotherTask = new DeadlineTask("edited Task",now);
+		Task anotherTask = new DeadlineTask("edited Task",now);
 		outputStr.append("[No.4][" + LogicFacade.DATE_FORMAT.print(now)+ "]edited Task"+newLine);
 		testList.complete(2);
 		testList.editTask(3, anotherTask);

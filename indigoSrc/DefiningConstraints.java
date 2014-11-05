@@ -10,8 +10,8 @@ public class DefiningConstraints {
 	private static final int TOP_PANEL_INDEX = 3;
 	private static final int INPUT_FIELD_INDEX = 4;
 	private static final int USER_FEEDBACK_INDEX = 5;
-	private static final int FLOATING_TASKS_INDEX = 6;
-	private static final int CALENDAR_INDEX = 7;
+	//private static final int FLOATING_TASKS_INDEX = 6;
+	//private static final int CALENDAR_INDEX = 7;
 	
 	public GridBagConstraints setConstraints(int componentIndex) {
 		GridBagConstraints constraints;

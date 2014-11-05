@@ -1,8 +1,8 @@
 package logic;
 
 import indigoSrc.DeadlineTask;
-import indigoSrc.FloatingTask;
 import indigoSrc.Parser;
+import indigoSrc.Task;
 import indigoSrc.TaskList;
 
 import java.util.ArrayList;
@@ -36,8 +36,8 @@ public class Search extends CommandClass {
 		StringBuilder StringList = new StringBuilder();
 		int found = 0;
 		String keyWords = parserVar.getCommand().trim().toLowerCase();
-		ArrayList<FloatingTask> floatTaskList = taskListVar.getFloatingList();
-		ArrayList<FloatingTask> timeTaskList = taskListVar.getTimedList();
+		ArrayList<Task> floatTaskList = taskListVar.getFloatingList();
+		ArrayList<Task> timeTaskList = taskListVar.getTimedList();
 		int floatTasks = floatTaskList.size();
 		int timeTasks = timeTaskList.size();
 		StringList.append(DEADLINE_TASKS + "\n");
@@ -58,7 +58,7 @@ public class Search extends CommandClass {
 		for(int j=0; j<floatTasks; j++){
 			if(floatTaskList.get(j).getDescription().toLowerCase().contains(keyWords)){
 				int sum = j + timeTasks + 1;
-				FloatingTask temp = floatTaskList.get(j);
+				Task temp = floatTaskList.get(j);
 				SearchListNode node = new SearchListNode(temp, j);
 				searchList.add(node);
 				StringList.append(sum + ". " + temp.getDescription() + "\n");
@@ -84,8 +84,8 @@ public class Search extends CommandClass {
 		StringBuilder StringList = new StringBuilder();
 		int found = 1;
 		String keyWords = parserVar.getCommand().trim().toLowerCase();
-		ArrayList<FloatingTask> floatTaskList = taskListVar.getFloatingList();
-		ArrayList<FloatingTask> timeTaskList = taskListVar.getTimedList();
+		ArrayList<Task> floatTaskList = taskListVar.getFloatingList();
+		ArrayList<Task> timeTaskList = taskListVar.getTimedList();
 		int floatTasks = floatTaskList.size();
 		int timeTasks = timeTaskList.size();
 		StringList.append(DEADLINE_TASKS + "\n");
@@ -104,7 +104,7 @@ public class Search extends CommandClass {
 		StringList.append("\n" + FLOATING_TASKS + "\n");
 		for(int j=0; j<floatTasks; j++){
 			if(floatTaskList.get(j).getDescription().toLowerCase().contains(keyWords)){
-				FloatingTask temp = floatTaskList.get(j);
+				Task temp = floatTaskList.get(j);
 				SearchListNode node = new SearchListNode(temp, j);
 				searchList.add(node);
 				StringList.append(found++ + ". " + floatTaskList.get(j).getDescription() + "\n");

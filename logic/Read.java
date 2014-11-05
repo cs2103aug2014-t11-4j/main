@@ -3,7 +3,6 @@ import indigoSrc.DeadlineTask;
 import indigoSrc.LogicFacade;
 import indigoSrc.Parser;
 import indigoSrc.TaskList;
-import indigoSrc.TimedTask;
 
 import org.joda.time.DateTime;
 
@@ -58,12 +57,16 @@ public class Read extends CommandClass{
 			TaskIdentifiers word = parserVar.taskWord;
 			switch(word){
 				case ALL:
+					feedback = "All tasks are shown";
 					return viewAll();
 				case OVERDUE:
+					feedback = "All tasks overdue are shown";
 					return viewOverDue();
 				case FLOATING:
+					feedback = "All the floating tasks are shown";
 					return viewFloatingTask();
 				case DEADLINE:
+					feedback = "All the deadline tasks are shown";
 					return viewDeadlineTask();
 				case TIMED:
 					return viewTimedTask();
@@ -123,11 +126,12 @@ public class Read extends CommandClass{
 	//The view of all tasks in floating tasklist
 	public String viewFloatingTask(){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
+
 		for (int i=0,j=1;i<taskListVar.getFloatingList().size();i++){
-			assert taskListVar.getFloatingList().get(i).toDeadlineTask()==null;
+			assert taskListVar.getFloatingList().get(i).getNumDates()!=1;
 			result.append(j++ + ". " + 
 					taskListVar.getFloatingList().get(i).toString() + newLine);
-		}
+			}
 		return result.toString().trim();
 	}
 	
@@ -135,7 +139,7 @@ public class Read extends CommandClass{
 	public String viewFloatingTask(int index){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
 		for (int i=0,j=index+1;i<taskListVar.getFloatingList().size();i++){
-			assert taskListVar.getFloatingList().get(i).toDeadlineTask()==null;
+			assert taskListVar.getFloatingList().get(i).getNumDates()!=1;
 			result.append(j++ + ". " + 
 					taskListVar.getFloatingList().get(i).toString() + newLine);
 		}
@@ -145,9 +149,9 @@ public class Read extends CommandClass{
 	//The view of all tasks in deadline tasklist
 	public String viewDeadlineTask(){
 		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
-		for (int i=0,j=1;i<taskListVar.getTimedList().size();i++){
+		for (int i=0,j=1;i<taskListVar.getTimedList().size();i++,j++){
 			DeadlineTask temp = (DeadlineTask) taskListVar.getTimedList().get(i);
-			result.append(j++ + ". " + temp.toString(LogicFacade.DATE_FORMAT) + newLine);
+			result.append(j + ". " + temp.toString(LogicFacade.DATE_FORMAT) + newLine);
 		}
 		return result.toString().trim();
 	}
@@ -174,7 +178,7 @@ public class Read extends CommandClass{
 	//This method is to find tasks which are due today.
 	public static String viewToday(){
 		DateTime now = new DateTime();
-		DateTime dts = new DateTime();
+		//DateTime dts = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
 		
@@ -249,9 +253,9 @@ public class Read extends CommandClass{
 	
 	public static String viewAny(DateTime start, DateTime end){
 		DateTime now = new DateTime();
-		int yearNow = now.getYear();
-		int monthNow = now.getMonthOfYear();
-		int dayNow = now.getDayOfMonth();
+		//int yearNow = now.getYear();
+		//int monthNow = now.getMonthOfYear();
+		//int dayNow = now.getDayOfMonth();
 		
 		if(start==null){
 			start = new DateTime();
