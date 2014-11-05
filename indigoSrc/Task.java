@@ -11,7 +11,7 @@ public abstract class Task implements Comparable<Task>{
 	protected String location;
 	
 	protected DateTime endTime;
-	protected static DateTime currentTime = DateTime.now();
+	protected DateTime currentTime = DateTime.now();
 	protected DateTime keyTime;
 	
 	protected DateTime startTime;	

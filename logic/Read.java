@@ -64,6 +64,7 @@ public class Read extends CommandClass{
 					return viewOverDue();
 				case FLOATING:
 					feedback = "All the floating tasks are shown";
+					tabNo = 4;
 					return viewFloatingTask();
 				case DEADLINE:
 					feedback = "All the deadline tasks are shown";
@@ -130,8 +131,12 @@ public class Read extends CommandClass{
 		for (int i=0,j=1;i<taskListVar.getFloatingList().size();i++){
 			assert taskListVar.getFloatingList().get(i).getNumDates()!=1;
 			result.append(j++ + ". " + 
-					taskListVar.getFloatingList().get(i).toString() + newLine);
+					taskListVar.getFloatingList().get(i).toString());
+			if(taskListVar.getRecentIndex() == j){
+				result.append(" \u2605");
 			}
+			result.append(newLine);
+		}
 		return result.toString().trim();
 	}
 	
@@ -140,8 +145,11 @@ public class Read extends CommandClass{
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
 		for (int i=0,j=index+1;i<taskListVar.getFloatingList().size();i++){
 			assert taskListVar.getFloatingList().get(i).getNumDates()!=1;
-			result.append(j++ + ". " + 
-					taskListVar.getFloatingList().get(i).toString() + newLine);
+			result.append(j++ + ". " + taskListVar.getFloatingList().get(i).toString());
+			if(taskListVar.getRecentIndex() == j){
+				result.append(" \u2605");
+			}
+			result.append(newLine);
 		}
 		return result.toString().trim();
 	}
@@ -151,7 +159,11 @@ public class Read extends CommandClass{
 		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
 		for (int i=0,j=1;i<taskListVar.getTimedList().size();i++,j++){
 			DeadlineTask temp = (DeadlineTask) taskListVar.getTimedList().get(i);
-			result.append(j + ". " + temp.toString(LogicFacade.DATE_FORMAT) + newLine);
+			result.append(j + ". " + temp.toString(LogicFacade.DATE_FORMAT));
+			if(taskListVar.getRecentIndex() == j){
+				result.append(" \u2605");
+			}
+			result.append(newLine);
 		}
 		return result.toString().trim();
 	}
