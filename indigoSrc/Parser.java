@@ -11,6 +11,7 @@ package indigoSrc;
  */
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,6 +45,7 @@ public class Parser {
 	ArrayList<String> detailsList = new ArrayList<String>();
 	private final static Logger LOGGER = Logger.getLogger(Parser.class.getName());
 	private static Scanner sc;
+	private Stack<Integer> multipleIndices =  new Stack<Integer>();
 
 	
 	public static void main(String args[]) {
@@ -242,6 +244,14 @@ public class Parser {
 		   keyWord.equals(CommandKey.UNDO) || keyWord.equals(CommandKey.REDO)) {
 			taskWord = sentenceString.checkTaskWords(keyWord);
 		}
+		
+		if(keyWord.equals(CommandKey.DELETE) || keyWord.equals(CommandKey.COMPLETE) ||
+		   keyWord.equals(CommandKey.UNCOMPLETE)){
+			multipleIndices = sentenceString.extractIndices();
+			if(multipleIndices == null || multipleIndices.empty() ){
+				System.out.println("Stack nothignn");
+			}
+		}
 	/*	=== editIndex status ===
 	 * 	If the command word is the first word, index of editing must be stated
 	 *	after it. Else if command word is not the first word, index must be the 
@@ -314,6 +324,10 @@ public class Parser {
 			return 1;
 		}
 		return editIndex; 
+	}
+	
+	public Stack<Integer> getMultipleIndices(){
+		return multipleIndices;
 	}
 	
 	public int getRawEditIndex(){

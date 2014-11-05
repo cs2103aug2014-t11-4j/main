@@ -2,6 +2,7 @@ package parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Stack;
 
 public class StringDecipher {
 	private ArrayList<String> remaining;
@@ -67,7 +68,10 @@ public class StringDecipher {
 				taskWord = TaskIdentifiers.indentifyWords(remaining.get(1).toLowerCase().trim());
 			}
 		}
-		wordsLeft = 0;
+		if(!taskWord.equals(TaskIdentifiers.INVALID)){
+			remaining.clear();
+			wordsLeft = 0;
+		}
 		return taskWord;
 	}
 	
@@ -77,6 +81,31 @@ public class StringDecipher {
 			printup += remaining.get(i) + " ";
 		}
 		return printup;
+	}
+
+	public Stack<Integer> extractIndices() {
+		Stack<Integer> indices = new Stack<Integer>();
+		if(getWordsLeft()==0){
+			return null;
+		}else{
+			int instances = getWordsLeft();
+			int i = 0;
+			int count=0;
+			while(i < instances){
+				try{
+					indices.push(Integer.parseInt(remaining.get(i)));
+					count++;
+				}catch(Exception err){
+				}
+				i++;
+			}
+			if(count!=instances){ //That means not all the input is number.
+				return null;
+			}
+		}
+		remaining.clear();
+		wordsLeft = 0;
+		return indices;
 	}
 
 }

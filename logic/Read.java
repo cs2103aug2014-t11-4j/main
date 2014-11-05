@@ -23,8 +23,8 @@ public class Read extends CommandClass{
 	public String resultString = new String();
 	public int tabNo = 0;
 	
-	DateTime start = null;
-	DateTime end = null;
+	DateTime start = new DateTime();
+	DateTime end = new DateTime();
 
 	@Override
 	public String execute() {
@@ -64,6 +64,7 @@ public class Read extends CommandClass{
 					return viewOverDue();
 				case FLOATING:
 					feedback = "All the floating tasks are shown";
+					tabNo = 4;
 					return viewFloatingTask();
 				case DEADLINE:
 					feedback = "All the deadline tasks are shown";
@@ -86,15 +87,6 @@ public class Read extends CommandClass{
 		} else if(parserVar.getRawCommand().contains("done")){
 			feedback = "Done tasks are shown. Good Job!";
 			return viewDone();
-		} else if (parserVar.getRawCommand().contains("-f")){
-			feedback = "All the floating tasks are shown";
-			return viewFloatingTask();
-		} else if (parserVar.getRawCommand().contains("-d")){
-			feedback = "All the deadline tasks are shown";
-			return viewDeadlineTask();
-		}  else if (parserVar.getRawCommand().contains("-overdue")){
-			feedback = "All tasks overdue are shown";
-			return viewOverDue().trim();
 		}  	else if (parserVar.getRawCommand().contains("-t")){
 			feedback = "Today's tasks are shown";
 			tabNo = 1;
