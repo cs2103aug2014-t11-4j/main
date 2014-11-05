@@ -92,6 +92,9 @@ public abstract class Task implements Comparable<Task>{
 	public String toStringWODate(){
 		StringBuilder result = new StringBuilder("");
 		result.append(taskDescription);
+		if (isCompleted()){
+			result.append('\u2713');
+		}
 		return result.toString();
 	}
 	
