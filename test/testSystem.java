@@ -60,6 +60,7 @@ public class testSystem {
 	
 	@Test
 	public void testAdvance(){
+		System.out.println(testInputAdvanced);
 		//TODO
 	}
 
