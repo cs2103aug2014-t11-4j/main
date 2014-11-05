@@ -52,19 +52,15 @@ public class StringDecipher {
 	}
 	
 	public TaskIdentifiers checkTaskWords(CommandKey keyWord) {
-		TaskIdentifiers taskWord = null;
+		TaskIdentifiers taskWord = TaskIdentifiers.INVALID;
 		assert this.getWordsLeft() >=0 && this.getWordsLeft() <=2;
 		if(this.getWordsLeft() == 0){
 			if(keyWord.equals(CommandKey.READ)){
 				taskWord = TaskIdentifiers.ALL;
-			} else {
-				taskWord = TaskIdentifiers.INVALID;
 			}
 		} else if(this.getWordsLeft() == 1){
 			String word = remainingToString().toLowerCase().trim();
-			if(!TaskIdentifiers.indentifyWords(word).equals(TaskIdentifiers.INVALID)){
-				taskWord = TaskIdentifiers.indentifyWords(word);
-			}
+			taskWord = TaskIdentifiers.indentifyWords(word);
 		} else if(this.getWordsLeft() == 2){
 			TaskIdentifiers all = TaskIdentifiers.indentifyWords(remaining.get(0).toLowerCase().trim());
 			if(all.equals(TaskIdentifiers.ALL)){

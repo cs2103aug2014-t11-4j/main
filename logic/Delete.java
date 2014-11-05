@@ -32,15 +32,15 @@ public class Delete extends CommandClass{
 		parserVar = parsing;
 		taskListVar = taskList;
 		int totalSize = taskListVar.getSize();
-		index = parserVar.getEditIndex();
+		index = parserVar.getRawEditIndex();
 		type = parserVar.taskWord;
 		if(!type.equals(TaskIdentifiers.INVALID)){
 			deleteAllIndex = fillDeleteAll(type);
-		} else if (index > totalSize || index < 1){
+		} else if ((index <= totalSize) && (index >= 1)){
+			toDo = taskListVar.get(index);
+		} else {
 			toDo = null;
 			isValid = false;
-		} else {
-			toDo = taskListVar.get(index);
 		}
 	}
 	
