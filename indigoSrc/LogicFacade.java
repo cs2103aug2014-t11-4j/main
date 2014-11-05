@@ -106,12 +106,11 @@ public class LogicFacade {
 				if(parser.taskWord.equals(TaskIdentifiers.ALL)){
 					int count = 0;
 					while(uList.isUndoAble()){
-						uList.undo().undo();
+						undoFunction();
 						count++;
 					}
-					return "undo " + count + " times.";
-				}
-				if(parser.getEditIndex()>0){
+					return printMoves(count, "Undo");
+				} else if (parser.getEditIndex()>0){
 					int index = parser.getEditIndex();
 					int count = 0; 
 					while(index > 0 && uList.isUndoAble()){
@@ -119,19 +118,19 @@ public class LogicFacade {
 						index--;
 						count++;
 					}
-					return "undo " + count + " times.";
+					return printMoves(count, "Undo");
+				} else {
+					return printMoves(0, "Undo");
 				}
-				return undoFunction();
 			case REDO:
 				if(parser.taskWord.equals(TaskIdentifiers.ALL)){
 					int count = 0;
 					while(uList.isRedoAble()){
-						uList.redo().execute();
+						redoFunction();
 						count++;
 					}
-					return "undo " + count + " times.";
-				}
-				if(parser.getEditIndex()>0){
+					return printMoves(count, "Redo");
+				}else if(parser.getEditIndex()>0){
 					int index = parser.getEditIndex();
 					int count = 0; 
 					while(index > 0 && uList.isRedoAble()){
@@ -139,9 +138,10 @@ public class LogicFacade {
 						index--;
 						count++;
 					}
-					return "redo " + count + " times.";
+					return printMoves(count, "Redo");
+				}else {
+					return printMoves(0, "Redo");
 				}
-				return redoFunction();
 			case COMPLETE:
 				Complete classCheck = new Complete(parser, taskList, true);
 				if(classCheck.isValid){
@@ -166,19 +166,24 @@ public class LogicFacade {
 		return "Saved";
 	}
 
-	public String redoFunction() {
+	public void redoFunction() {
 		if(uList.isRedoAble()){
-			return uList.redo().execute();
-		} else {
-			return "Nothing to redo";
+			uList.redo().execute();
 		}
 	}
 
-	public String undoFunction() {
+	public void undoFunction() {
 		if(uList.isUndoAble()){
-			return uList.undo().undo();
+			uList.undo().undo();
+		}
+	}
+	
+	public String printMoves(int count, String word){
+		assert count >= 0;
+		if(count == 0){
+			return "There's nothing to " + word.toLowerCase();
 		} else {
-			return "Nothing to undo";
+			return word + " " + count + " time(s).";
 		}
 	}
 
