@@ -1,7 +1,5 @@
 package indigoSrc;
 
-import gui.GridViewTaskList;
-
 import java.util.ArrayList;
 
 import logic.Complete;

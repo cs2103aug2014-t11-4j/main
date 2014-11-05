@@ -11,28 +11,24 @@ public class SaxHandler extends DefaultHandler {
 	private DateTime tempStartTime;
 	private DateTime tempEndTime;
 	private String tempTaskName;
-	private ArrayList<FloatingTask> timedList;
-	private ArrayList<FloatingTask> floatingList;
-	private FloatingTask tempTask;
+	private ArrayList<Task> timedList;
+	private ArrayList<Task> floatingList;
+	private Task tempTask;
 	private String tempValue;
     
-    public ArrayList<FloatingTask> getFloatingList(){
+    public ArrayList<Task> getFloatingList(){
     	return floatingList;
     }
     
-    public ArrayList<FloatingTask> getTimedList(){
+    public ArrayList<Task> getTimedList(){
     	return timedList;
     }
     
     public void startElement(String s, String s1, String tagName, Attributes attributes) 
     		throws SAXException {
     	if (tagName.equalsIgnoreCase("rootTaskList")){
-    		floatingList = new ArrayList<FloatingTask>();
-    		timedList = new ArrayList<FloatingTask>();
-    	}
-    	
-    	if (tagName.equalsIgnoreCase("Task")){
-    		tempTask = new FloatingTask();
+    		floatingList = new ArrayList<Task>();
+    		timedList = new ArrayList<Task>();
     	}
     	
     }

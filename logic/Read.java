@@ -127,13 +127,12 @@ public class Read extends CommandClass{
 	//The view of all tasks in floating tasklist
 	public String viewFloatingTask(){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
-		for (int i=0,j=1;i<taskListVar.getFloatingList().size();i++,j++){
-			if (!taskListVar.getFloatingList().get(i).isCompleted()){
-			assert taskListVar.getFloatingList().get(i).toDeadlineTask()==null;
-			result.append(j + ". " + 
+
+		for (int i=0,j=1;i<taskListVar.getFloatingList().size();i++){
+			assert taskListVar.getFloatingList().get(i).getNumDates()!=1;
+			result.append(j++ + ". " + 
 					taskListVar.getFloatingList().get(i).toString() + newLine);
 			}
-		}
 		return result.toString().trim();
 	}
 	
@@ -141,7 +140,7 @@ public class Read extends CommandClass{
 	public String viewFloatingTask(int index){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
 		for (int i=0,j=index+1;i<taskListVar.getFloatingList().size();i++){
-			assert taskListVar.getFloatingList().get(i).toDeadlineTask()==null;
+			assert taskListVar.getFloatingList().get(i).getNumDates()!=1;
 			result.append(j++ + ". " + 
 					taskListVar.getFloatingList().get(i).toString() + newLine);
 		}
@@ -152,10 +151,8 @@ public class Read extends CommandClass{
 	public String viewDeadlineTask(){
 		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
 		for (int i=0,j=1;i<taskListVar.getTimedList().size();i++,j++){
-			if (!taskListVar.getTimedList().get(i).isCompleted()){
 			DeadlineTask temp = (DeadlineTask) taskListVar.getTimedList().get(i);
 			result.append(j + ". " + temp.toString(LogicFacade.DATE_FORMAT) + newLine);
-			}
 		}
 		return result.toString().trim();
 	}
