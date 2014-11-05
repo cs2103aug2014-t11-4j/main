@@ -29,14 +29,16 @@ public enum CommandKey {
 			case "-r" :		//pro shortkey
 				return CommandKey.REDO;
 			case "complete"://default command
-			case "done":	//alternate name
+			case "did":	//alternate name
 			case "com":	//user shortkey
 			case "-c":		//pro shortkey
+			case "check":
 				return CommandKey.COMPLETE;
 			case "uncomplete"://default command
-			case "undone":	//alternate name
+			case "undid":	//alternate name
 			case "uncom":	//user shortkey
 			case "-uc":		//pro shortkey
+			case "uncheck":
 				return CommandKey.UNCOMPLETE;
 			case "search":	//default command
 			case "-s" :		//pro shortkey

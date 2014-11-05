@@ -240,7 +240,7 @@ public class Parser {
 		if(keyWord.equals(CommandKey.DELETE) || keyWord.equals(CommandKey.COMPLETE) ||
 		   keyWord.equals(CommandKey.READ) || keyWord.equals(CommandKey.UNCOMPLETE) ||
 		   keyWord.equals(CommandKey.UNDO) || keyWord.equals(CommandKey.REDO)) {
-			taskWord = sentenceString.checkTaskWords();
+			taskWord = sentenceString.checkTaskWords(keyWord);
 		}
 	/*	=== editIndex status ===
 	 * 	If the command word is the first word, index of editing must be stated

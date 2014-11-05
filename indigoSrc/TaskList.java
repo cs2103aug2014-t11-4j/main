@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -354,5 +355,54 @@ public class TaskList {
 			timedTaskList.remove(toDo);
 		}
 	}
-
+	
+	public Stack<Integer> findOverdue(Stack<Task> listOfTasks) {
+		Stack<Integer> indices = new Stack<Integer>();
+		int timeSize = timedTaskList.size();
+		for(int i=0; i<timeSize; i++){
+			if(timedTaskList.get(i).isOverdue()){
+				listOfTasks.push(timedTaskList.get(i));
+				indices.push(i);
+			}
+		}
+		return indices;
+	}
+	
+	public Stack<Integer> findCompleted(Stack<Task> listOfTasks) {
+		Stack<Integer> indices = new Stack<Integer>();
+		int floatSize = floatingTaskList.size();
+		int timeSize = timedTaskList.size();
+		for(int i=0; i<timeSize; i++){
+			if(timedTaskList.get(i).isCompleted()){
+				listOfTasks.push(timedTaskList.get(i));
+				indices.push(i+1);
+			}
+		}
+		for(int i=0; i<floatSize; i++){
+			if(floatingTaskList.get(i).isCompleted()){
+				listOfTasks.push(timedTaskList.get(i));
+				indices.push(i + timeSize + 1);
+			}
+		}
+		return indices;
+	}
+	
+	public Stack<Integer> findNoComplete(Stack<Task> listOfTasks) {
+		Stack<Integer> indices = new Stack<Integer>();
+		int timeSize = timedTaskList.size();
+		int floatSize = floatingTaskList.size();
+		for(int i=0; i<timeSize; i++){
+			if(!timedTaskList.get(i).isCompleted()){
+				listOfTasks.push(timedTaskList.get(i));
+				indices.push(i+1);
+			}
+		}
+		for(int i=0; i<floatSize; i++){
+			if(!floatingTaskList.get(i).isCompleted()){
+				listOfTasks.push(timedTaskList.get(i));
+				indices.push(i + timeSize + 1);
+			}
+		}
+		return indices;
+	}
 }

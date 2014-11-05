@@ -1,7 +1,7 @@
 package parser;
 
 public enum TaskIdentifiers {
-	ALL, OVERDUE, FLOATING, DEADLINE, TIMED, INVALID;
+	ALL, OVERDUE, FLOATING, DEADLINE, COMPLETED, UNCOMPLETED, TIMED, INVALID;
 	
 	public static TaskIdentifiers indentifyWords(String usedWords){
 		usedWords = usedWords.trim();
@@ -23,6 +23,14 @@ public enum TaskIdentifiers {
 			case "dl":
 			case "-dl":
 				return TaskIdentifiers.DEADLINE;
+			case "completed":
+			case "done":
+			case "checked":
+				return TaskIdentifiers.COMPLETED;
+			case "notcompleted":
+			case "undone":
+			case "unchecked":
+				return TaskIdentifiers.UNCOMPLETED;
 			case "timed":
 			case "time":
 			case "period":
