@@ -101,8 +101,8 @@ public class FillUpMainWindow {
 	private JTextField setReadInput(JPanel topPanel) {
 	
 		readInput = new JTextField();
-		readInput.addActionListener(new Listener());
-		readInput.addKeyListener(new Listener());	
+		readInput.addActionListener(new readInputTextFieldListener());
+		readInput.addKeyListener(new readInputTextFieldListener());	
 		return readInput;
 	}
 	private JTextArea setLiveUserFeedback(JPanel topPanel) {
@@ -142,22 +142,74 @@ public class FillUpMainWindow {
 		return taskDisplay;
 		
 	}
+
+	public class readInputTextFieldListener implements ActionListener, KeyListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String text = readInput.getText();
+			readInput.selectAll();
+			LogicFacade controller = new LogicFacade(text);
+			liveUserFeedback.setText(controller.feedback);
+			taskDisplay.update(text);
+			readInput.requestFocusInWindow();
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			 displayInfo(e, readInput.getText());
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			displayInfo(e, readInput.getText());
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			displayInfo(e, readInput.getText());
+		}
+
+	}
+	private void displayInfo(KeyEvent e, String command) {
+        int id = e.getID();
+        if (id == KeyEvent.KEY_TYPED) {	
+        } else if(id == KeyEvent.KEY_PRESSED) {	
+        	if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Z) {
+        		LogicFacade lc = new LogicFacade("undo");
+        		taskDisplay.update(lc.display);
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Y){
+        		LogicFacade lc = new LogicFacade("redo");
+        		taskDisplay.update(lc.display);
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_D){
+        		readInput.setText("delete ");
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_N){
+        		readInput.setText("add ");
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_E){
+        		readInput.setText("edit ");
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_F){
+        		readInput.setText("search ");
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
+        		
+        	}
+        } 
+        
+        else if(id == KeyEvent.KEY_RELEASED) {
+        	if (command.equals("a") || command.equals("ad") || command.equals("add")) 
+        		liveUserFeedback.setText( "add <some task>");
+        	else if (command.equals("d") ||command.equals("de") || command.equals("del") || command.equals("dele")|| command.equals("delet")|| command.equals("delete"))
+        		liveUserFeedback.setText( "delete <index>");
+        	else if (command.equals("v") || command.equals("vi") || command.equals("vie"))
+        		liveUserFeedback.setText( "view <-t/-w/-m/done/undone>");
+        	else if (command.equals("e") || command.equals("ed") || command.equals("edi") || command.equals("edit"))
+        		liveUserFeedback.setText( "edit <index> <some task>");
+        	else if (command.equals("c")||command.equals("co")||command.equals("com")||command.equals("comp")||command.equals("compl")
+        			||command.equals("comple")||command.equals("complet")||command.equals("complete")){
+        		liveUserFeedback.setText("complete <index>");
+        	}
+
+        }
+	}
 	
-	public String getReadInputText(){
-		return readInput.getText();
-		
-	}
-	public void readInputFocus(){
-		readInput.requestFocusInWindow();
-	}
-	public void setReadInputText(String text){
-		readInput.setText(text);	
-	}
-	public void selectAllReadInput(){
-		readInput.selectAll();	
-	}
-	public void setUserFeedbackText(String text){
-		liveUserFeedback.setText(text);	
-	}
 
 }
