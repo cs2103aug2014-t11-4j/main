@@ -37,7 +37,6 @@ public class Delete extends CommandClass{
 		taskListVar = taskList;
 		int totalSize = taskListVar.getSize();
 		index = parserVar.getEditIndex();
-		System.out.println(index +"get");
 		if (index > totalSize || index < 1){
 			toDo = null;
 			isValid = false;
@@ -50,7 +49,6 @@ public class Delete extends CommandClass{
 		if (isValid==false){
 			return "Invalid index";
 		} 
-		System.out.println(index + "getRaw");
 		taskListVar.deleteTask(index);
 	
 		return toDo.toString() + " is deleted";

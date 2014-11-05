@@ -159,12 +159,7 @@ public class FillUpMainWindow {
 			LogicFacade controller = new LogicFacade(text);
 			liveUserFeedback.setText(controller.feedback);
 			taskDisplay.update(text);
-			
-			controller = new LogicFacade("view -f");
-			floatingTextPane.setText(controller.display);
-			
-			floatingTextPane.setCaretPosition(0);
-		
+
 			readInput.requestFocusInWindow();
 		}
 

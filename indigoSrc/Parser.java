@@ -349,12 +349,24 @@ public class Parser {
 		now = new DateTime();
 		TimeRef = now.plusMinutes(2);
 		if (endTime.isBefore(now)){
-			isValid = false;
-			DateTime newDate = endTime.plusDays(1);
-			endTime = newDate; 
-		} else if(endTime.isBefore(TimeRef)){
-			DateTime newDate = endTime.plusHours(1);
-			endTime = newDate;
+			//isValid = false;
+			if(endTime.getYear() == now.getYear() && 
+			   endTime.getDayOfYear() == now.getDayOfYear()){
+				if(endTime.isBefore(TimeRef)){
+					DateTime newDate = endTime.plusDays(1);
+					endTime = newDate;
+				}
+			}else {
+				int days = now.getDayOfYear() - endTime.getDayOfYear();
+				if(now.getYear() > endTime.getYear()){
+					days += 365 * (now.getYear() - endTime.getYear());
+				}
+				DateTime newDate = endTime.plusDays(days);
+				if(newDate.isBefore(TimeRef)){
+					newDate.plusDays(1);
+				}
+				endTime = newDate;
+			}
 		}
 	}
 	
