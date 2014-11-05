@@ -210,7 +210,7 @@ public class FillUpMainWindow {
         
         else if(id == KeyEvent.KEY_RELEASED) {
         	if (command.equals("a") || command.equals("ad") || command.equals("add")) 
-        		liveUserFeedback.setText( "add (index) <some task>");
+        		liveUserFeedback.setText( "add <some task>");
         	else if (command.equals("d") ||command.equals("de") || command.equals("del") || command.equals("dele")|| command.equals("delet")|| command.equals("delete"))
         		liveUserFeedback.setText( "delete <index>");
         	else if (command.equals("v") || command.equals("vi") || command.equals("vie"))
