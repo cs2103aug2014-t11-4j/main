@@ -50,13 +50,13 @@ public class Delete extends CommandClass{
 			int timedListSize = taskListVar.getTimedList().size();
 			int floatListSize = taskListVar.getFloatingList().size();
 			for(int i = 0; i < floatListSize; i++){
-				deleteAll.push(taskListVar.getFloatingList().get(0));
+				deleteAll.push(taskListVar.getFloatingList().get(i));
 				indices.push(i + timedListSize + 1);
 			}
 		} else if(type.equals(TaskIdentifiers.DEADLINE)){
 			int timedListSize = taskListVar.getTimedList().size();
 			for(int i = 0; i < timedListSize; i++){
-				deleteAll.push(taskListVar.getTimedList().get(0));
+				deleteAll.push(taskListVar.getTimedList().get(i));
 				indices.push(i + 1);
 			}
 		} else if(type.equals(TaskIdentifiers.OVERDUE)){
@@ -73,7 +73,7 @@ public class Delete extends CommandClass{
 				indices.push(i+1);
 			}
 			for(int i=0; i<floatSize; i++){
-				deleteAll.push(taskListVar.getTimedList().get(i));
+				deleteAll.push(taskListVar.getFloatingList().get(i));
 				indices.push(i + timeSize + 1);
 			}
 		} else{
