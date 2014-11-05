@@ -10,14 +10,9 @@ package indigoSrc;
  *
  */
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.*;
 
 import org.joda.time.DateTime;
 
@@ -32,8 +27,8 @@ public class Parser {
 	private DateTime TimeRef;
 	public TaskIdentifiers taskWord;
 	
-	private static Logger logger = Logger.getLogger("Parser");
-	private String sortedCommand;
+	//private static Logger logger = Logger.getLogger("Parser");
+	//private String sortedCommand;
 	CommandKey keyWord			;  				//stores the key command "add"/"delete" to return to logic
 	String toDo               	= "";//stores the final command to return to logic
 	private String rawCommand;
@@ -64,7 +59,7 @@ public class Parser {
 		Parser test = new Parser(testInput);
 		testParser = new TimeParser(testInput);	
 		try {
-			System.out.println(testParser.parser.get(0).getText());
+			System.out.println(TimeParser.parser.get(0).getText());
 		} catch (IndexOutOfBoundsException err){
 			System.out.println("There are no such thing as time!");
 		}
@@ -270,7 +265,7 @@ public class Parser {
 		}
 		
 		TimeParser timeParser = new TimeParser(toDo);
-		sortedCommand = timeParser.getSortedCommand() + "";
+		//sortedCommand = timeParser.getSortedCommand() + "";
 		
 		if (timeParser.isTimedTask()){
 			startTime = timeParser.getStartTime();

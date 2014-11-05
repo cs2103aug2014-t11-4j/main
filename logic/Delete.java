@@ -1,11 +1,8 @@
 package logic;
 
-import indigoSrc.DeadlineTask;
-import indigoSrc.FloatingTask;
 import indigoSrc.Parser;
 import indigoSrc.Task;
 import indigoSrc.TaskList;
-import indigoSrc.TimedTask;
 
 /* This class is the delete class which deletes the task that user
  * would want to delete. User will have to indicate the index which the task 
@@ -18,7 +15,7 @@ public class Delete extends CommandClass{
 	
 	Task toDo;
 	int index;
-	private boolean byNum;
+	//private boolean byNum;
 
 	@Override
 	public String execute() {
@@ -26,7 +23,7 @@ public class Delete extends CommandClass{
 	}
 	
 	public void main(String arg[]){
-		Delete del = new Delete(new Parser("delete 3"), new TaskList());
+		new Delete(new Parser("delete 3"), new TaskList());
 		int index = parserVar.getEditIndex();
 		System.out.println(index +"getmain");
 		index = parserVar.getRawEditIndex();

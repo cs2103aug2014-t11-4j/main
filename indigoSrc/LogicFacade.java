@@ -1,7 +1,5 @@
 package indigoSrc;
 
-import java.util.ArrayList;
-
 import logic.Complete;
 import logic.Create;
 import logic.Delete;
@@ -45,7 +43,7 @@ public class LogicFacade {
 		loadData();
 		String userInput = userCommand;
 		Parser parse = new Parser(userInput);
-		CommandKey now = parse.getKeyCommand();
+		parse.getKeyCommand();
 		if(parse.isValid()==false){
 			feedback = "Invalid input";
 		}else{

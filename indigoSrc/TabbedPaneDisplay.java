@@ -1,28 +1,25 @@
 package indigoSrc;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
-import java.awt.Component;
 import java.util.ArrayList;
 
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
-
-import parser.CommandKey;
 
 
 public class TabbedPaneDisplay extends JPanel {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabbedPaneDisplay;
 	private JTextPane taskDisplayPane; 
-	private JTable inboxTable;
+	//private JTable inboxTable;
 	public LogicFacade id = new LogicFacade();
 	public static ArrayList<JTextPane> PaneArray = new ArrayList<JTextPane>();
 	
@@ -72,7 +69,7 @@ public class TabbedPaneDisplay extends JPanel {
 		
 	} 
 	
-	private JComponent makeInboxTable(JTable inbox, String text){
+	/*private JComponent makeInboxTable(JTable inbox, String text){
 		JPanel tabbedPanel = new JPanel();
 		
 //		 String[] columnNames = {"Index", "Task    ", "Start","End"};
@@ -91,7 +88,7 @@ public class TabbedPaneDisplay extends JPanel {
 		tabbedPanel.add(scrollPane);
 //		inboxTable = table;
 		return tabbedPanel;
-	}
+	}*/
 	
 	
 	public void update(String text){

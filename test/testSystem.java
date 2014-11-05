@@ -1,12 +1,8 @@
 package test;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-
+import static org.junit.Assert.assertEquals;
 import indigoSrc.LogicFacade;
 
-import org.joda.time.DateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -20,7 +16,7 @@ public class testSystem {
 		String[] inputs = {"undo",
 				"add some task",
 				"add 2 another task",
-				"add 300 wrong task",
+				"add 300 valid task",
 				"add time task today",
 				"add another time task tomorrow",
 				"add a third time task from 11am to 2pm yesterday",

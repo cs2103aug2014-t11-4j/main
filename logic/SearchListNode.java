@@ -1,7 +1,6 @@
 package logic;
 
 import indigoSrc.DeadlineTask;
-import indigoSrc.FloatingTask;
 import indigoSrc.Task;
 
 public class SearchListNode {

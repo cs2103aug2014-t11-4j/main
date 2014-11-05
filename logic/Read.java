@@ -3,7 +3,6 @@ import indigoSrc.DeadlineTask;
 import indigoSrc.LogicFacade;
 import indigoSrc.Parser;
 import indigoSrc.TaskList;
-import indigoSrc.TimedTask;
 
 import org.joda.time.DateTime;
 
@@ -179,7 +178,7 @@ public class Read extends CommandClass{
 	//This method is to find tasks which are due today.
 	public static String viewToday(){
 		DateTime now = new DateTime();
-		DateTime dts = new DateTime();
+		//DateTime dts = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
 		
@@ -254,9 +253,9 @@ public class Read extends CommandClass{
 	
 	public static String viewAny(DateTime start, DateTime end){
 		DateTime now = new DateTime();
-		int yearNow = now.getYear();
-		int monthNow = now.getMonthOfYear();
-		int dayNow = now.getDayOfMonth();
+		//int yearNow = now.getYear();
+		//int monthNow = now.getMonthOfYear();
+		//int dayNow = now.getDayOfMonth();
 		
 		if(start==null){
 			start = new DateTime();

@@ -1,7 +1,6 @@
 package logic;
 
 import indigoSrc.DeadlineTask;
-import indigoSrc.FloatingTask;
 import indigoSrc.Parser;
 import indigoSrc.Task;
 import indigoSrc.TaskList;

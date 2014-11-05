@@ -5,7 +5,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -15,21 +14,15 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.jws.soap.SOAPBinding.Style;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
 public class FillUpMainWindow {
@@ -39,14 +32,14 @@ public class FillUpMainWindow {
 	private static final int TOP_PANEL_INDEX = 3;
 	private static final int INPUT_FIELD_INDEX = 4;
 	private static final int USER_FEEDBACK_INDEX = 5;
-	private static final int FLOATING_TASKS_INDEX = 6;
-	private static final int CALENDAR_INDEX = 7;
+	//private static final int FLOATING_TASKS_INDEX = 6;
+	//private static final int CALENDAR_INDEX = 7;
 
 	private JLayeredPane displayLayers = new JLayeredPane();
 	private JTextField readInput;
-	private JTextField calendarField;
+	//private JTextField calendarField;
 	private JTextArea liveUserFeedback;
-	private JTextPane floatingTextPane;
+	//private JTextPane floatingTextPane;
 
 	public TabbedPaneDisplay taskDisplay;
 	public DefiningConstraints gridBag = new DefiningConstraints();
@@ -130,11 +123,11 @@ public class FillUpMainWindow {
 		bottomPanel.setPreferredSize(new Dimension(500,150));
 		bottomPanel.setOpaque(false);
 		
-		GridBagConstraints floatingTasksConstraints, tabbedPaneConstraints;
-		floatingTasksConstraints =  gridBag.setConstraints(FLOATING_TASKS_INDEX);
+		GridBagConstraints tabbedPaneConstraints;
+		//floatingTasksConstraints =  gridBag.setConstraints(FLOATING_TASKS_INDEX);
 		tabbedPaneConstraints =  gridBag.setConstraints(TABBED_PANE_INDEX);
 		
-		TabbedPaneDisplay taskDisply = addTabbedPane(bottomPanel);
+		addTabbedPane(bottomPanel);
 		bottomPanel.add(taskDisplay, tabbedPaneConstraints);	
 		return bottomPanel; 
 	
