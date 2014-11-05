@@ -96,7 +96,7 @@ public class TaskList {
 	// view the taskList in a particular format
 	public String viewFloatingTask(){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
-		for (int i=0,j=1;i<floatingTaskList.size();i++){
+		for (int i=0,j=1;i<floatingTaskList.size();i++,j++){
 			assert floatingTaskList.get(i).numDates!=1;
 			result.append(j + ". " + floatingTaskList.get(i).toString() + newLine);
 		}
@@ -106,7 +106,7 @@ public class TaskList {
 	public String viewDeadlineTask(DateTimeFormatter dtf){
 		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
 
-		for (int i=0,j=1;i<timedTaskList.size();i++){
+		for (int i=0,j=1;i<timedTaskList.size();i++,j++){
 			Task temp = timedTaskList.get(i);
 			result.append(j + ". " + temp.toString(dtf) + newLine);
 		}
