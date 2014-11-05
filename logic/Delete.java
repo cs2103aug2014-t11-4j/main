@@ -1,11 +1,18 @@
 package logic;
 
+<<<<<<< HEAD
 import java.util.Stack;
 
 import parser.TaskIdentifiers;
+=======
+>>>>>>> origin/master
 import indigoSrc.Parser;
 import indigoSrc.Task;
 import indigoSrc.TaskList;
+
+import java.util.Stack;
+
+import parser.TaskIdentifiers;
 
 /* This class is the delete class which deletes the task that user
  * would want to delete. User will have to indicate the index which the task 
@@ -66,9 +73,16 @@ public class Delete extends CommandClass{
 			System.out.println("Itsnullhere");
 			toDo = taskListVar.get(index);
 		} else {
+<<<<<<< HEAD
 			System.out.println("Itsnull");
 			toDo = null;
 			isValid = false;
+=======
+			index = taskListVar.getRecentIndex();
+			toDo = taskListVar.get(index);
+			//toDo = null;
+			//isValid = false;
+>>>>>>> origin/master
 		}
 	}
 	

@@ -32,13 +32,11 @@ public enum CommandKey {
 			case "did":	//alternate name
 			case "com":	//user shortkey
 			case "-c":		//pro shortkey
-			case "check":
 				return CommandKey.COMPLETE;
 			case "uncomplete"://default command
 			case "undid":	//alternate name
 			case "uncom":	//user shortkey
 			case "-uc":		//pro shortkey
-			case "uncheck":
 				return CommandKey.UNCOMPLETE;
 			case "search":	//default command
 			case "-s" :		//pro shortkey
@@ -54,7 +52,8 @@ public enum CommandKey {
 	
 	//List down all the valid commands which can stand alone.
 	public boolean checkValidAlone(){
-		if(this.equals(READ) || this.equals(CLEAR) || this.equals(UNDO) || this.equals(REDO)){
+		if(this.equals(READ) || this.equals(CLEAR) || this.equals(UNDO) || this.equals(REDO) /*||
+			this.equals(DELETE) || this.equals(COMPLETE) || this.equals(UNCOMPLETE)*/){
 			return true;
 		}
 		return false;

@@ -31,13 +31,11 @@ public class Update extends CommandClass{
 		parserVar = parsing;
 		taskListVar = taskList; 
 		int totalSize = taskListVar.getSize();
-		index = parserVar.getEditIndex();
+		index = parserVar.getRawEditIndex();
 		if (index > totalSize || index < 1){
-			isValid = false;
-			toDoReplaced = null;
-		} else {
-			toDoReplaced = taskListVar.get(index);
+			index = taskListVar.getRecentIndex();
 		}
+		toDoReplaced = taskListVar.get(index);
 		
 		String newTaskDescription = parserVar.getCommand();
 		DateTime newStartTime = parserVar.getStartTime();

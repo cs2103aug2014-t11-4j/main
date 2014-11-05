@@ -69,9 +69,36 @@ public class Read extends CommandClass{
 				case DEADLINE:
 					feedback = "All the deadline tasks are shown";
 					return viewDeadlineTask();
-				case TIMED:
-					return viewTimedTask();
+				case COMPLETED:
+					feedback = "All the completed tasks are shown";
+					return viewDone();
+				case UNCOMPLETED:
+					feedback = "All the uncompleted tasks are shown";
+					return viewUndone();
+				case TODAY:
+					feedback = "All today's tasks are shown";
+					tabNo = 1;
+					String resultTod = viewOverDue() + newLine + viewToday();
+					return resultTod.trim();
+				case TOMORROW:
+					feedback = "All tomorrow's tasks are shown";
+					String resultTom = viewTomorrow();
+					return resultTom.trim();
+				case THIS_WEEK:
+					feedback = "All this week's tasks are shown";
+					tabNo = 2;
+					String resultWk = viewOverDue() + newLine + viewThisWeek();
+					return resultWk.trim();
+				case NEXT_WEEK:
+					feedback = "All next week's tasks are shown";
+					String resultNw = viewNextWeek();
+					return resultNw.trim();
+				case THIS_MONTH:
+					feedback = "All this month's tasks are shown";
+					tabNo = 3;
+					return viewThisMonth();
 				default:
+					return viewAll();
 			}
 		}
 		
@@ -80,6 +107,7 @@ public class Read extends CommandClass{
 			DateTime dte = parserVar.getEndTime();
 			return viewAny(dts, dte);
 		}
+<<<<<<< HEAD
 		
 		if(parserVar.getRawCommand().contains("undone")){
 			feedback = "These are your undone tasks. You can do it!";
@@ -113,27 +141,37 @@ public class Read extends CommandClass{
 			result.append(j++ + ". " + temp.toString(LogicFacade.DATE_FORMAT) + newLine);
 		}
 		return result.toString().trim();
+=======
+		return viewAll();
+>>>>>>> origin/master
 	}
 
 	//The view of all tasks in floating tasklist
 	public String viewFloatingTask(){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
 
-		for (int i=0,j=1;i<taskListVar.getFloatingList().size();i++){
+		for (int i=0,j=1;i<taskListVar.getFloatingList().size();i++,j++){
 			assert taskListVar.getFloatingList().get(i).getNumDates()!=1;
-			result.append(j++ + ". " + 
-					taskListVar.getFloatingList().get(i).toString() + newLine);
+			result.append(j + ". " + 
+					taskListVar.getFloatingList().get(i).toString());
+			if(taskListVar.getRecentIndex() == j){
+				result.append(" \u2605");
 			}
+			result.append(newLine);
+		}
 		return result.toString().trim();
 	}
 	
 	//The view of all tasks in floating tasklist with index addendum.
 	public String viewFloatingTask(int index){
 		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
-		for (int i=0,j=index+1;i<taskListVar.getFloatingList().size();i++){
+		for (int i=0,j=index+1;i<taskListVar.getFloatingList().size();i++,j++){
 			assert taskListVar.getFloatingList().get(i).getNumDates()!=1;
-			result.append(j++ + ". " + 
-					taskListVar.getFloatingList().get(i).toString() + newLine);
+			result.append(j + ". " + taskListVar.getFloatingList().get(i).toString());
+			if(taskListVar.getRecentIndex() == j){
+				result.append(" \u2605");
+			}
+			result.append(newLine);
 		}
 		return result.toString().trim();
 	}
@@ -143,7 +181,11 @@ public class Read extends CommandClass{
 		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
 		for (int i=0,j=1;i<taskListVar.getTimedList().size();i++,j++){
 			DeadlineTask temp = (DeadlineTask) taskListVar.getTimedList().get(i);
-			result.append(j + ". " + temp.toString(LogicFacade.DATE_FORMAT) + newLine);
+			result.append(j + ". " + temp.toString(LogicFacade.DATE_FORMAT));
+			if(taskListVar.getRecentIndex() == j){
+				result.append(" \u2605");
+			}
+			result.append(newLine);
 		}
 		return result.toString().trim();
 	}
@@ -170,7 +212,6 @@ public class Read extends CommandClass{
 	//This method is to find tasks which are due today.
 	public static String viewToday(){
 		DateTime now = new DateTime();
-		//DateTime dts = new DateTime();
 		int yearNow = now.getYear();
 		int dayNow = now.getDayOfYear();
 		
@@ -185,6 +226,23 @@ public class Read extends CommandClass{
 		return result.toString().trim();
 	}
 	
+	private static String viewTomorrow() {
+		DateTime now = new DateTime();
+		now = now.plusDays(1);
+		int yearNow = now.getYear();
+		int dayNow = now.getDayOfYear();
+		
+		StringBuilder result = new StringBuilder("Tomorrow's tasks are: " + newLine);
+		int tlSize = taskListVar.getTimedList().size();
+		for (int i=1; i<=tlSize; i++){
+				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
+				if((temp.getKeyTime().getYear() == yearNow) && (temp.getKeyTime().getDayOfYear() == dayNow)){
+					result.append(temp.toStringWODate() + newLine);
+			}
+		}
+		return result.toString().trim();
+	}
+
 	//This method is to find tasks which are due this week. 
 	//It does not follow the pattern on Monday to Sunday. It takes tasks of
 	//the next seven days.
@@ -215,6 +273,35 @@ public class Read extends CommandClass{
 		return result.toString().trim();
 	}
 	
+	private static String viewNextWeek() {
+		// TODO Auto-generated method stub
+		DateTime now = new DateTime();
+		now = now.plusDays(7);
+		int yearNow = now.getYear();
+		int dayNow = now.getDayOfYear();
+		int day7 = dayNow + 7;
+		
+		StringBuilder result = new StringBuilder();
+		int tlSize = taskListVar.getTimedList().size();
+		String timeKeeperCompare = dayLeft(now, now);
+		result.append(timeKeeperCompare + newLine);
+		for (int i=1; i<=tlSize; i++){
+				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
+				DateTime tempDate = temp.getTime();
+				String timeKeeper = dayLeft(now, tempDate);
+				int tempDateDay = tempDate.getDayOfYear();
+				if((tempDate.getYear() == yearNow) && 
+					((tempDateDay >= dayNow) && (tempDateDay <= day7))){
+					if(!timeKeeperCompare.equals(timeKeeper)){
+						result.append(newLine + timeKeeper + newLine);
+						timeKeeperCompare = timeKeeper;
+					}
+						result.append(temp.toStringWODate() + newLine);
+				}
+		}
+		return result.toString().trim();
+	}
+
 	//This method is to find the tasks which are due this current month. Taking Overdue tasks 
 	//for the month into consideration as well.
 	public static String viewThisMonth(){
@@ -292,8 +379,8 @@ public class Read extends CommandClass{
 			String timeKeeper = dayLeft(now, tempDate);
 			int tempDateDay = tempDate.getDayOfYear();
 			int tempDateYear = tempDate.getYear();
-			if((tempDateYear < yearNow) || 
-				((tempDateDay < dayNow) && (tempDateYear <= yearNow))){
+			if(((tempDateYear < yearNow)  && !temp.isCompleted()) || 
+				((tempDateDay < dayNow) && (tempDateYear <= yearNow) && !temp.isCompleted())){
 				if(!timeKeeperCompare.equals(timeKeeper)){
 					result.append(newLine + timeKeeper + newLine);
 					timeKeeperCompare = timeKeeper;
@@ -304,7 +391,6 @@ public class Read extends CommandClass{
 				}
 			}
 		}
-		//System.out.println(result.toString().trim() + newLine);
 		return result.toString().trim() + newLine;
 	}
 	

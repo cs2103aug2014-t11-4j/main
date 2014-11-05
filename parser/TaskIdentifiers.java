@@ -1,7 +1,8 @@
 package parser;
 
 public enum TaskIdentifiers {
-	ALL, OVERDUE, FLOATING, DEADLINE, COMPLETED, UNCOMPLETED, TIMED, INVALID;
+	ALL, OVERDUE, FLOATING, DEADLINE, COMPLETED, UNCOMPLETED, TIMED, INVALID,
+	TODAY, THIS_WEEK, NEXT_WEEK, THIS_MONTH, TOMORROW;
 	
 	public static TaskIdentifiers indentifyWords(String usedWords){
 		usedWords = usedWords.trim();
@@ -35,7 +36,24 @@ public enum TaskIdentifiers {
 			case "time":
 			case "period":
 			case "-tm":
-				return TaskIdentifiers.TIMED;			
+				return TaskIdentifiers.TIMED;		
+			case "today":
+			case "-t":
+				return TaskIdentifiers.TODAY;
+			case "tomorrow":
+			case "-tom":
+				return TaskIdentifiers.TOMORROW;
+			case "thisweek":
+			case "week":
+			case "-w":
+				return TaskIdentifiers.THIS_WEEK;
+			case "nextweek":
+			case "-nw":
+				return TaskIdentifiers.NEXT_WEEK;
+			case "thismonth":
+			case "month":
+			case "-m":
+				return TaskIdentifiers.THIS_MONTH;
 			default:
 				return TaskIdentifiers.INVALID;
 		}

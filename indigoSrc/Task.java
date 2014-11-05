@@ -11,7 +11,7 @@ public abstract class Task implements Comparable<Task>{
 	protected String location;
 	
 	protected DateTime endTime;
-	protected static DateTime currentTime = DateTime.now();
+	protected DateTime currentTime = DateTime.now();
 	protected DateTime keyTime;
 	
 	protected DateTime startTime;	
@@ -71,7 +71,7 @@ public abstract class Task implements Comparable<Task>{
 	}
 	
 	public boolean isOverdue(){
-		return endTime.isBefore(currentTime);
+		return endTime.isBefore(currentTime) && (isDone);
 	}
 	
 	public String editLocation(String newPlace){
@@ -92,6 +92,9 @@ public abstract class Task implements Comparable<Task>{
 	public String toStringWODate(){
 		StringBuilder result = new StringBuilder("");
 		result.append(taskDescription);
+		if (isCompleted()){
+			result.append('\u2713');
+		}
 		return result.toString();
 	}
 	

@@ -372,7 +372,7 @@ public class Parser {
 				}
 				DateTime newDate = endTime.plusDays(days);
 				if(newDate.isBefore(TimeRef)){
-					newDate.plusDays(1);
+					newDate = newDate.plusDays(1);
 				}
 				endTime = newDate;
 			}

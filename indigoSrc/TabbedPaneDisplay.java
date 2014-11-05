@@ -95,10 +95,15 @@ public class TabbedPaneDisplay extends JPanel {
 			setTab(0);
 			PaneArray.get(0).setText(new LogicFacade("-v").display);
 		}
+		PaneArray.get(0).setCaretPosition(0);
 		PaneArray.get(1).setText(new LogicFacade("view -t").display);
+		PaneArray.get(1).setCaretPosition(0);
 		PaneArray.get(2).setText(new LogicFacade("view -w").display);
+		PaneArray.get(2).setCaretPosition(0);
 		PaneArray.get(3).setText(new LogicFacade("view -m").display);
+		PaneArray.get(3).setCaretPosition(0);
 		PaneArray.get(4).setText(new LogicFacade("view -f").display);
+		PaneArray.get(4).setCaretPosition(0);
 
 	}
 	
