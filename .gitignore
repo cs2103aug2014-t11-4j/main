@@ -219,3 +219,5 @@ pip-log.txt
 .mr.developer.cfg
 /myTask.xml
 *.xml
+src/gui/wood.jpg
+src/gui/goindigologo.jpg

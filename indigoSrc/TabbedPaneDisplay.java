@@ -1,17 +1,12 @@
 package indigoSrc;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
-import java.awt.Component;
 import java.util.ArrayList;
 
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 
@@ -20,9 +15,13 @@ import parser.CommandKey;
 
 public class TabbedPaneDisplay extends JPanel {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabbedPaneDisplay;
 	private JTextPane taskDisplayPane; 
-	private JTable inboxTable;
+	//private JTable inboxTable;
 	public LogicFacade id = new LogicFacade();
 	public static ArrayList<JTextPane> PaneArray = new ArrayList<JTextPane>();
 	
@@ -72,7 +71,7 @@ public class TabbedPaneDisplay extends JPanel {
 		
 	} 
 	
-	private JComponent makeInboxTable(JTable inbox, String text){
+	/*private JComponent makeInboxTable(JTable inbox, String text){
 		JPanel tabbedPanel = new JPanel();
 		
 //		 String[] columnNames = {"Index", "Task    ", "Start","End"};
@@ -91,11 +90,12 @@ public class TabbedPaneDisplay extends JPanel {
 		tabbedPanel.add(scrollPane);
 //		inboxTable = table;
 		return tabbedPanel;
-	}
+	}*/
 	
 	
 	public void update(String text){
 		//TODO
+
 		Parser parse = new Parser(text + "");
 		if(parse.getKeyCommand().equals(CommandKey.READ)){
 			LogicFacade lf = new LogicFacade(text);
@@ -106,10 +106,11 @@ public class TabbedPaneDisplay extends JPanel {
 			PaneArray.get(0).setText(new LogicFacade(text).display);
 		} else {
 			setTab(0);
+			PaneArray.get(0).setText(new LogicFacade("-v").display);
 		}
-		PaneArray.get(0).setText(new LogicFacade("view -t").display);
-		PaneArray.get(1).setText(new LogicFacade("view -w").display);
-		PaneArray.get(2).setText(new LogicFacade("view -m").display);
+		PaneArray.get(1).setText(new LogicFacade("view -t").display);
+		PaneArray.get(2).setText(new LogicFacade("view -w").display);
+		PaneArray.get(3).setText(new LogicFacade("view -m").display);
 
 	}
 	
@@ -122,7 +123,7 @@ public class TabbedPaneDisplay extends JPanel {
 		
 	}
 */
-	private void setTab(int index){
+	public void setTab(int index){
 		
 		if (index == 1){
 			tabbedPaneDisplay.setSelectedIndex(1);

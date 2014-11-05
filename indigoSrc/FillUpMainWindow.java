@@ -5,7 +5,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -15,21 +14,15 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.jws.soap.SOAPBinding.Style;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
 public class FillUpMainWindow {
@@ -39,14 +32,14 @@ public class FillUpMainWindow {
 	private static final int TOP_PANEL_INDEX = 3;
 	private static final int INPUT_FIELD_INDEX = 4;
 	private static final int USER_FEEDBACK_INDEX = 5;
-	private static final int FLOATING_TASKS_INDEX = 6;
-	private static final int CALENDAR_INDEX = 7;
+	//private static final int FLOATING_TASKS_INDEX = 6;
+	//private static final int CALENDAR_INDEX = 7;
 
 	private JLayeredPane displayLayers = new JLayeredPane();
 	private JTextField readInput;
-	private JTextField calendarField;
+	//private JTextField calendarField;
 	private JTextArea liveUserFeedback;
-	private JTextPane floatingTextPane;
+	//private JTextPane floatingTextPane;
 
 	public TabbedPaneDisplay taskDisplay;
 	public DefiningConstraints gridBag = new DefiningConstraints();
@@ -55,7 +48,7 @@ public class FillUpMainWindow {
 		Container contentPane = mainWindow.getContentPane();
 		contentPane.add(displayLayers);
 		JPanel mainPanel = new JPanel();
-		mainPanel.setBounds(0, 0, 600, 300);
+		mainPanel.setBounds(0, 0, 450, 650);
 		mainPanel.setLayout(new GridBagLayout());
 		mainPanel.setOpaque(false);
 		
@@ -130,11 +123,11 @@ public class FillUpMainWindow {
 		bottomPanel.setPreferredSize(new Dimension(500,150));
 		bottomPanel.setOpaque(false);
 		
-		GridBagConstraints floatingTasksConstraints, tabbedPaneConstraints;
-		floatingTasksConstraints =  gridBag.setConstraints(FLOATING_TASKS_INDEX);
+		GridBagConstraints tabbedPaneConstraints;
+		//floatingTasksConstraints =  gridBag.setConstraints(FLOATING_TASKS_INDEX);
 		tabbedPaneConstraints =  gridBag.setConstraints(TABBED_PANE_INDEX);
 		
-		TabbedPaneDisplay taskDisply = addTabbedPane(bottomPanel);
+		addTabbedPane(bottomPanel);
 		bottomPanel.add(taskDisplay, tabbedPaneConstraints);	
 		return bottomPanel; 
 	
@@ -159,12 +152,6 @@ public class FillUpMainWindow {
 			LogicFacade controller = new LogicFacade(text);
 			liveUserFeedback.setText(controller.feedback);
 			taskDisplay.update(text);
-			
-			controller = new LogicFacade("view -f");
-			floatingTextPane.setText(controller.display);
-			
-			floatingTextPane.setCaretPosition(0);
-		
 			readInput.requestFocusInWindow();
 		}
 
@@ -209,11 +196,11 @@ public class FillUpMainWindow {
         
         else if(id == KeyEvent.KEY_RELEASED) {
         	if (command.equals("a") || command.equals("ad") || command.equals("add")) 
-        		liveUserFeedback.setText( "add (index) <some task>");
+        		liveUserFeedback.setText( "add <some task>");
         	else if (command.equals("d") ||command.equals("de") || command.equals("del") || command.equals("dele")|| command.equals("delet")|| command.equals("delete"))
         		liveUserFeedback.setText( "delete <index>");
-        	else if (command.equals("v") || command.equals("vi") || command.equals("vie") || command.equals("view"))
-        		liveUserFeedback.setText( "view <today/this week/this month/over due>");
+        	else if (command.equals("v") || command.equals("vi") || command.equals("vie"))
+        		liveUserFeedback.setText( "view <-t/-w/-m/done/undone>");
         	else if (command.equals("e") || command.equals("ed") || command.equals("edi") || command.equals("edit"))
         		liveUserFeedback.setText( "edit <index> <some task>");
         	else if (command.equals("c")||command.equals("co")||command.equals("com")||command.equals("comp")||command.equals("compl")
