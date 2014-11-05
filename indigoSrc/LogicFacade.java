@@ -53,6 +53,10 @@ public class LogicFacade {
 		}else{
 			feedback = readCommand(userInput);
 		}
+		System.out.println(display);
+		if (display==null){
+			display = new Read(taskList).resultString;
+		}
 		
 		/*if(!(now.equals(CommandKey.CREATE)) || (now.equals(CommandKey.SEARCH))){
 			Read rc = new Read(taskList);
