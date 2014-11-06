@@ -1,11 +1,8 @@
 package logic;
 
-<<<<<<< HEAD
 import java.util.Stack;
 
 import parser.TaskIdentifiers;
-=======
->>>>>>> origin/master
 import indigoSrc.Parser;
 import indigoSrc.Task;
 import indigoSrc.TaskList;
@@ -73,16 +70,8 @@ public class Delete extends CommandClass{
 			System.out.println("Itsnullhere");
 			toDo = taskListVar.get(index);
 		} else {
-<<<<<<< HEAD
-			System.out.println("Itsnull");
-			toDo = null;
-			isValid = false;
-=======
 			index = taskListVar.getRecentIndex();
 			toDo = taskListVar.get(index);
-			//toDo = null;
-			//isValid = false;
->>>>>>> origin/master
 		}
 	}
 	
