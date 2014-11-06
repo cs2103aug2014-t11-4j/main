@@ -37,14 +37,14 @@ public class Complete extends CommandClass {
 	private String check() {
 		// TODO Auto-generated method stub
 		assert(isValid);
-		taskListVar.get(index).complete();
+		taskListVar.complete(index);
 		return toDo.toString() + " is completed!";
 	}
 	
 	private String unCheck() {
 		// TODO Auto-generated method stub
 		assert(isValid);
-		taskListVar.get(index).unComplete();
+		taskListVar.unComplete(index);
 		return toDo.toString() + " is not completed!";
 	}
 
