@@ -1,21 +1,13 @@
 package indigoSrc;
-/** this class is meant to read in the command line from the user in the form of a string
- * and parse it so that the logic can access it simply. 
- * currently implemented: 
- * add function: add buy a fish by OR on 23 dec 2014 OR /23/12/2014
- * delete function: delete 3 (integer)
- * edit: edit 3 buy a cat instead (integer + command)
- * undo: does nothing but return keycommand
+/** This class is meant to read in the command line from the user in the form of a string
+ * 	and parse it so that the logic can access it simply. 
  * @author Joanna
- *
  */
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.joda.time.DateTime;
-
 import parser.CommandKey;
 import parser.StringDecipher;
 import parser.TaskIdentifiers;
@@ -26,17 +18,14 @@ public class Parser {
 	private DateTime now;
 	private DateTime TimeRef;
 	public TaskIdentifiers taskWord;
-	
 	//private static Logger logger = Logger.getLogger("Parser");
 	//private String sortedCommand;
-	CommandKey keyWord			;  				//stores the key command "add"/"delete" to return to logic
-	String toDo               	= "";//stores the final command to return to logic
+	CommandKey keyWord;  		
+	String toDo = "";
 	private String rawCommand;
 	private DateTime startTime;
 	private DateTime endTime;
-	boolean containConj 		= false;			//determine if it is a floating task
 	private int editIndex;
-	private String location;
 	private boolean isFloatingTask;
 	private boolean isDeadlineTask;
 	private boolean isTimedTask; 
@@ -70,6 +59,7 @@ public class Parser {
 		System.out.println("Command:" + test.getCommand());
 	}
 	
+	//Command containing key command and its description.
 	public String getRawCommand(){
 		if (rawCommand !=null){
 			return rawCommand.trim();
@@ -77,22 +67,11 @@ public class Parser {
 			return "";
 		}
 	}
-
-	public String getLocation(){
-		return location + "";
-	}
 	
+	//Command without key command and time identifiers.
 	public String getCommand() {
-		toDo = toDo.trim();
-	
-		ArrayList<String> prepWordsList = new ArrayList<String>();
-		prepWordsList.add("on");
-		prepWordsList.add("by");
-		prepWordsList.add("at");
-		prepWordsList.add("from");	
-		prepWordsList.add("in"); 
-		prepWordsList.add("until"); 
-	
+		toDo = toDo.trim(); 
+		ArrayList<String> prepWordsList = doPrepWordsList();
 		ArrayList<String> monthsList = doMonthsList();
 				
 		String[] description;
@@ -103,18 +82,19 @@ public class Parser {
 			
 		}
 		String[] identifers = new String[size]; 
-		
+		//Storing date identified into an array.
 		for(int i=0; i<size;i++){ 
 			identifers[i] = TimeParser.parser.get(i).getText();
-		//	System.out.println(identifers[i]);
 		} 
 		
-		for (int k=0;k<identifers.length;k++){
+		//Removing instances of integer if identified.
+		for (int k=0;k<identifers.length;k++){ 
 			if(isInteger(identifers[k])) { 
 				identifers[k] = ""; 
 			}
 		}
 		
+		//Removing instances of months if identified.
 		for(int j=0; j<size; j++) { 
 			if(monthsList.contains(identifers[j])) { 
 				String regex1 = "\bjan\b";
@@ -152,48 +132,74 @@ public class Parser {
 				}
 			}
 		}
-	
+		
+		//Replacing valid time and date instances with IDENTIFIER.
 		for(int k=0; k<size; k++) {
-			//System.out.println(toDo);
 			toDo = toDo.replaceFirst(identifers[k], "IDENTIFIER"); 
-			description = toDo.split(" "); 
-			//System.out.println(toDo); 
+			description = toDo.split(" ");  
 				for(int j=0; j<description.length; j++) { 
 					if(description[j].contains("IDENTIFIER") && j>0) { 
 						String prepWord = description[j-1]; 			
-							if(prepWordsList.contains(prepWord) && description[j].equals("IDENTIFIER")) {
-								String finaltoDo = "";  
-								description[j-1] ="";
-								for(int j1=0; j1<description.length; j1++) { //removes prep word if there is
-									finaltoDo = finaltoDo + description[j1] + " "; 
-								}
-								toDo = finaltoDo; 
-								toDo = toDo.replace("IDENTIFIER", ""); //removes the identifier
-								toDo = toDo.trim(); 
-								toDo = toDo.replaceAll("( )+", " ");
-								
-							}
+							removeIdentifierAndPrep(prepWordsList, description,
+									j, prepWord);
 					} 
-							toDo = toDo.replace("IDENTIFIER", ""); //if identifier does not have prep words before it
-							toDo = toDo.replaceAll("( )+", " ");
-							toDo = toDo.trim();
-						}
-					}	
+							removeIdentifier();
+				}
+		}	
+		//If command contains quotations, replace the original quotes back.
 		if(containQuo == true) { 
 			toDo = toDo.replace("QUOTATION", ignoreChar); 
 		}
 		return toDo; 
 	}
-
+	
+	//If identifier does not have preposition words before it, simply remove the identifier.
+	public void removeIdentifier() {
+		toDo = toDo.replace("IDENTIFIER", ""); 
+		toDo = toDo.replaceAll("( )+", " ");
+		toDo = toDo.trim();
+	}
+	
+	//Removes identifier found and the preposition word that appears before it.
+	public void removeIdentifierAndPrep(ArrayList<String> prepWordsList,
+										String[] description, int j, String prepWord) {
+		if(prepWordsList.contains(prepWord) && description[j].equals("IDENTIFIER")) {
+			String finaltoDo = "";  
+			description[j-1] ="";
+			for(int m=0; m<description.length; m++) { //Removes the preposition word.
+				finaltoDo = finaltoDo + description[m] + " "; 
+			}
+			toDo = finaltoDo; 
+			toDo = toDo.replace("IDENTIFIER", ""); //Removes the identifier.
+			toDo = toDo.trim(); 
+			toDo = toDo.replaceAll("( )+", " ");
+		}
+	}
+	
+	//Create an ArrayList consisting of preposition words.
+	public ArrayList<String> doPrepWordsList() {
+		ArrayList<String> prepWordsList = new ArrayList<String>();
+		prepWordsList.add("on");
+		prepWordsList.add("by");
+		prepWordsList.add("at");
+		prepWordsList.add("from");	
+		prepWordsList.add("in"); 
+		prepWordsList.add("until");
+		return prepWordsList;
+	}
+	
+	//Determine is a string contains purely integers.
 	public static boolean isInteger(String s) {
 	    try { 
 	        Integer.parseInt(s); 
 	    } catch(NumberFormatException e) { 
 	        return false; 
 	    }
-	    // only got here if we didn't return false
+	    //Only got here if we didn't return false.
 	    return true;
 	}
+	
+	//Create an ArrayList consisting of months words.
 	public ArrayList<String> doMonthsList() {
 		ArrayList<String> monthsList = new ArrayList<String>();
 		monthsList.add("jan");
@@ -208,7 +214,8 @@ public class Parser {
 		monthsList.add("nov");
 		monthsList.add("dec");
 		monthsList.add("mon"); 
-		monthsList.add("wed"); 
+		monthsList.add("wed");
+		monthsList.add("fri"); 
 		return monthsList;
 	}
 
@@ -223,7 +230,7 @@ public class Parser {
 		}
 		StringDecipher sentenceString = new StringDecipher(sentenceArray);
 		
-		//The key word of the command must be either the first or last of the sentence.
+		//Key word of the command must be either the first or last of the sentence.
 		keyWord = sentenceString.getKey();
 		if(keyWord.equals(CommandKey.CLEAR) && sentenceString.getWordsLeft()!=0){
 			keyWord = CommandKey.DELETE;
@@ -271,22 +278,26 @@ public class Parser {
 			assert sentenceString.getWordsLeft() == 0;
 		}
 		
-		//check for special keywords with quotations before parsing
+		//Check for command with quotations before parsing.
 		String tempCheck = toDo; 
 		ArrayList<Integer> quotations = new ArrayList<Integer>();
- 
+		
+		//Check for the number of '"' in the string.
 		for(int i=0; i<tempCheck.length(); i++) { 
 			if(tempCheck.charAt(i)=='\"') {
 				quotations.add(i);
 			}
-			if(quotations.size()==2) { //quotations found
+		}
+		
+		if(quotations.size()==2) { //Quotations found. 
 				ignoreStart = quotations.get(0); 
 				ignoreEnd = quotations.get(1); 
 				ignoreChar = tempCheck.substring(ignoreStart-1, ignoreEnd+2); 
 				ignoreChar = ignoreChar.trim();
-			}
 		}
-		if(quotations.size()==2) { //sieve out the words inside quotations
+		
+		//Sieve out the words found inside the quotations.
+		if(quotations.size()==2) { 
 			containQuo = true; 
 			toDo = toDo.replace(ignoreChar, "QUOTATION"); 
 			toDo = toDo.trim(); 
@@ -320,6 +331,7 @@ public class Parser {
 		assert keyWord !=null;
 	}
 	
+	//Check if a string is empty.
 	public boolean checkEmpty(String userCommand) {
 		userCommand.trim();
 		if(userCommand.equals("")){
@@ -375,11 +387,11 @@ public class Parser {
 		return isTimedTask;
 	}
 	
+	//If date entered has passed, add a certain time to it so it becomes a valid task.
 	public void smartParserCheck(){
 		now = new DateTime();
 		TimeRef = now.plusMinutes(2);
 		if (endTime.isBefore(now)){
-			//isValid = false;
 			if(endTime.getYear() == now.getYear() && 
 			   endTime.getDayOfYear() == now.getDayOfYear()){
 				if(endTime.isBefore(TimeRef)){
@@ -407,5 +419,4 @@ public class Parser {
 	public String getMessage(){
 		return message;
 	}
-
 }
