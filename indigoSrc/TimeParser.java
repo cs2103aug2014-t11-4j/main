@@ -6,16 +6,13 @@ import java.util.Scanner;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.joda.time.DateTime;
 import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 import org.ocpsoft.prettytime.nlp.parse.DateGroup;
 
-
-public class TimeParser {
-	
-	private String userCommand; // raw command from user
-	private String sortedUserCommand; // commands follows a format without a date:  e.g.add go to school
+public class TimeParser {	
+	private String userCommand; //Raw command from user.
+	private String sortedUserCommand; //Commands follows a format without a date: e.g.add go to school
 	private DateTime endTime;
 	private DateTime startTime;
 	private List<Date> datesStart;
@@ -36,13 +33,12 @@ public class TimeParser {
 		userCommand = someCommand.trim();
 		assert userCommand!=null;
 		
-		//this for loop deals with cases like op2 and cs2103
+		//Loop deals with cases such as op2 and cs2103 and prevent identifiers from removing them.
 		for(int k=0;k<userCommand.length();k++) { 
 			if(Character.isDigit(userCommand.charAt(k))) {  
 				if(k==0) { 
 					break; 
-				}
-				else if(Character.isLetter(userCommand.charAt(k-1))) { 
+				}else if(Character.isLetter(userCommand.charAt(k-1))) { 
 					int digitInt = 0; 
 					char digitChar = (char)userCommand.charAt(k); 
 					digitInt = Character.getNumericValue(digitChar); 
@@ -53,14 +49,13 @@ public class TimeParser {
 				}
 			}
 		}
-		
 		parser = new PrettyTimeParser().parseSyntax(userCommand);
-		filterParser();  //removes "6" or "wed" but found in "wedding" and deals with "3 a" and "3 p" etc. 
-		filterTimedTask(); //deals with identifiers = 2 namely, "thursday" and "8pm-10pm" but refers to same day
-		filterDeadLineTask(); //deals with identifiers = 2 namely, "monday" and "9pm" but they're separated
+		filterParser();  
+		filterTimedTask(); 
+		filterDeadLineTask(); 
 		
 		if (parser == null){
-			LOGGER.log(Level.FINE, "floating task detected.");
+			LOGGER.log(Level.FINE, "Floating task detected.");
 			sortedUserCommand = userCommand + "";
 			assert isDateFree();
 		} 
@@ -83,7 +78,7 @@ public class TimeParser {
 	    			parseTime();
 	    			break;
 	    		default:
-	    			LOGGER.log(Level.FINE, "more than 2 dateGroups detected.");
+	    			LOGGER.log(Level.FINE, "More than 2 dateGroups detected.");
 	    			LOGGER.log(Level.FINE, listAllDates(parser));
 	    			parseTime();
 			}
@@ -91,10 +86,8 @@ public class TimeParser {
 		assert sortedUserCommand!=null;
 	}
 	
+	//Deals with 2 identifiers namely, "thursday" and "8pm-10pm" but refers to the same day.
 	private void filterTimedTask() { 
-		ArrayList<String> prepWordsList = new ArrayList<String>();
-		prepWordsList.add("to"); 
-		
 		String[] descriptions; 
 		
 		if(parser.size() ==2) {
@@ -103,7 +96,7 @@ public class TimeParser {
 		 
 			if(second.contains("to")) { 
 				filteredTimedTask = true; 
-				descriptions = parser.get(1).getText().split("to"); //contains (5pm) and (6pm)
+				descriptions = parser.get(1).getText().split("to"); 
 				String date = parser.get(0).getText(); 
 				userCommand = userCommand.replace(date, date + " " + descriptions[0]);
 				userCommand = userCommand.replace(second, date + " " + descriptions[1]);			
@@ -111,50 +104,34 @@ public class TimeParser {
 				parserNewTimedTask = new PrettyTimeParser().parseSyntax(userCommand); 
 			}
 			
-			if(first.contains("to")) { 
+			else if(first.contains("to")) { 
 				filteredTimedTask = true; 
-				descriptions = parser.get(0).getText().split("to"); //contains (5pm) and (6pm)
+				descriptions = parser.get(0).getText().split("to"); 
 				String date = parser.get(1).getText(); 
 				userCommand = userCommand.replace(date, date + " " + descriptions[1]);
 				userCommand = userCommand.replace(first, date + " " + descriptions[0]); 
 				userCommand = userCommand.replaceAll("( )+", " ");
 				parserNewTimedTask = new PrettyTimeParser().parseSyntax(userCommand); 
-			}
-						
+			}			
 		}	
 	}
 	
+	//Deals with 2 identifiers namely, "monday" and "9pm" but they are separated.
 	private void filterDeadLineTask() { 
 		if(parser.size() == 2) { 
 			String start = parser.get(0).getText();
 			String end = parser.get(1).getText(); 
-			if((!(start.contains(" "))) || (!(end.contains(" ")))) { //contains (5pm) and (thursday) or (12 dec 2015)
+			if((!(start.contains(" "))) || (!(end.contains(" ")))) { //Contains (5pm) and (thursday) or (12 dec 2015).
 				filteredDeadLineTask = true; 
 				userCommand = userCommand.replace(start,start + " " + end);  
 				parserNewDeadLineTask = new PrettyTimeParser().parseSyntax(userCommand); 
 			}
 		}
 	}
+	
+	////Removes "6" or "wed" but found in "wedding" and deals with "3 a" and "3 p" etc. 
 	private void filterParser() { 
-		filterWords.add("mon"); 
-		filterWords.add("tue"); 
-		filterWords.add("wed"); 
-		filterWords.add("thu"); 
-		filterWords.add("fri"); 
-		filterWords.add("jan"); 
-		filterWords.add("feb"); 
-		filterWords.add("mar"); 
-		filterWords.add("apr");
-		filterWords.add("may"); 
-		filterWords.add("june"); 
-		filterWords.add("jul"); 
-		filterWords.add("aug"); 
-		filterWords.add("sep");
-		filterWords.add("oct"); 
-		filterWords.add("nov"); 
-		filterWords.add("dec"); 
-		filterWords.add("eve"); 
-		
+		filterWords(); 
 		String regex1 = "\bmon\b";
 		String regex2 = "\btue\b";
 		String regex3 = "\bwed\b"; 
@@ -175,58 +152,80 @@ public class TimeParser {
 		String regex18 = "\beve\b"; 
 		
 		for (int j=0;j<parser.size();j++){
-				String identified = parser.get(j).getText();
-				if(isInteger(parser.get(j).getText())) {  //removes stand alone integers like "6" identified
-					parser.remove(j); 
-				}
-				if((identified.length() ==3) && (identified.charAt(2) == 'a')) { //if "3 a" identified, remove it
-					System.out.println("DID IT ENTER"); 
-					parser.remove(j); 
-				}
-				if((identified.length() ==3) && (identified.charAt(2) == 'p')) //if "3 p" identified, remove it
-					parser.remove(j); 
+			String identified = parser.get(j).getText();
+			if(isInteger(parser.get(j).getText())) {  //Removes stand-alone integers like "6" if identified.
+				parser.remove(j); 
+			}
+			if((identified.length() ==3) && (identified.charAt(2) == 'a')) { //If "3 a" identified, remove it.
+				parser.remove(j); 
+			}
+			if((identified.length() ==3) && (identified.charAt(2) == 'p')) //If "3 p" identified, remove it.
+				parser.remove(j); 
 				
-				if(filterWords.contains(identified)) {  //remove "wed" if it is found in "wedding" 
-					if(!parser.get(j).getText().equals(regex1)) 
-					if(!parser.get(j).getText().equals(regex2)) 
-					if(!parser.get(j).getText().equals(regex3)) 
-					if(!parser.get(j).getText().equals(regex4)) 
-					if(!parser.get(j).getText().equals(regex5)) 
-					if(!parser.get(j).getText().equals(regex6))
-					if(!parser.get(j).getText().equals(regex7)) 
-					if(!parser.get(j).getText().equals(regex8))
-					if(!parser.get(j).getText().equals(regex9)) 
-					if(!parser.get(j).getText().equals(regex10)) 
-					if(!parser.get(j).getText().equals(regex11))
-					if(!parser.get(j).getText().equals(regex12)) 
-					if(!parser.get(j).getText().equals(regex13)) 
-					if(!parser.get(j).getText().equals(regex14))
-					if(!parser.get(j).getText().equals(regex15)) 
-					if(!parser.get(j).getText().equals(regex16)) 
-					if(!parser.get(j).getText().equals(regex17)) 	
-					if(!parser.get(j).getText().equals(regex18)) { 
-						parser.remove(j);  
-					}
+			if(filterWords.contains(identified)) {  //Remove "wed" if it is found in "wedding".
+				if(!parser.get(j).getText().equals(regex1)) 
+				if(!parser.get(j).getText().equals(regex2)) 
+				if(!parser.get(j).getText().equals(regex3)) 
+				if(!parser.get(j).getText().equals(regex4)) 
+				if(!parser.get(j).getText().equals(regex5)) 
+				if(!parser.get(j).getText().equals(regex6))
+				if(!parser.get(j).getText().equals(regex7)) 
+				if(!parser.get(j).getText().equals(regex8))
+				if(!parser.get(j).getText().equals(regex9)) 
+				if(!parser.get(j).getText().equals(regex10)) 
+				if(!parser.get(j).getText().equals(regex11))
+				if(!parser.get(j).getText().equals(regex12)) 
+				if(!parser.get(j).getText().equals(regex13)) 
+				if(!parser.get(j).getText().equals(regex14))
+				if(!parser.get(j).getText().equals(regex15)) 
+				if(!parser.get(j).getText().equals(regex16)) 
+				if(!parser.get(j).getText().equals(regex17)) 	
+				if(!parser.get(j).getText().equals(regex18)) { 
+					parser.remove(j);  
 				}
+			}
 		}
 	}
 	
+	//Adds word to the ArrayList to be filtered out. 
+	public void filterWords() {
+		filterWords.add("mon"); 
+		filterWords.add("tue"); 
+		filterWords.add("wed"); 
+		filterWords.add("thu"); 
+		filterWords.add("fri"); 
+		filterWords.add("jan"); 
+		filterWords.add("feb"); 
+		filterWords.add("mar"); 
+		filterWords.add("apr");
+		filterWords.add("may"); 
+		filterWords.add("june"); 
+		filterWords.add("jul"); 
+		filterWords.add("aug"); 
+		filterWords.add("sep");
+		filterWords.add("oct"); 
+		filterWords.add("nov"); 
+		filterWords.add("dec"); 
+		filterWords.add("eve");
+	}
+	
+	//Determine is a string contains purely integers.
 	public static boolean isInteger(String s) {
 	    try { 
 	        Integer.parseInt(s); 
 	    } catch(NumberFormatException e) { 
 	        return false; 
 	    }
-	    // only got here if we didn't return false
+	    //Only got here if we didn't return false.
 	    return true;
 	}
 	
-	private String listAllDates(List<DateGroup> parser2) {
+	private String listAllDates(List<DateGroup> ParserTest) {
 		StringBuilder result = new StringBuilder("Dates are:\n");
-		for (int i=0;i<parser2.size();i++){
-			result.append("DateGroup " + i+ " "+  parser2.get(i).getText() + ":\n");
-			for (int j=0;j<parser2.get(i).getDates().size();j++){
-				result.append(parser2.get(i).getDates().get(j).toString());
+		for (int i=0;i<ParserTest.size();i++){
+			result.append("DateGroup " + i+ " "+  ParserTest.get(i).getText() + ":\n");
+			for (int j=0;j<ParserTest.get(i).getDates().size();j++){
+				result.append(ParserTest.get(i).getDates().get(j).toString());
 			}
 		}
 		return result.toString();
@@ -243,19 +242,19 @@ public class TimeParser {
 			datesEnd = parser.get(1).getDates(); 
 		}
 		
-		if(filteredTimedTask == true) {  //"thursday" and "5pm to 7pm" as separate time instances
+		if(filteredTimedTask == true) {  //"thursday" and "5pm to 7pm" as separate time instances.
 			parseTimedTask3(); 
 		}
-		else if(filteredDeadLineTask == true) { //"thursday" and "5pm" as separate time instances
+		else if(filteredDeadLineTask == true) { //"thursday" and "5pm" as separate time instances.
 			parseDeadLineTask2(); 
 		}
-		else if(datesStart.size()==2) {  //"thursday 5pm to friday 7pm" together
+		else if(datesStart.size()==2) {  //"thursday 5pm to friday 7pm" together.
 			parseTimedTask1(); 
 		}
-		else if(parser.size()==2) { //"thursday 5pm" and "friday 7pm" as separate time instances
+		else if(parser.size()==2) { //"thursday 5pm" and "friday 7pm" as separate time instances.
 			parseTimedTask2();
 		}
-		else if(datesStart.size()==1) {  //"thursday 5pm" together
+		else if(datesStart.size()==1) {  //"thursday 5pm" together.
 			parseDeadLineTask1(); 
 		}
 	}

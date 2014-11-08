@@ -53,7 +53,7 @@ public class Read extends CommandClass{
 	}
 	
 	public String view(){
-		if(parserVar.taskWord!=null){
+		if(parserVar.taskWord != null){
 			TaskIdentifiers word = parserVar.taskWord;
 			switch(word){
 				case ALL:
