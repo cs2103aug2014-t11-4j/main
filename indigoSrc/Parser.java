@@ -268,9 +268,15 @@ public class Parser {
 		//sortedCommand = timeParser.getSortedCommand() + "";
 		
 		if (timeParser.isTimedTask()){
-			startTime = timeParser.getStartTime();
-			endTime = timeParser.getEndTime();
-			isTimedTask = true;
+			if((timeParser.getStartTime()).compareTo(timeParser.getEndTime()) <0) { //start is earlier than end
+				startTime = timeParser.getStartTime();
+				endTime = timeParser.getEndTime();
+			}
+			else {  //start is later than end so swop 
+				endTime = timeParser.getStartTime();
+				startTime = timeParser.getEndTime();
+			}
+		isTimedTask = true;
 		} else if(timeParser.isDeadLineTask()){
 			endTime = timeParser.getEndTime();
 			isDeadlineTask = true;
