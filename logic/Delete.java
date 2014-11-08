@@ -1,15 +1,12 @@
 package logic;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 import parser.TaskIdentifiers;
 import indigoSrc.Parser;
 import indigoSrc.Task;
 import indigoSrc.TaskList;
-
-import java.util.Stack;
-
-import parser.TaskIdentifiers;
 
 /** This class is the delete class which deletes the task that user
  * would want to delete. User will have to indicate the index which the task 
@@ -37,87 +34,51 @@ public class Delete extends CommandClass{
 		int totalSize = taskListVar.getSize();
 		index = parserVar.getRawEditIndex();
 		type = parserVar.taskWord;
-		Stack<Integer> manyNumbers = new Stack<Integer>();
+		ArrayList<Integer> manyNumbers = new ArrayList<Integer>();
 		manyNumbers = parserVar.getMultipleIndices();
-		//System.out.println(manyNumbers.peek() + "inDelete");
 		
 		if(manyNumbers != null){
-			System.out.println("Itsnotnull");
-			Stack<Integer> check = new Stack<Integer>();
+			ArrayList<Integer> check = new ArrayList<Integer>();
 			check = manyNumbers;
-			if(manyNumbers.empty() || manyNumbers == null){
-				System.out.println("Stack nothignn");
-			} else {
-				System.out.println(manyNumbers.peek());
-			}
 			if(checkValidIndices(check)){
-				if(manyNumbers.empty() || manyNumbers == null){
-					System.out.println("Stack nothignn");
-				} else {
-					System.out.println(manyNumbers.peek());
-				}
-				deleteAllIndex = fillDeleteNum(manyNumbers);
+				deleteAllIndex = fillDeleteAll(manyNumbers);
 				type = TaskIdentifiers.ALL;
-				System.out.println("Itsnullnotvalid");
 			} else{
-
 				isValid = false;
 			}
 		} else if(!type.equals(TaskIdentifiers.INVALID)){
-			System.out.println("Itsnull");
 			deleteAllIndex = fillDeleteAll(type);
 		} else if ((index <= totalSize) && (index >= 1)){
-			System.out.println("Itsnullhere");
 			toDo = taskListVar.get(index);
 		} else {
-			index = taskListVar.getRecentIndex();
-			toDo = taskListVar.get(index);
+			isValid = false;
+			toDo = null;
 		}
 	}
 	
-	private boolean checkValidIndices(Stack<Integer> manyNumbers) {
+	private boolean checkValidIndices(ArrayList<Integer> manyNumbers) {
 		// TODO Auto-generated method stub
-		if(manyNumbers.empty() || manyNumbers == null){
-			System.out.println("Stack nothignn");
-		} else {
-			System.out.println(manyNumbers.peek());
-		}
-		Stack<Integer> check = new Stack<Integer>();
-		check = (Stack<Integer>) manyNumbers.clone();
 		int totalSize = taskListVar.getSize();
-		while(!check.empty()){
-			int number = check.pop();
+		for(int i=0; i<=manyNumbers.size() - 1; i++){
+			int number = manyNumbers.get(i);
 			if(!((number <= totalSize) && (number >= 1))){
 				return false;
 			}
 		}
-		if(manyNumbers.empty() || manyNumbers == null){
-			System.out.println("Stack nothignn");
-		} else {
-			System.out.println(manyNumbers.peek());
-		}
-		//manyNumbers = check;
 		return true;
 	}
 	
-	public Stack<Integer> fillDeleteNum(Stack<Integer> manyNumbers) {
-		if(manyNumbers.empty() || manyNumbers == null){
-			System.out.println("Stack nothignn");
-		} else {
-			System.out.println(manyNumbers.peek());
-		}
+	public Stack<Integer> fillDeleteAll(ArrayList<Integer> manyNumbers) {
 		// TODO Auto-generated method stub
 		Stack<Integer> indices = new Stack<Integer>();
-		while(!manyNumbers.empty()){
-			System.out.println("i get empty");
-			int number = manyNumbers.pop();
+		for(int i=0; i<manyNumbers.size(); i++){
+			int number = manyNumbers.get(i);
 			deleteAll.push(taskListVar.get(number));
-			
 			indices.push(number);
 		}
 		return indices;
 	}
-
+	
 	public Stack<Integer> fillDeleteAll(TaskIdentifiers type){
 		Stack<Integer> indices = new Stack<Integer>();
 		if(type.equals(TaskIdentifiers.FLOATING)){
@@ -157,24 +118,24 @@ public class Delete extends CommandClass{
 	}
 	
 	private String delete() throws ArrayIndexOutOfBoundsException{
-		if(!type.equals(TaskIdentifiers.INVALID)){
-			System.out.println("Itsnotnullwaydown");
-			Stack<Integer> temp = new Stack<Integer>();
-			int count = 0;
-			while(!deleteAllIndex.empty()){
-				System.out.println("emotystack");
-				int indexNum = deleteAllIndex.pop();
-				taskListVar.deleteTask(indexNum);
-				temp.push(indexNum);
-				count++;
-			}
-			deleteAllIndex = temp;
-			return count + " task(s) is/are deleted.";
-		}
-		System.out.println("Itsnotnullrechhere");
 		if (isValid==false){
 			return "Invalid index";
 		} 
+		if(!type.equals(TaskIdentifiers.INVALID)){
+			Stack<Integer> temp = new Stack<Integer>();
+			Stack<Task> taskTemp = new Stack<Task>();
+			int count = 0;
+			while(!deleteAllIndex.empty()){
+				int indexNum = deleteAllIndex.pop();
+				taskListVar.deleteTask(indexNum);
+				temp.push(indexNum);
+				taskTemp.push(deleteAll.pop());
+				count++;
+			}
+			deleteAllIndex = temp;
+			deleteAll = taskTemp;
+			return count + " task(s) is/are deleted.";
+		}
 		taskListVar.deleteTask(index);
 		return toDo.toString() + " is deleted";
 	}

@@ -308,9 +308,9 @@ public class TaskList {
 	public boolean unComplete(int index){
 		indexRecentTask = index;
 		if (index>timedTaskList.size()){
-			return floatingTaskList.get(index-1-timedTaskList.size()).complete();
+			return floatingTaskList.get(index-1-timedTaskList.size()).unComplete();
 		} else {
-			return timedTaskList.get(index-1).complete();
+			return timedTaskList.get(index-1).unComplete();
 		}
 	}
 

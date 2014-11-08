@@ -1,8 +1,13 @@
 package parser;
-
+/**This class takes in a string array and decipher it. It will identify the key command words,
+ * the indices of input and the task indentifiers.
+ * This class is made of the remaining words in the array and the number of words left.
+ * 
+ * @author KenHua
+ */
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Stack;
+import java.util.Collections;
 
 public class StringDecipher {
 	private ArrayList<String> remaining;
@@ -22,6 +27,8 @@ public class StringDecipher {
 		return wordsLeft;
 	}
 	
+	//Gets the command key word. It extracts either the first or last word depending on 
+	//the command ket word's position.
 	public CommandKey getKey(){
 		int arraySize = wordsLeft;
 		CommandKey key = CommandKey.identifyKey(remaining.get(0).toLowerCase());
@@ -40,18 +47,22 @@ public class StringDecipher {
 		return key;
 	}
 	
+	//Gets the index from the sentence. It takes the second position if the key
+	//command is at the first position or the first position if the key command
+	//is at the last position.
 	public int getIndex(){
 		int index = -1;
 		try{
 			 index = Integer.parseInt(remaining.get(0));
 			 remaining.remove(0);
 		} catch(NumberFormatException er){
-			
 		}
 		this.wordsLeft = remaining.size();
 		return index;
 	}
 	
+	//Identifies the key word is the following commands are identified:
+	//Delete, complete, uncomplete, undo, redo, and view.
 	public TaskIdentifiers checkTaskWords(CommandKey keyWord) {
 		TaskIdentifiers taskWord = TaskIdentifiers.INVALID;
 		assert this.getWordsLeft() >=0 && this.getWordsLeft() <=2;
@@ -75,6 +86,7 @@ public class StringDecipher {
 		return taskWord;
 	}
 	
+	//Returns the remaining words after deciphering.
 	public String remainingToString(){
 		String printup = "";
 		for(int i=0; i<wordsLeft; i++){
@@ -83,8 +95,10 @@ public class StringDecipher {
 		return printup;
 	}
 
-	public Stack<Integer> extractIndices() {
-		Stack<Integer> indices = new Stack<Integer>();
+	//Find indices input by user. This method is invoked by command keys:
+	//Delete, complete and uncomplete.
+	public ArrayList<Integer> extractIndices() {
+		ArrayList<Integer> indices = new ArrayList<Integer>();
 		if(getWordsLeft()==0){
 			return null;
 		}else{
@@ -93,7 +107,7 @@ public class StringDecipher {
 			int count=0;
 			while(i < instances){
 				try{
-					indices.push(Integer.parseInt(remaining.get(i)));
+					indices.add(Integer.parseInt(remaining.get(i)));
 					count++;
 				}catch(Exception err){
 				}
@@ -103,6 +117,7 @@ public class StringDecipher {
 				return null;
 			}
 		}
+		Collections.sort(indices);
 		remaining.clear();
 		wordsLeft = 0;
 		return indices;

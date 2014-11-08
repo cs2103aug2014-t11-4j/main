@@ -15,7 +15,6 @@ package indigoSrc;
  */
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,7 +52,7 @@ public class Parser {
 	ArrayList<String> detailsList = new ArrayList<String>();
 	private final static Logger LOGGER = Logger.getLogger(Parser.class.getName());
 	private static Scanner sc;
-	private Stack<Integer> multipleIndices =  new Stack<Integer>();
+	private ArrayList<Integer> multipleIndices =  new ArrayList<Integer>();
 
 	
 	public static void main(String args[]) {
@@ -250,17 +249,23 @@ public class Parser {
 		  (!(keyWord.equals(CommandKey.CREATE) || keyWord.equals(CommandKey.UPDATE)))){
 			editIndex = sentenceString.getIndex();
 		}
+	/*	If the command is one of the following (in the if statement), taskIdentifiers 
+	 * 	words can be used to execute the command. 
+	 */
 		if(keyWord.equals(CommandKey.DELETE) || keyWord.equals(CommandKey.COMPLETE) ||
 		   keyWord.equals(CommandKey.READ) || keyWord.equals(CommandKey.UNCOMPLETE) ||
 		   keyWord.equals(CommandKey.UNDO) || keyWord.equals(CommandKey.REDO)) {
 			taskWord = sentenceString.checkTaskWords(keyWord);
 		}
 		
+	/*	If the command is one of the following (in the if statement), multiple index can be
+	 *  input by the user. Thus, this block is to check and extract the indices.
+	 */
 		if(keyWord.equals(CommandKey.DELETE) || keyWord.equals(CommandKey.COMPLETE) ||
 		   keyWord.equals(CommandKey.UNCOMPLETE)){
 			multipleIndices = sentenceString.extractIndices();
-			if(multipleIndices == null || multipleIndices.empty() ){
-				System.out.println("Stack nothignn");
+			if(multipleIndices == null || multipleIndices.isEmpty() ){
+				
 			}
 		}
 	/*	=== editIndex status ===
@@ -273,15 +278,11 @@ public class Parser {
 			if(!(keyWord.equals(CommandKey.CREATE))){
 				editIndex = sentenceString.getIndex();
 			}
-			//commandSentence = sentenceString.returnTwoRemaining();
-			//commandWords = commandSentence[1];
-			//location = parseLocation(commandSentence);
 			toDo = sentenceString.remainingToString();
 			
 			LOGGER.log(Level.FINE, "toDo: " + toDo);
 			LOGGER.log(Level.FINE, "editIndex " + editIndex);
 		}	else {
-			//sentenceString.getWordsLeft == 0
 			assert sentenceString.getWordsLeft() == 0;
 		}
 		
@@ -334,6 +335,7 @@ public class Parser {
 		assert keyWord !=null;
 	}
 	
+	//Checks if the user has input nothing or just white spaces.
 	public boolean checkEmpty(String userCommand) {
 		userCommand.trim();
 		if(userCommand.equals("")){
@@ -343,21 +345,11 @@ public class Parser {
 		}
 	}
 	
-/*	private String parseLocation(String[] words) {
-		String place = new String("");
-		for (String str: words){
-			if (str.startsWith("@")){
-				place = str.substring(1);
-				return place;
-			}
-		}
-		return null;
-	}
-*/
 	public CommandKey getKeyCommand() { 
 		return keyWord;
 	}
-
+	
+	//Edit index is tampered to return default 1.
 	public int getEditIndex() { 
 		if (editIndex == -1){
 			return 1;
@@ -365,10 +357,12 @@ public class Parser {
 		return editIndex; 
 	}
 	
-	public Stack<Integer> getMultipleIndices(){
+	public ArrayList<Integer> getMultipleIndices(){
 		return multipleIndices;
 	}
 	
+	//Get the raw edit index, which is not tampered to return 
+	//default 1.
 	public int getRawEditIndex(){
 		return editIndex;
 	}
@@ -393,11 +387,13 @@ public class Parser {
 		return isTimedTask;
 	}
 	
+	//Checks if the date and time entered by user is not a past time. If it is, 
+	//this method will auto correct the timing. If there is a start time (timed task),
+	//the start time will not change even is it has past.
 	public void smartParserCheck(){
 		now = new DateTime();
 		TimeRef = now.plusMinutes(2);
 		if (endTime.isBefore(now)){
-			//isValid = false;
 			if(endTime.getYear() == now.getYear() && 
 			   endTime.getDayOfYear() == now.getDayOfYear()){
 				if(endTime.isBefore(TimeRef)){

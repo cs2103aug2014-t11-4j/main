@@ -101,13 +101,7 @@ public class Read extends CommandClass{
 					return viewAll();
 			}
 		}
-		
-		if(parserVar.isDeadlineTask()){
-			DateTime dts = parserVar.getStartTime();
-			DateTime dte = parserVar.getEndTime();
-			return viewAny(dts, dte);
-		}
-		return viewAll();
+		return "0";
 	}
 
 	//The view of all tasks in floating tasklist
@@ -293,41 +287,6 @@ public class Read extends CommandClass{
 		return result.toString().trim();
 	}
 	
-	
-	public static String viewAny(DateTime start, DateTime end){
-		DateTime now = new DateTime();
-		//int yearNow = now.getYear();
-		//int monthNow = now.getMonthOfYear();
-		//int dayNow = now.getDayOfMonth();
-		
-		if(start==null){
-			start = new DateTime();
-		}
-		int yearEnd = end.getYear();
-		int monthEnd = end.getMonthOfYear();
-		int dayEnd = end.getDayOfYear();
-		
-		StringBuilder result = new StringBuilder();
-		int tlSize = taskListVar.getTimedList().size();
-		String timeKeeperCompare = dayLeft(now, start);
-		result.append(timeKeeperCompare + newLine);
-		for (int i=1; i<=tlSize; i++){
-				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
-				DateTime tempDate = temp.getTime();
-				String timeKeeper = dayLeft(now, tempDate);
-				int tempMonth = tempDate.getMonthOfYear();
-				if((tempDate.getYear() == yearEnd) && (tempMonth == monthEnd) &&
-						(tempDate.getDayOfYear() == dayEnd)){
-					if(!timeKeeperCompare.equals(timeKeeper)){
-						result.append(newLine + timeKeeper + newLine);
-						timeKeeperCompare = timeKeeper;
-					}
-					result.append(temp.toString(LogicFacade.TIME_FORMAT) + newLine);
-				}
-		}
-		return result.toString().trim();
-	}
-	
 	//This method lets user see tasks which are overdue but not done
 	public static String viewOverDue(){
 		DateTime now = new DateTime();
@@ -358,6 +317,7 @@ public class Read extends CommandClass{
 		return result.toString().trim() + newLine;
 	}
 	
+	//Prints the heading for each task separation. Prints out the day and dates
 	private static String dayLeft(DateTime today, DateTime taskDate){
 		String returnString[] = new String[2];
 		int days = 0;
@@ -399,7 +359,8 @@ public class Read extends CommandClass{
 		
 		return returnString[0] + returnString[1];
 	}
-
+	
+	//Undo is ignored.
 	@Override
 	public String undo() {
 		// TODO Auto-generated method stub

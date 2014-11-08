@@ -1,5 +1,4 @@
 package indigoSrc;
-
 import logic.Complete;
 import logic.Create;
 import logic.Delete;
@@ -7,10 +6,8 @@ import logic.Read;
 import logic.Search;
 import logic.UndoList;
 import logic.Update;
-
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-
 import parser.CommandKey;
 import parser.TaskIdentifiers;
 
@@ -28,85 +25,69 @@ import parser.TaskIdentifiers;
  */
 
 public class LogicFacade {
-	public String display;
-	public String feedback;
-	private static UndoList uList = new UndoList();;
-	private static Parser parser;
+	public String display;			//The one which is displayed on the tabbed pane.
+	public String feedback;			//The one which is displayed below the user input line
+	private static UndoList uList = new UndoList();;	//The invoker for the command class pattern
+	private static Parser parser;	
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yyyy, HH:mm");
 	public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm");
-	public static final String FILE_NAME = "myTask";
-	private static TaskList taskList = new TaskList();
-	public int setTab = 0;
+	public static final String FILE_NAME = "myTask";	//By default. Only can save here.
+	private static TaskList taskList = new TaskList();	
+	public int setTab = 0;			//The tab number indicator on tabbedpane display
 	
 	//Default constructor
 	public LogicFacade(){
 		this("view");
 	}
 	
-	public LogicFacade(String userCommand){
+	public LogicFacade(String userInput){
 		loadData();
-		String userInput = userCommand;
-		Parser parse = new Parser(userInput);
-		parse.getKeyCommand();
-		if(parse.isValid()==false){
+		Parser parseString = new Parser(userInput);
+		parseString.getKeyCommand();
+		if(parseString.isValid()==false){
 			feedback = "Invalid input";
 		}else{
-			feedback = readCommand(userInput);
+			feedback = readCommand(parseString);
 		}
-		//System.out.println(display);
 		if (display==null){
 			display = new Read(taskList).resultString;
 		}
-		
-		/*if(!(now.equals(CommandKey.CREATE)) || (now.equals(CommandKey.SEARCH))){
-			Read rc = new Read(taskList);
-		}*/
 		saveData();
 	}
 
-	private String readCommand(String userCommand) {
-		/*
-		 * TODO 
-		 * 1.read a command from user and process it 
-		 * 2.execute Command
-		 */ // TODO simple input for testing
-		parser = new Parser(userCommand);
-		return executeCommand(parser.getKeyCommand());
+	//Reads in a command.
+	private String readCommand(Parser parseString) {
+		return executeCommand(parseString.getKeyCommand());
 	}
-
+	
+	//Execute the task.
 	private String executeCommand(CommandKey commandKey) {
-		/*
-		 * TODO 
-		 * 1.executeCommand 
-		 * 2.save taskList
-		 * 
-		 * A standardized command should have String systemMessage returned.
-		 */
 		switch (commandKey){
 			case CREATE:
 				Create classAdd = new Create(parser, taskList);
 				if(classAdd.isValid){
-					uList.push(classAdd);
+					uList.push(classAdd);		//Push into the invoker for undo
 				}
 				return classAdd.execute();
 			case READ:
 				Read classView = new Read(parser, taskList);
-				setTab = classView.tabNo;
+				setTab = classView.tabNo;		//Tells which tab to display on GUI
 				display = classView.resultString;
 				return classView.feedback;
 			case UPDATE:
 				Update classEdit = new Update(parser, taskList);
 				if(classEdit.isValid){
-					uList.push(classEdit);
+					uList.push(classEdit);		//Push into the invoker for undo
 				}
 				return classEdit.execute();
 			case DELETE:
 				Delete classDelete = new Delete(parser, taskList);
 				if(classDelete.isValid){
-					uList.push(classDelete);
+					uList.push(classDelete);	//Push into the invoker for undo
 				}
 				return classDelete.execute();
 			case UNDO:
+				//This is for multiple undo on specific types of tasks
 				if(parser.taskWord.equals(TaskIdentifiers.ALL)){
 					int count = 0;
 					while(uList.isUndoAble()){
@@ -114,6 +95,7 @@ public class LogicFacade {
 						count++;
 					}
 					return printMoves(count, "Undo");
+				//This is for mutliple undo.
 				} else if (parser.getEditIndex()>0){
 					int index = parser.getEditIndex();
 					int count = 0; 
@@ -123,10 +105,12 @@ public class LogicFacade {
 						count++;
 					}
 					return printMoves(count, "Undo");
+				//This is the default value=0;
 				} else {
 					return printMoves(0, "Undo");
 				}
 			case REDO:
+				//This is for multiple undo on specific types of tasks
 				if(parser.taskWord.equals(TaskIdentifiers.ALL)){
 					int count = 0;
 					while(uList.isRedoAble()){
@@ -134,6 +118,7 @@ public class LogicFacade {
 						count++;
 					}
 					return printMoves(count, "Redo");
+				//This is for mutliple indices.
 				}else if(parser.getEditIndex()>0){
 					int index = parser.getEditIndex();
 					int count = 0; 
@@ -149,20 +134,23 @@ public class LogicFacade {
 			case COMPLETE:
 				Complete classCheck = new Complete(parser, taskList, true);
 				if(classCheck.isValid){
-					uList.push(classCheck);
+					uList.push(classCheck);		//Push into the invoker for undo
 				}
 				return classCheck.execute();
 			case UNCOMPLETE:
-				int indexU = parser.getEditIndex();
-				taskList.get(indexU).unComplete();
-				return "Task marked as uncomplete";	
+				Complete classUnCheck = new Complete(parser, taskList, false);
+				if(classUnCheck.isValid){
+					uList.push(classUnCheck);	//Push into the invoker for undo
+				}
+				return classUnCheck.execute(); 
 			case SEARCH:
-				System.out.println("come to me");
+				//searches for keywords only. Not for time. 
 				Search classSearch = new Search(parser, taskList);
 				String result = classSearch.execute();
 				display = classSearch.searchResult;
 				return result;
 			case CLEAR:
+				//By default, this will clear all 
 				return taskList.clear();
 			default:
 				System.exit(0);
