@@ -200,7 +200,7 @@ public class FillUpMainWindow {
         	else if (command.equals("d") ||command.equals("de") || command.equals("del") || command.equals("dele")|| command.equals("delet")|| command.equals("delete"))
         		liveUserFeedback.setText( "delete <index>");
         	else if (command.equals("v") || command.equals("vi") || command.equals("vie"))
-        		liveUserFeedback.setText( "view <-t/-w/-m/done/undone>");
+        		liveUserFeedback.setText( "view <today/thisweek/thismonth/done/undone>");
         	else if (command.equals("e") || command.equals("ed") || command.equals("edi") || command.equals("edit"))
         		liveUserFeedback.setText( "edit <index> <some task>");
         	else if (command.equals("c")||command.equals("co")||command.equals("com")||command.equals("comp")||command.equals("compl")

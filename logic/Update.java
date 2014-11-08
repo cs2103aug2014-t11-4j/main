@@ -39,9 +39,7 @@ public class Update extends CommandClass{
 		
 		String newTaskDescription = parserVar.getCommand();
 		DateTime newStartTime = parserVar.getStartTime();
-		if(newStartTime == null){
-			System.out.print("Is it null");
-		}
+		
 		DateTime newEndTime = parserVar.getEndTime();
 		if(newTaskDescription.equals("")){
 			newTaskDescription = toDoReplaced.getDescription();
@@ -51,7 +49,6 @@ public class Update extends CommandClass{
 		}
 		if(newStartTime==null){
 			newStartTime = toDoReplaced.getStartTime();
-			System.out.print("Is it null");
 		}
 		toDo = getTask(newTaskDescription, newEndTime, newStartTime);
 	}

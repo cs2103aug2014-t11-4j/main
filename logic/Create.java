@@ -47,7 +47,7 @@ public class Create extends CommandClass {
 			return "Invalid index";
 		} else {
 		taskListVar.addTask(index, toDo);
-		return toDo.toString() + " is added to taskList!";
+		return toDo.toString() + "\nis added to taskList!";
 		}
 
 	}

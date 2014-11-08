@@ -33,6 +33,7 @@ public class LogicFacade {
 	private static UndoList uList = new UndoList();;
 	private static Parser parser;
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yyyy, HH:mm");
+	public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm");
 	public static final String FILE_NAME = "myTask";
 	private static TaskList taskList = new TaskList();
 	public int setTab = 0;

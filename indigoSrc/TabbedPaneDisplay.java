@@ -62,7 +62,7 @@ public class TabbedPaneDisplay extends JPanel {
 		JPanel tabbedPanel = new JPanel();
 		
 		textPaneTemp = new JTextPane();
-		Font font = new Font("Serif", Font.ITALIC,20);
+		Font font = new Font("Serif", Font.ITALIC,14);
 		PaneArray.add(textPaneTemp);
 
 		JScrollPane scroll = new JScrollPane(textPaneTemp);

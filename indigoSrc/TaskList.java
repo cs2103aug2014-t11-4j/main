@@ -140,16 +140,16 @@ public class TaskList {
 	}
 	
 	public String viewUndone(){
-		StringBuilder str = new StringBuilder("FloatingTasks Due: " + newLine);
+		StringBuilder str = new StringBuilder("Tasks Due: " + newLine);
 		int j = 1;
 		for (int i=0; i<timedTaskList.size();i++,j++){
 			if (!timedTaskList.get(i).isCompleted()){
-				str.append( j + ". " + timedTaskList.get(i).toString() + newLine);
+				str.append( j + ". " + timedTaskList.get(i).toString(LogicFacade.DATE_FORMAT) + newLine);
 			}
 		}
 		for (int i=0; i<floatingTaskList.size();i++,j++){
 			if (!floatingTaskList.get(i).isCompleted()){
-				str.append( j + ". " + floatingTaskList.get(i).toString() + newLine);
+				str.append( j + ". " + floatingTaskList.get(i).toString(LogicFacade.DATE_FORMAT) + newLine);
 			}
 		}
 		return str.toString();
