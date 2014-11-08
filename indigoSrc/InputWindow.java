@@ -8,9 +8,6 @@ import javax.swing.UIManager;
 
 public class InputWindow extends JFrame {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Override
