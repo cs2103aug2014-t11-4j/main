@@ -7,6 +7,10 @@ package indigoSrc;
  * edit: edit 3 buy a cat instead (integer + command)
  * undo: does nothing but return keycommand
  * @author Joanna
+ * 
+ * It can also parse index and return the type of tasks which needs to be invoked for commands
+ * like read, delete, complete and undo
+ * @author KenHua
  *
  */
 import java.util.ArrayList;

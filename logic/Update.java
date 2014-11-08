@@ -8,11 +8,11 @@ import indigoSrc.Parser;
 import indigoSrc.Task;
 import indigoSrc.TaskList;
 import indigoSrc.TimedTask;
-/* This class is the update class which can update the task that user
+/** This class is the update class which can update the task that user
  * would want to edit. User will have to indicate the index which the task 
  * lies to update the task.
  * 
- * @author Ken
+ * @author KenHua
  */
 
 public class Update extends CommandClass{

@@ -8,12 +8,12 @@ import org.joda.time.DateTime;
 
 import parser.TaskIdentifiers;
 
-/* This class is the read class which will display the list that user
+/** This class is the read class which will display the list that user
  * would want to see. This class has different types of views that user
  * can choose from. The Tabbed Pane Display will have some default view
  * type implemented like viewToday() and viewThisWeek().
  * 
- * @author Ken
+ * @author KenHua
  */
 
 public class Read extends CommandClass{
