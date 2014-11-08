@@ -7,11 +7,11 @@ import indigoSrc.Parser;
 import indigoSrc.TaskList;
 import indigoSrc.TimedTask;
 
-/* This class is the create class which adds the task that user
+/** This class is the create class which adds the task that user
  * would want to add. This class has the function to add task either
  * in the floating tasklist or the deadline tasklist.
  * 
- * @author Ken
+ * @author KenHua
  */
 
 public class Create extends CommandClass {
@@ -47,7 +47,7 @@ public class Create extends CommandClass {
 			return "Invalid index";
 		} else {
 		taskListVar.addTask(index, toDo);
-		return toDo.toString() + " is added to taskList!";
+		return toDo.toString() + "\nis added to taskList!";
 		}
 
 	}

@@ -2,6 +2,12 @@ package indigoSrc;
 /** This class is meant to read in the command line from the user in the form of a string
  * 	and parse it so that the logic can access it simply. 
  * @author Joanna
+=======
+ * 
+ * It can also parse index and return the type of tasks which needs to be invoked for commands
+ * like read, delete, complete and undo
+ * @author KenHua
+ *
  */
 import java.util.ArrayList;
 import java.util.Scanner;

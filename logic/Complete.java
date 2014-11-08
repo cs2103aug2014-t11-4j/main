@@ -4,6 +4,13 @@ import indigoSrc.Task;
 import indigoSrc.Parser;
 import indigoSrc.TaskList;
 
+/** This class is the Complete class which marks a task. This class has 
+ * the function to mark the task either as done or undone.
+ * in the floating tasklist or the deadline tasklist.
+ * 
+ * @author KenHua
+ */
+
 public class Complete extends CommandClass {
 	
 	Task toDo;
