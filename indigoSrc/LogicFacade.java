@@ -15,12 +15,15 @@ import parser.CommandKey;
 import parser.TaskIdentifiers;
 
 /**
- * This a main program of Indigo. Indigo is a software that can store, process
+ * This a main Logic of Indigo. Indigo is a software that can store, process
  * and display tasks on the desktop as a task manager. Indigo also supports
  * audio reminder, auto-correction, and color-coded highlighting. Indigo takes
  * input from keyboard only. Indigo stores data on a local disk.
  * 
- * @author jjlu & Ken
+ * This class acts like a facade pattern that the GUI will call. This facade then calls 
+ * the other classes of logic and components like storage and parser to execute a task.
+ * 
+ * @author jjlu & KenHua
  *
  */
 
@@ -30,6 +33,7 @@ public class LogicFacade {
 	private static UndoList uList = new UndoList();;
 	private static Parser parser;
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yyyy, HH:mm");
+	public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm");
 	public static final String FILE_NAME = "myTask";
 	private static TaskList taskList = new TaskList();
 	public int setTab = 0;

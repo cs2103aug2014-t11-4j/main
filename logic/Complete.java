@@ -4,6 +4,13 @@ import indigoSrc.Task;
 import indigoSrc.Parser;
 import indigoSrc.TaskList;
 
+/** This class is the Complete class which marks a task. This class has 
+ * the function to mark the task either as done or undone.
+ * in the floating tasklist or the deadline tasklist.
+ * 
+ * @author KenHua
+ */
+
 public class Complete extends CommandClass {
 	
 	Task toDo;
@@ -37,14 +44,14 @@ public class Complete extends CommandClass {
 	private String check() {
 		// TODO Auto-generated method stub
 		assert(isValid);
-		taskListVar.get(index).complete();
+		taskListVar.complete(index);
 		return toDo.toString() + " is completed!";
 	}
 	
 	private String unCheck() {
 		// TODO Auto-generated method stub
 		assert(isValid);
-		taskListVar.get(index).unComplete();
+		taskListVar.unComplete(index);
 		return toDo.toString() + " is not completed!";
 	}
 

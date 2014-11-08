@@ -2,9 +2,10 @@ package logic;
 
 import indigoSrc.Parser;
 import indigoSrc.TaskList;
-//This is the Command abstract class used in the Logic component implementing the 
-//Command Pattern. The methods return String because they are used for testing.
-//@Ken
+/**This is the Command abstract class used in the Logic component implementing the 
+ * Command of users.
+ * @author KenHua
+ */
 
 public abstract class CommandClass {
 	protected Parser parserVar; 

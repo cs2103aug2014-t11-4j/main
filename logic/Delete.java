@@ -11,11 +11,11 @@ import java.util.Stack;
 
 import parser.TaskIdentifiers;
 
-/* This class is the delete class which deletes the task that user
+/** This class is the delete class which deletes the task that user
  * would want to delete. User will have to indicate the index which the task 
  * lies to delete the task.
  * 
- * @author Ken
+ * @author KenHua
  */
 
 public class Delete extends CommandClass{

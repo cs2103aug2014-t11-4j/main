@@ -4,8 +4,14 @@ import indigoSrc.DeadlineTask;
 import indigoSrc.Parser;
 import indigoSrc.Task;
 import indigoSrc.TaskList;
-
 import java.util.ArrayList;
+
+/** This class is the search class which finds the task based on the user's
+ * key words. This class has the function to search through the list of tasks to find
+ * the tasks containing the keywords. 
+ * 
+ * @author KenHua
+ */
 
 public class Search extends CommandClass {
 

@@ -7,6 +7,10 @@ package indigoSrc;
  * edit: edit 3 buy a cat instead (integer + command)
  * undo: does nothing but return keycommand
  * @author Joanna
+ * 
+ * It can also parse index and return the type of tasks which needs to be invoked for commands
+ * like read, delete, complete and undo
+ * @author KenHua
  *
  */
 import java.util.ArrayList;
@@ -42,6 +46,10 @@ public class Parser {
 	private boolean isDeadlineTask;
 	private boolean isTimedTask; 
 	static TimeParser testParser;	
+	private String ignoreChar = "";
+	private int ignoreStart = 0; 
+	private int ignoreEnd = 0;
+	private boolean containQuo = false; 
 	ArrayList<String> detailsList = new ArrayList<String>();
 	private final static Logger LOGGER = Logger.getLogger(Parser.class.getName());
 	private static Scanner sc;
@@ -65,7 +73,7 @@ public class Parser {
 		} catch (IndexOutOfBoundsException err){
 			System.out.println("There are no such thing as time!");
 		}
-		System.out.println("Command:" + test.getRawCommand());
+		System.out.println("Command:" + test.getCommand());
 	}
 	
 	public String getRawCommand(){
@@ -82,7 +90,7 @@ public class Parser {
 	
 	public String getCommand() {
 		toDo = toDo.trim();
-		
+	
 		ArrayList<String> prepWordsList = new ArrayList<String>();
 		prepWordsList.add("on");
 		prepWordsList.add("by");
@@ -176,7 +184,10 @@ public class Parser {
 							toDo = toDo.replaceAll("( )+", " ");
 							toDo = toDo.trim();
 						}
-					}		
+					}	
+		if(containQuo == true) { 
+			toDo = toDo.replace("QUOTATION", ignoreChar); 
+		}
 		return toDo; 
 	}
 
@@ -274,13 +285,41 @@ public class Parser {
 			assert sentenceString.getWordsLeft() == 0;
 		}
 		
+		//check for special keywords with quotations before parsing
+		String tempCheck = toDo; 
+		ArrayList<Integer> quotations = new ArrayList<Integer>();
+ 
+		for(int i=0; i<tempCheck.length(); i++) { 
+			if(tempCheck.charAt(i)=='\"') {
+				quotations.add(i);
+			}
+			if(quotations.size()==2) { //quotations found
+				ignoreStart = quotations.get(0); 
+				ignoreEnd = quotations.get(1); 
+				ignoreChar = tempCheck.substring(ignoreStart-1, ignoreEnd+2); 
+				ignoreChar = ignoreChar.trim();
+			}
+		}
+		if(quotations.size()==2) { //sieve out the words inside quotations
+			containQuo = true; 
+			toDo = toDo.replace(ignoreChar, "QUOTATION"); 
+			toDo = toDo.trim(); 
+			toDo = toDo.replaceAll("( )+", " ");
+		}
+		
 		TimeParser timeParser = new TimeParser(toDo);
 		//sortedCommand = timeParser.getSortedCommand() + "";
 		
 		if (timeParser.isTimedTask()){
-			startTime = timeParser.getStartTime();
-			endTime = timeParser.getEndTime();
-			isTimedTask = true;
+			if((timeParser.getStartTime()).compareTo(timeParser.getEndTime()) <0) { //start is earlier than end
+				startTime = timeParser.getStartTime();
+				endTime = timeParser.getEndTime();
+			}
+			else {  //start is later than end so swap 
+				endTime = timeParser.getStartTime();
+				startTime = timeParser.getEndTime();
+			}
+		isTimedTask = true;
 		} else if(timeParser.isDeadLineTask()){
 			endTime = timeParser.getEndTime();
 			isDeadlineTask = true;
@@ -294,7 +333,7 @@ public class Parser {
 		}
 		assert keyWord !=null;
 	}
-
+	
 	public boolean checkEmpty(String userCommand) {
 		userCommand.trim();
 		if(userCommand.equals("")){

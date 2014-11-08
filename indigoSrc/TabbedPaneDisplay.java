@@ -50,7 +50,8 @@ public class TabbedPaneDisplay extends JPanel {
 		JComponent floatingPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -f").display);
 		tabbedPaneDisplay.addTab("    Floating    ", null, floatingPanel, "Displays floating tasks.");
 		tabbedPaneDisplay.setMnemonicAt(4, KeyEvent.VK_5);
-
+		
+		tabbedPaneDisplay.setSelectedIndex(1);
 		add(tabbedPaneDisplay);
 		
 		tabbedPaneDisplay.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -61,7 +62,7 @@ public class TabbedPaneDisplay extends JPanel {
 		JPanel tabbedPanel = new JPanel();
 		
 		textPaneTemp = new JTextPane();
-		Font font = new Font("Serif", Font.ITALIC,20);
+		Font font = new Font("Serif", Font.ITALIC,14);
 		PaneArray.add(textPaneTemp);
 
 		JScrollPane scroll = new JScrollPane(textPaneTemp);

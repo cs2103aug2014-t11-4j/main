@@ -8,12 +8,12 @@ import org.joda.time.DateTime;
 
 import parser.TaskIdentifiers;
 
-/* This class is the read class which will display the list that user
+/** This class is the read class which will display the list that user
  * would want to see. This class has different types of views that user
  * can choose from. The Tabbed Pane Display will have some default view
  * type implemented like viewToday() and viewThisWeek().
  * 
- * @author Ken
+ * @author KenHua
  */
 
 public class Read extends CommandClass{
@@ -184,7 +184,7 @@ public class Read extends CommandClass{
 		for (int i=1; i<=tlSize; i++){
 				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
 				if((temp.getKeyTime().getYear() == yearNow) && (temp.getKeyTime().getDayOfYear() == dayNow)){
-					result.append(temp.toStringWODate() + newLine);
+					result.append(temp.toString(LogicFacade.TIME_FORMAT) + newLine);
 			}
 		}
 		return result.toString().trim();
@@ -201,7 +201,7 @@ public class Read extends CommandClass{
 		for (int i=1; i<=tlSize; i++){
 				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
 				if((temp.getKeyTime().getYear() == yearNow) && (temp.getKeyTime().getDayOfYear() == dayNow)){
-					result.append(temp.toStringWODate() + newLine);
+					result.append(temp.toString(LogicFacade.TIME_FORMAT) + newLine);
 			}
 		}
 		return result.toString().trim();
@@ -231,7 +231,7 @@ public class Read extends CommandClass{
 						result.append(newLine + timeKeeper + newLine);
 						timeKeeperCompare = timeKeeper;
 					}
-						result.append(temp.toStringWODate() + newLine);
+						result.append(temp.toString(LogicFacade.TIME_FORMAT) + newLine);
 				}
 		}
 		return result.toString().trim();
@@ -260,7 +260,7 @@ public class Read extends CommandClass{
 						result.append(newLine + timeKeeper + newLine);
 						timeKeeperCompare = timeKeeper;
 					}
-						result.append(temp.toStringWODate() + newLine);
+						result.append(temp.toString(LogicFacade.TIME_FORMAT) + newLine);
 				}
 		}
 		return result.toString().trim();
@@ -287,7 +287,7 @@ public class Read extends CommandClass{
 						result.append(newLine + timeKeeper + newLine);
 						timeKeeperCompare = timeKeeper;
 					}
-					result.append(temp.toStringWODate() + newLine);
+					result.append(temp.toString(LogicFacade.TIME_FORMAT) + newLine);
 				}
 		}
 		return result.toString().trim();
@@ -322,7 +322,7 @@ public class Read extends CommandClass{
 						result.append(newLine + timeKeeper + newLine);
 						timeKeeperCompare = timeKeeper;
 					}
-					result.append(temp.toStringWODate() + newLine);
+					result.append(temp.toString(LogicFacade.TIME_FORMAT) + newLine);
 				}
 		}
 		return result.toString().trim();
@@ -349,7 +349,7 @@ public class Read extends CommandClass{
 					result.append(newLine + timeKeeper + newLine);
 					timeKeeperCompare = timeKeeper;
 				}
-				result.append(temp.toStringWODate() + newLine);
+				result.append(temp.toString(LogicFacade.TIME_FORMAT) + newLine);
 				if(result.equals(newLine)){
 					return result.append("").toString().trim();
 				}

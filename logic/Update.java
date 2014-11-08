@@ -8,11 +8,11 @@ import indigoSrc.Parser;
 import indigoSrc.Task;
 import indigoSrc.TaskList;
 import indigoSrc.TimedTask;
-/* This class is the update class which can update the task that user
+/** This class is the update class which can update the task that user
  * would want to edit. User will have to indicate the index which the task 
  * lies to update the task.
  * 
- * @author Ken
+ * @author KenHua
  */
 
 public class Update extends CommandClass{
@@ -39,9 +39,7 @@ public class Update extends CommandClass{
 		
 		String newTaskDescription = parserVar.getCommand();
 		DateTime newStartTime = parserVar.getStartTime();
-		if(newStartTime == null){
-			System.out.print("Is it null");
-		}
+		
 		DateTime newEndTime = parserVar.getEndTime();
 		if(newTaskDescription.equals("")){
 			newTaskDescription = toDoReplaced.getDescription();
@@ -51,7 +49,6 @@ public class Update extends CommandClass{
 		}
 		if(newStartTime==null){
 			newStartTime = toDoReplaced.getStartTime();
-			System.out.print("Is it null");
 		}
 		toDo = getTask(newTaskDescription, newEndTime, newStartTime);
 	}
