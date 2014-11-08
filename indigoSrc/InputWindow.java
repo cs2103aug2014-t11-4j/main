@@ -44,7 +44,7 @@ public class InputWindow extends JFrame {
 		mainWindow.setBounds(875, 40, 450, 650);
 		mainWindow.setResizable(false);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainWindow.setIconImage(new ImageIcon("src/gui/goindigologo.jpg").getImage());
+		mainWindow.setIconImage(new ImageIcon("gui/goindigologo.jpg").getImage());
 	}
 
 }

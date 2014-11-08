@@ -71,7 +71,7 @@ public class FillUpMainWindow {
 	private void setBackGroundImage() {
 		BufferedImage img;
 		try {
-			img = ImageIO.read(new File("src/gui/wood.jpg"));
+			img = ImageIO.read(new File("gui/wood.jpg"));
 			JLabel background = new JLabel(new ImageIcon(img));
 			background.setBounds(-100,-100, 550, 750);
 			displayLayers.add(background,new Integer(0));
