@@ -329,7 +329,7 @@ public class Parser {
 		if (quotations.size() == 2) { // Quotations found.
 			ignoreStart = quotations.get(0);
 			ignoreEnd = quotations.get(1);
-			ignoreChar = tempCheck.substring(ignoreStart - 1, ignoreEnd + 2);
+			ignoreChar = tempCheck.substring(ignoreStart, ignoreEnd + 1);
 			ignoreChar = ignoreChar.trim();
 		}
 
