@@ -30,7 +30,7 @@ public class Complete extends CommandClass {
 		toCheck = boolCheck;
 		int totalSize = taskListVar.getSize();
 		index = parserVar.getEditIndex();
-		type = parserVar.taskWord;
+		type = parserVar.getTaskWord();
 		ArrayList<Integer> manyNumbers = new ArrayList<Integer>();
 		manyNumbers = parserVar.getMultipleIndices();
 		

@@ -25,11 +25,17 @@ public class Parser {
 	private String message;
 	private DateTime now;
 	private DateTime TimeRef;
+<<<<<<< HEAD
 	public TaskIdentifiers taskWord;
 	// private static Logger logger = Logger.getLogger("Parser");
 	// private String sortedCommand;
 	CommandKey keyWord;
 	String toDo = "";
+=======
+	private TaskIdentifiers taskWord;
+	private CommandKey keyWord		;//stores the key command "add"/"delete" to return to logic
+	private String toDo               	= "";//stores the final command to return to logic
+>>>>>>> a33626139068e79085a023c5372ba852a4a2d6fe
 	private String rawCommand;
 	private DateTime startTime;
 	private DateTime endTime;
@@ -274,6 +280,7 @@ public class Parser {
 						.equals(CommandKey.UPDATE)))) {
 			editIndex = sentenceString.getIndex();
 		}
+<<<<<<< HEAD
 		/*
 		 * If the command is one of the following (in the if statement),
 		 * taskIdentifiers words can be used to execute the command.
@@ -284,6 +291,15 @@ public class Parser {
 				|| keyWord.equals(CommandKey.UNCOMPLETE)
 				|| keyWord.equals(CommandKey.UNDO)
 				|| keyWord.equals(CommandKey.REDO)) {
+=======
+		
+	/*	If the command is one of the following (in the if statement), taskIdentifiers 
+	 * 	words can be used to execute the command. 
+	 */
+		if(keyWord.equals(CommandKey.DELETE) || keyWord.equals(CommandKey.COMPLETE) ||
+		   keyWord.equals(CommandKey.READ) || keyWord.equals(CommandKey.UNCOMPLETE) ||
+		   keyWord.equals(CommandKey.UNDO) || keyWord.equals(CommandKey.REDO)) {
+>>>>>>> a33626139068e79085a023c5372ba852a4a2d6fe
 			taskWord = sentenceString.checkTaskWords(keyWord);
 		}
 
@@ -455,5 +471,9 @@ public class Parser {
 
 	public String getMessage() {
 		return message;
+	}
+	
+	public TaskIdentifiers getTaskWord(){
+		return taskWord;
 	}
 }
