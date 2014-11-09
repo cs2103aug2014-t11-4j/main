@@ -41,17 +41,8 @@ public class TimeParser {
 		// from removing them.
 		for (int k = 0; k < userCommand.length(); k++) {
 			if (Character.isDigit(userCommand.charAt(k))) {
-				if (k == 0) {
-					break;
-				} else if (Character.isLetter(userCommand.charAt(k - 1))) {
-					int digitInt = 0;
-					char digitChar = userCommand.charAt(k);
-					digitInt = Character.getNumericValue(digitChar);
-					ArrayList<Integer> digits = new ArrayList<Integer>();
-					digits.add(digitInt);
-					int length = userCommand.length();
-					userCommand = userCommand.substring(0, k) + "DIGIT"
-							+ userCommand.substring(k + 1, length);
+				if ((k != 0) && (Character.isLetter(userCommand.charAt(k - 1)))) {
+					replaceDigits(k);
 				}
 			}
 		}
@@ -60,36 +51,36 @@ public class TimeParser {
 		filterTimedTask();
 		filterDeadLineTask();
 
-		if (parser == null) {
+		int size = parser.size();
+		if ((parser == null) || (size == 0)) {
 			LOGGER.log(Level.FINE, "Floating task detected.");
 			sortedUserCommand = userCommand + "";
 			assert isDateFree();
 		}
 
-		if (hasFilteredTimedTask == true) {
-			parseTime();
-		}
-
-		if (hasFilteredDeadLineTask == true) {
+		else if ((hasFilteredTimedTask == true)
+				|| (hasFilteredDeadLineTask == true) || (size == 1)
+				|| (size == 2)) {
 			parseTime();
 		}
 
 		else {
-			switch (parser.size()) {
-			case 0:
-				assert isDateFree();
-				break;
-			case 1:
-			case 2:
-				parseTime();
-				break;
-			default:
-				LOGGER.log(Level.FINE, "More than 2 dateGroups detected.");
-				LOGGER.log(Level.FINE, listAllDates(parser));
-				parseTime();
-			}
+			LOGGER.log(Level.FINE, "More than 2 dateGroups detected.");
+			LOGGER.log(Level.FINE, listAllDates(parser));
+			parseTime();
 		}
 		assert sortedUserCommand != null;
+	}
+
+	public void replaceDigits(int k) {
+		int digitInt = 0;
+		char digitChar = userCommand.charAt(k);
+		digitInt = Character.getNumericValue(digitChar);
+		ArrayList<Integer> digits = new ArrayList<Integer>();
+		digits.add(digitInt);
+		int length = userCommand.length();
+		userCommand = userCommand.substring(0, k) + "DIGIT"
+				+ userCommand.substring(k + 1, length);
 	}
 
 	// Deals with 2 identifiers namely, "thursday" and "8pm-10pm" but refers to

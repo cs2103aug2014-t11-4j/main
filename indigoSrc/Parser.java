@@ -178,8 +178,8 @@ public class Parser {
 				&& description[j].equals("IDENTIFIER")) {
 			String finaltoDo = "";
 			description[j - 1] = "";
-			for (int m = 0; m < description.length; m++) { // Removes the
-															// preposition word.
+			// Removes the preposition word.
+			for (int m = 0; m < description.length; m++) {
 				finaltoDo = finaltoDo + description[m] + " ";
 			}
 			toDo = finaltoDo;
@@ -311,31 +311,7 @@ public class Parser {
 			assert sentenceString.getWordsLeft() == 0;
 		}
 
-		// Check for command with quotations before parsing.
-		String tempCheck = toDo;
-		ArrayList<Integer> quotations = new ArrayList<Integer>();
-
-		// Check for the number of '"' in the string.
-		for (int i = 0; i < tempCheck.length(); i++) {
-			if (tempCheck.charAt(i) == '\"') {
-				quotations.add(i);
-			}
-		}
-
-		if (quotations.size() == 2) { // Quotations found.
-			ignoreStart = quotations.get(0);
-			ignoreEnd = quotations.get(1);
-			ignoreChar = tempCheck.substring(ignoreStart - 1, ignoreEnd + 2);
-			ignoreChar = ignoreChar.trim();
-		}
-
-		// Sieve out the words found inside the quotations.
-		if (quotations.size() == 2) {
-			ifContainQuo = true;
-			toDo = toDo.replace(ignoreChar, "QUOTATION");
-			toDo = toDo.trim();
-			toDo = toDo.replaceAll("( )+", " ");
-		}
+		checkForQuotations();
 
 		TimeParser timeParser = new TimeParser(toDo);
 		// sortedCommand = timeParser.getSortedCommand() + "";
@@ -362,6 +338,34 @@ public class Parser {
 			smartParserCheck();
 		}
 		assert keyWord != null;
+	}
+
+	// Check for command with quotations before parsing.
+	public void checkForQuotations() {
+		String tempCheck = toDo;
+		ArrayList<Integer> quotations = new ArrayList<Integer>();
+
+		// Check for the number of '"' in the string.
+		for (int i = 0; i < tempCheck.length(); i++) {
+			if (tempCheck.charAt(i) == '\"') {
+				quotations.add(i);
+			}
+		}
+
+		if (quotations.size() == 2) { // Quotations found.
+			ignoreStart = quotations.get(0);
+			ignoreEnd = quotations.get(1);
+			ignoreChar = tempCheck.substring(ignoreStart - 1, ignoreEnd + 2);
+			ignoreChar = ignoreChar.trim();
+		}
+
+		// Sieve out the words found inside the quotations.
+		if (quotations.size() == 2) {
+			ifContainQuo = true;
+			toDo = toDo.replace(ignoreChar, "QUOTATION");
+			toDo = toDo.trim();
+			toDo = toDo.replaceAll("( )+", " ");
+		}
 	}
 
 	// Checks if the user has input nothing or just white spaces.
