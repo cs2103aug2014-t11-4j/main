@@ -3,10 +3,10 @@ package logic;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import Storage.Task;
+import Storage.TaskList;
+import parser.Parser;
 import parser.TaskIdentifiers;
-import indigoSrc.Task;
-import indigoSrc.Parser;
-import indigoSrc.TaskList;
 
 /** This class is the Complete class which marks a task. This class has 
  * the function to mark the task either as done or undone.

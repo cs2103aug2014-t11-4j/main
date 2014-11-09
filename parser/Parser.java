@@ -1,4 +1,4 @@
-package indigoSrc;
+package parser;
 
 /** This class is meant to read in the command line from the user in the form of a string
  * 	and parse it so that the logic can access it simply. 
@@ -15,10 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
-
-import parser.CommandKey;
-import parser.StringDecipher;
-import parser.TaskIdentifiers;
 
 public class Parser {
 	private boolean isValid;

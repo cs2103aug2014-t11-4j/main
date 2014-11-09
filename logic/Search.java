@@ -1,10 +1,11 @@
 package logic;
 
-import indigoSrc.DeadlineTask;
-import indigoSrc.Parser;
-import indigoSrc.Task;
-import indigoSrc.TaskList;
 import java.util.ArrayList;
+
+import parser.Parser;
+import Storage.DeadlineTask;
+import Storage.Task;
+import Storage.TaskList;
 
 /** This class is the search class which finds the task based on the user's
  * key words. This class has the function to search through the list of tasks to find

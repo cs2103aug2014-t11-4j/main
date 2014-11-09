@@ -10,7 +10,9 @@ import logic.Update;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import Storage.TaskList;
 import parser.CommandKey;
+import parser.Parser;
 import parser.TaskIdentifiers;
 
 /**
@@ -39,7 +41,7 @@ public class LogicFacade {
 	
 	//Default constructor
 	public LogicFacade(){
-		this("view all");
+		this("-v all");
 	}
 	
 	public LogicFacade(String userInput){
@@ -88,50 +90,9 @@ public class LogicFacade {
 				}
 				return classDelete.execute();
 			case UNDO:
-				//This is for multiple undo on specific types of tasks
-				if(parseString.getTaskWord().equals(TaskIdentifiers.ALL)){
-					int count = 0;
-					while(uList.isUndoAble()){
-						undoFunction();
-						count++;
-					}
-					return printMoves(count, "Undo");
-				//This is for mutliple undo.
-				} else if (parseString.getEditIndex()>0){
-					int index = parseString.getEditIndex();
-					int count = 0; 
-					while(index > 0 && uList.isUndoAble()){
-						undoFunction();
-						index--;
-						count++;
-					}
-					return printMoves(count, "Undo");
-				//This is the default value=0;
-				} else {
-					return printMoves(0, "Undo");
-				}
+				return undoMethod();
 			case REDO:
-				//This is for multiple undo on specific types of tasks
-				if(parseString.getTaskWord().equals(TaskIdentifiers.ALL)){
-					int count = 0;
-					while(uList.isRedoAble()){
-						redoFunction();
-						count++;
-					}
-					return printMoves(count, "Redo");
-				//This is for mutliple indices.
-				}else if(parseString.getEditIndex()>0){
-					int index = parseString.getEditIndex();
-					int count = 0; 
-					while(index > 0 && uList.isRedoAble()){
-						redoFunction();
-						index--;
-						count++;
-					}
-					return printMoves(count, "Redo");
-				}else {
-					return printMoves(0, "Redo");
-				}
+				return redoMethod();
 			case COMPLETE:
 				Complete classCheck = new Complete(parseString, taskList, true);
 				if(classCheck.isValid){
@@ -157,6 +118,55 @@ public class LogicFacade {
 				System.exit(0);
 		}
 		return "Saved";
+	}
+
+	public String redoMethod() {
+		//This is for multiple undo on specific types of tasks
+		if(parseString.getTaskWord().equals(TaskIdentifiers.ALL)){
+			int count = 0;
+			while(uList.isRedoAble()){
+				redoFunction();
+				count++;
+			}
+			return printMoves(count, "Redo");
+		//This is for mutliple indices.
+		}else if(parseString.getEditIndex()>0){
+			int index = parseString.getEditIndex();
+			int count = 0; 
+			while(index > 0 && uList.isRedoAble()){
+				redoFunction();
+				index--;
+				count++;
+			}
+			return printMoves(count, "Redo");
+		}else {
+			return printMoves(0, "Redo");
+		}
+	}
+
+	public String undoMethod() {
+		//This is for multiple undo on specific types of tasks
+		if(parseString.getTaskWord().equals(TaskIdentifiers.ALL)){
+			int count = 0;
+			while(uList.isUndoAble()){
+				undoFunction();
+				count++;
+			}
+			return printMoves(count, "Undo");
+		//This is for mutliple undo.
+		} else if (parseString.getEditIndex()>0){
+			int index = parseString.getEditIndex();
+			int count = 0; 
+			while(index > 0 && uList.isUndoAble()){
+				undoFunction();
+				index--;
+				count++;
+			}
+			return printMoves(count, "Undo");
+		//This is the default value=0;
+		} else {
+			return printMoves(0, "Undo");
+		}
 	}
 
 	public void redoFunction() {
