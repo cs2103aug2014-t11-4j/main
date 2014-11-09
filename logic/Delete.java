@@ -33,7 +33,7 @@ public class Delete extends CommandClass{
 		taskListVar = taskList;
 		int totalSize = taskListVar.getSize();
 		index = parserVar.getRawEditIndex();
-		type = parserVar.taskWord;
+		type = parserVar.getTaskWord();
 		ArrayList<Integer> manyNumbers = new ArrayList<Integer>();
 		manyNumbers = parserVar.getMultipleIndices();
 		

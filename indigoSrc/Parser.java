@@ -29,11 +29,11 @@ public class Parser {
 	private String message;
 	private DateTime now;
 	private DateTime TimeRef;
-	public TaskIdentifiers taskWord;
+	private TaskIdentifiers taskWord;
 	
 	//private static Logger logger = Logger.getLogger("Parser");
 	//private String sortedCommand;
-	CommandKey keyWord			;  				//stores the key command "add"/"delete" to return to logic
+	private CommandKey keyWord		;//stores the key command "add"/"delete" to return to logic
 	String toDo               	= "";//stores the final command to return to logic
 	private String rawCommand;
 	private DateTime startTime;
@@ -249,6 +249,7 @@ public class Parser {
 		  (!(keyWord.equals(CommandKey.CREATE) || keyWord.equals(CommandKey.UPDATE)))){
 			editIndex = sentenceString.getIndex();
 		}
+		
 	/*	If the command is one of the following (in the if statement), taskIdentifiers 
 	 * 	words can be used to execute the command. 
 	 */
@@ -264,9 +265,6 @@ public class Parser {
 		if(keyWord.equals(CommandKey.DELETE) || keyWord.equals(CommandKey.COMPLETE) ||
 		   keyWord.equals(CommandKey.UNCOMPLETE)){
 			multipleIndices = sentenceString.extractIndices();
-			if(multipleIndices == null || multipleIndices.isEmpty() ){
-				
-			}
 		}
 	/*	=== editIndex status ===
 	 * 	If the command word is the first word, index of editing must be stated
@@ -420,6 +418,10 @@ public class Parser {
 	
 	public String getMessage(){
 		return message;
+	}
+	
+	public TaskIdentifiers getTaskWord(){
+		return taskWord;
 	}
 
 }

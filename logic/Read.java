@@ -53,8 +53,8 @@ public class Read extends CommandClass{
 	}
 	
 	public String view(){
-		if(parserVar.taskWord!=null){
-			TaskIdentifiers word = parserVar.taskWord;
+		if(!parserVar.getTaskWord().equals(TaskIdentifiers.INVALID)){
+			TaskIdentifiers word = parserVar.getTaskWord();
 			switch(word){
 				case ALL:
 					feedback = "All tasks are shown";
@@ -101,7 +101,7 @@ public class Read extends CommandClass{
 					return viewAll();
 			}
 		}
-		return "0";
+		return "-";
 	}
 
 	//The view of all tasks in floating tasklist
