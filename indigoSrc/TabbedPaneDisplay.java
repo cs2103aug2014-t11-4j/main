@@ -113,19 +113,14 @@ public class TabbedPaneDisplay extends JPanel {
 		
 		if (index == 1){
 			tabbedPaneDisplay.setSelectedIndex(1);
-
 		} else if (index == 2){
 			tabbedPaneDisplay.setSelectedIndex(2);
-			
 		} else if (index == 3){
 			tabbedPaneDisplay.setSelectedIndex(3);
-			
 		} else if (index == 4){
 			tabbedPaneDisplay.setSelectedIndex(4);
-			
 		} else {
 			tabbedPaneDisplay.setSelectedIndex(0);
-			
 		}
 	}
 }
