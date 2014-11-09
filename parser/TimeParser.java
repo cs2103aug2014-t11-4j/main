@@ -3,8 +3,6 @@ package parser;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,7 +29,6 @@ public class TimeParser {
 			.getName());
 
 	// private int numDate = -1;
-	private static Scanner sc;
 
 	public TimeParser(String someCommand) {
 		userCommand = someCommand.trim();
@@ -336,19 +333,6 @@ public class TimeParser {
 			return true;
 		} else {
 			return false;
-		}
-	}
-
-	public static void main(String[] argv) {
-		ConsoleHandler handler = new ConsoleHandler();
-		LOGGER.setLevel(Level.FINER);
-		handler.setLevel(Level.FINER);
-		LOGGER.addHandler(handler);
-
-		sc = new Scanner(System.in);
-		while (true) {
-			TimeParser mp = new TimeParser(sc.nextLine());
-			mp.isDateFree();
 		}
 	}
 

@@ -10,7 +10,6 @@ package parser;
  *
  */
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +19,7 @@ public class Parser {
 	private boolean isValid;
 	private String message;
 	private DateTime now;
-	private DateTime TimeRef;
+	private DateTime timeRef;
 	// private static Logger logger = Logger.getLogger("Parser");
 	// private String sortedCommand;
 	private TaskIdentifiers taskWord;
@@ -42,28 +41,7 @@ public class Parser {
 	ArrayList<String> detailsList = new ArrayList<String>();
 	private final static Logger LOGGER = Logger.getLogger(Parser.class
 			.getName());
-	private static Scanner sc;
 	private ArrayList<Integer> multipleIndices = new ArrayList<Integer>();
-
-	public static void main(String args[]) {
-		/*
-		 * ConsoleHandler handler = new ConsoleHandler();
-		 * LOGGER.setLevel(Level.FINER); handler.setLevel(Level.FINER);
-		 * LOGGER.addHandler(handler);
-		 */
-		String testInput;
-		System.out.println("Enter command:");
-		sc = new Scanner(System.in);
-		testInput = sc.nextLine();
-		Parser test = new Parser(testInput);
-		testParser = new TimeParser(testInput);
-		try {
-			System.out.println(TimeParser.parser.get(0).getText());
-		} catch (IndexOutOfBoundsException err) {
-			System.out.println("There are no such thing as time!");
-		}
-		System.out.println("Command:" + test.getCommand());
-	}
 
 	// Command containing key command and its description.
 	public String getRawCommand() {
@@ -422,11 +400,11 @@ public class Parser {
 	// the start time will not change even is it has past.
 	public void smartParserCheck() {
 		now = new DateTime();
-		TimeRef = now.plusMinutes(2);
+		timeRef = now.plusMinutes(2);
 		if (endTime.isBefore(now)) {
 			if (endTime.getYear() == now.getYear()
 					&& endTime.getDayOfYear() == now.getDayOfYear()) {
-				if (endTime.isBefore(TimeRef)) {
+				if (endTime.isBefore(timeRef)) {
 					DateTime newDate = endTime.plusDays(1);
 					endTime = newDate;
 				}
@@ -436,7 +414,7 @@ public class Parser {
 					days += 365 * (now.getYear() - endTime.getYear());
 				}
 				DateTime newDate = endTime.plusDays(days);
-				if (newDate.isBefore(TimeRef)) {
+				if (newDate.isBefore(timeRef)) {
 					newDate = newDate.plusDays(1);
 				}
 				endTime = newDate;
