@@ -2,12 +2,12 @@ package logic;
 
 import org.joda.time.DateTime;
 
-import indigoSrc.DeadlineTask;
-import indigoSrc.FloatingTask;
-import indigoSrc.Parser;
-import indigoSrc.Task;
-import indigoSrc.TaskList;
-import indigoSrc.TimedTask;
+import parser.Parser;
+import Storage.DeadlineTask;
+import Storage.FloatingTask;
+import Storage.Task;
+import Storage.TaskList;
+import Storage.TimedTask;
 /** This class is the update class which can update the task that user
  * would want to edit. User will have to indicate the index which the task 
  * lies to update the task.

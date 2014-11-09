@@ -1,4 +1,6 @@
-package indigoSrc;
+package gui;
+import indigoSrc.LogicFacade;
+
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
@@ -12,6 +14,7 @@ import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 
 import parser.CommandKey;
+import parser.Parser;
 
 
 public class TabbedPaneDisplay extends JPanel {

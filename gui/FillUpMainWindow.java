@@ -1,4 +1,6 @@
-package indigoSrc;
+package gui;
+
+import indigoSrc.LogicFacade;
 
 import java.awt.Color;
 import java.awt.Container;

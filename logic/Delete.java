@@ -3,10 +3,10 @@ package logic;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import Storage.Task;
+import Storage.TaskList;
+import parser.Parser;
 import parser.TaskIdentifiers;
-import indigoSrc.Parser;
-import indigoSrc.Task;
-import indigoSrc.TaskList;
 
 /** This class is the delete class which deletes the task that user
  * would want to delete. User will have to indicate the index which the task 

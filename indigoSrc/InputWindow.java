@@ -1,5 +1,7 @@
 package indigoSrc;
 
+import gui.FillUpMainWindow;
+
 import java.awt.EventQueue;
 
 import javax.swing.ImageIcon;

@@ -1,11 +1,11 @@
 package logic;
-import indigoSrc.DeadlineTask;
 import indigoSrc.LogicFacade;
-import indigoSrc.Parser;
-import indigoSrc.TaskList;
 
 import org.joda.time.DateTime;
 
+import Storage.DeadlineTask;
+import Storage.TaskList;
+import parser.Parser;
 import parser.TaskIdentifiers;
 
 /** This class is the read class which will display the list that user
