@@ -1,5 +1,10 @@
 package parser;
 
+/** This class is meant to parse the command according to floating/deadline/timed task
+ * 	and filter out the identfiers if they are identified but are not an instance of time or date.
+ * @author Joanna
+ * 
+ */
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
