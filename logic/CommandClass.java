@@ -1,7 +1,7 @@
 package logic;
 
-import indigoSrc.Parser;
-import indigoSrc.TaskList;
+import parser.Parser;
+import Storage.TaskList;
 /**This is the Command abstract class used in the Logic component implementing the 
  * Command of users.
  * @author KenHua

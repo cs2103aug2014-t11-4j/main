@@ -1,16 +1,17 @@
 package test;
 
 import static org.junit.Assert.*;
-import indigoSrc.DeadlineTask;
-import indigoSrc.FloatingTask;
 import indigoSrc.LogicFacade;
-import indigoSrc.Task;
-import indigoSrc.TaskList;
-import indigoSrc.TimedTask;
 
 import org.joda.time.DateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import Storage.DeadlineTask;
+import Storage.FloatingTask;
+import Storage.Task;
+import Storage.TaskList;
+import Storage.TimedTask;
 
 public class testTaskList {
 	private static String[] testStr;

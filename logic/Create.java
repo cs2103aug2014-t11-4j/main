@@ -1,11 +1,11 @@
 package logic;
 
-import indigoSrc.DeadlineTask;
-import indigoSrc.FloatingTask;
-import indigoSrc.Task;
-import indigoSrc.Parser;
-import indigoSrc.TaskList;
-import indigoSrc.TimedTask;
+import parser.Parser;
+import Storage.DeadlineTask;
+import Storage.FloatingTask;
+import Storage.Task;
+import Storage.TaskList;
+import Storage.TimedTask;
 
 /** This class is the create class which adds the task that user
  * would want to add. This class has the function to add task either
