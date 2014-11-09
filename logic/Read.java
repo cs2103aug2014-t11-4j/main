@@ -53,13 +53,8 @@ public class Read extends CommandClass{
 	}
 	
 	public String view(){
-<<<<<<< HEAD
-		if(parserVar.taskWord != null){
-			TaskIdentifiers word = parserVar.taskWord;
-=======
-		if(!parserVar.getTaskWord().equals(TaskIdentifiers.INVALID)){
-			TaskIdentifiers word = parserVar.getTaskWord();
->>>>>>> multiple-index
+		TaskIdentifiers word = parserVar.getTaskWord();
+		if(!word.equals(TaskIdentifiers.INVALID)){
 			switch(word){
 				case ALL:
 					feedback = "All tasks are shown";

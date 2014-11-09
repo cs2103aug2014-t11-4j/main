@@ -22,20 +22,9 @@ public class Parser {
 	private String message;
 	private DateTime now;
 	private DateTime TimeRef;
-<<<<<<< HEAD
-	public TaskIdentifiers taskWord;
-	//private static Logger logger = Logger.getLogger("Parser");
-	//private String sortedCommand;
-	CommandKey keyWord;  		
-	String toDo = "";
-=======
 	private TaskIdentifiers taskWord;
-	
-	//private static Logger logger = Logger.getLogger("Parser");
-	//private String sortedCommand;
 	private CommandKey keyWord		;//stores the key command "add"/"delete" to return to logic
-	String toDo               	= "";//stores the final command to return to logic
->>>>>>> multiple-index
+	private String toDo               	= "";//stores the final command to return to logic
 	private String rawCommand;
 	private DateTime startTime;
 	private DateTime endTime;
@@ -441,12 +430,8 @@ public class Parser {
 	public String getMessage(){
 		return message;
 	}
-<<<<<<< HEAD
-=======
 	
 	public TaskIdentifiers getTaskWord(){
 		return taskWord;
 	}
-
->>>>>>> multiple-index
 }
