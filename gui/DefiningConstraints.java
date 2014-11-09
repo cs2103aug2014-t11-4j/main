@@ -3,6 +3,12 @@ package gui;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
+
+/**This is the class to define the GridBagConstraints constants used by the 
+ * components of the GUI. 
+ * 
+ * @author Sritam
+ */
 public class DefiningConstraints {
 	
 	private static final int BOTTOM_PANEL_INDEX = 1;

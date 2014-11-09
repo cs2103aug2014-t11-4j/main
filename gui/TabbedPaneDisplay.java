@@ -16,12 +16,14 @@ import javax.swing.ScrollPaneConstants;
 import parser.CommandKey;
 import parser.Parser;
 
-
+/**This is the class which contains the information for the TabbedPanedDisplay as
+ * it defines them and how they should appear on the GUI.
+ * 
+ * @author Sritam
+ *
+ */
 public class TabbedPaneDisplay extends JPanel {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabbedPaneDisplay;
 	private JTextPane taskDisplayPane; 

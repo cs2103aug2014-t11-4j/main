@@ -29,6 +29,13 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
+/**This is the class which is used to fill the the main window when it is called.
+ * It returns components like the Input line, Feedback line, and the Tabbed Pane display
+ * 
+ * @author Sritam
+ *
+ */
+
 public class FillUpMainWindow {
 	
 	private static final int BOTTOM_PANEL_INDEX = 1;
@@ -73,7 +80,7 @@ public class FillUpMainWindow {
 		try {
 			img = ImageIO.read(new File("src/gui/wood.jpg"));
 			JLabel background = new JLabel(new ImageIcon(img));
-			background.setBounds(-100,-100, 550, 750);
+			background.setBounds(0, -20, 550, 750);
 			displayLayers.add(background,new Integer(0));
 		} catch (IOException e) {
 		}
@@ -138,7 +145,7 @@ public class FillUpMainWindow {
 		
 		JScrollPane scroll = new JScrollPane(liveUserFeedback);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		feedbackPanel.setLayout(new GridLayout(1,1));
+		feedbackPanel.setLayout(new GridLayout(4,2));
 		
 		feedbackPanel.add(scroll);
 		

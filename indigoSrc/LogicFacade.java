@@ -17,15 +17,16 @@ import parser.TaskIdentifiers;
 
 /**
  * This a main Logic of Indigo. Indigo is a software that can store, process
- * and display tasks on the desktop as a task manager. Indigo also supports
- * audio reminder, auto-correction, and color-coded highlighting. Indigo takes
+ * and display tasks on the desktop as a task manager. Indigo takes
  * input from keyboard only. Indigo stores data on a local disk.
  * 
  * This class acts like a facade pattern that the GUI will call. This facade then calls 
  * the other classes of logic and components like storage and parser to execute a task.
  * 
- * @author jjlu & KenHua
+ * @author KenHua
  *
+ * saveData() and loadData() methods are written by Jiajie as it deals with the storage.
+ * @author jjlu 
  */
 
 public class LogicFacade {
