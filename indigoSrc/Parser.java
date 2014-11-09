@@ -123,30 +123,23 @@ public class Parser {
 				String regex14 = "\bwed\b";
 				String regex15 = "\beve\b";
 
-				if (!identifers[j].equals(regex1))
-					if (!identifers[j].equals(regex2))
-						if (!identifers[j].equals(regex3))
-							if (!identifers[j].equals(regex4))
-								if (!identifers[j].equals(regex5))
-									if (!identifers[j].equals(regex6))
-										if (!identifers[j].equals(regex7))
-											if (!identifers[j].equals(regex8))
-												if (!identifers[j]
-														.equals(regex9))
-													if (!identifers[j]
-															.equals(regex10))
-														if (!identifers[j]
-																.equals(regex11))
-															if (!identifers[j]
-																	.equals(regex12))
-																if (!identifers[j]
-																		.equals(regex13))
-																	if (!identifers[j]
-																			.equals(regex14))
-																		if (!identifers[j]
-																				.equals(regex15)) {
-																			identifers[j] = "";
-																		}
+				if ((!identifers[j].equals(regex1))
+						|| (!identifers[j].equals(regex2))
+						|| (!identifers[j].equals(regex3))
+						|| (!identifers[j].equals(regex4))
+						|| (!identifers[j].equals(regex5))
+						|| (!identifers[j].equals(regex6))
+						|| (!identifers[j].equals(regex7))
+						|| (!identifers[j].equals(regex8))
+						|| (!identifers[j].equals(regex9))
+						|| (!identifers[j].equals(regex10))
+						|| (!identifers[j].equals(regex11))
+						|| (!identifers[j].equals(regex12))
+						|| (!identifers[j].equals(regex13))
+						|| (!identifers[j].equals(regex14))
+						|| (!identifers[j].equals(regex15))) {
+					identifers[j] = "";
+				}
 			}
 		}
 

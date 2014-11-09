@@ -184,55 +184,26 @@ public class TimeParser {
 			}
 			// Remove "wed" if it is found in "wedding".
 			if (filterWords.contains(identified)) {
-				if (!parser.get(j).getText().equals(regex1))
-					if (!parser.get(j).getText().equals(regex2))
-						if (!parser.get(j).getText().equals(regex3))
-							if (!parser.get(j).getText().equals(regex4))
-								if (!parser.get(j).getText().equals(regex5))
-									if (!parser.get(j).getText().equals(regex6))
-										if (!parser.get(j).getText()
-												.equals(regex7))
-											if (!parser.get(j).getText()
-													.equals(regex8))
-												if (!parser.get(j).getText()
-														.equals(regex9))
-													if (!parser.get(j)
-															.getText()
-															.equals(regex10))
-														if (!parser
-																.get(j)
-																.getText()
-																.equals(regex11))
-															if (!parser
-																	.get(j)
-																	.getText()
-																	.equals(regex12))
-																if (!parser
-																		.get(j)
-																		.getText()
-																		.equals(regex13))
-																	if (!parser
-																			.get(j)
-																			.getText()
-																			.equals(regex14))
-																		if (!parser
-																				.get(j)
-																				.getText()
-																				.equals(regex15))
-																			if (!parser
-																					.get(j)
-																					.getText()
-																					.equals(regex16))
-																				if (!parser
-																						.get(j)
-																						.getText()
-																						.equals(regex17))
-																					if (!parser
-																							.get(j)
-																							.getText()
-																							.equals(regex18)) {
-																						parser.remove(j);
-																					}
+				if ((!parser.get(j).getText().equals(regex1))
+						|| (!parser.get(j).getText().equals(regex2))
+						|| (!parser.get(j).getText().equals(regex3))
+						|| (!parser.get(j).getText().equals(regex4))
+						|| (!parser.get(j).getText().equals(regex5))
+						|| (!parser.get(j).getText().equals(regex6))
+						|| (!parser.get(j).getText().equals(regex7))
+						|| (!parser.get(j).getText().equals(regex8))
+						|| (!parser.get(j).getText().equals(regex9))
+						|| (!parser.get(j).getText().equals(regex10))
+						|| (!parser.get(j).getText().equals(regex11))
+						|| (!parser.get(j).getText().equals(regex12))
+						|| (!parser.get(j).getText().equals(regex13))
+						|| (!parser.get(j).getText().equals(regex14))
+						|| (!parser.get(j).getText().equals(regex15))
+						|| (!parser.get(j).getText().equals(regex16))
+						|| (!parser.get(j).getText().equals(regex17))
+						|| (!parser.get(j).getText().equals(regex18))) {
+					parser.remove(j);
+				}
 			}
 		}
 	}
