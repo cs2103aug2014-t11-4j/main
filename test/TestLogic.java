@@ -6,11 +6,8 @@ import indigoSrc.LogicFacade;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Scanner;
 public class TestLogic {
 	private static String[] testInputsBasic;
-	private static String[] testInputAdvanced;
-	private int numOfAllTask;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -44,8 +41,6 @@ public class TestLogic {
 				};
 		testInputsBasic = inputs;
 		
-		String[] moreInputs = new String[]{};
-		testInputAdvanced = moreInputs;
 	}
 
 	@Test
