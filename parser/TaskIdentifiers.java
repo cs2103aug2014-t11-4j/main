@@ -38,6 +38,7 @@ public enum TaskIdentifiers {
 			case "done":	//alternate word
 			case "checked":	//alternate word
 				return TaskIdentifiers.COMPLETED;
+			case "uncompleted":
 			case "notcompleted"://default long word
 			case "undone":	//alternate word
 			case "unchecked"://alternate word

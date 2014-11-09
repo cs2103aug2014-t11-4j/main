@@ -2,7 +2,6 @@ package test;
 
 import static org.junit.Assert.assertEquals;
 import indigoSrc.LogicFacade;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 

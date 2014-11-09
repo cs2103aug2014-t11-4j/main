@@ -1,0 +1,176 @@
+RULES for Entering commands
+===========================
+
+1. Add a task
+2. Delete a task
+3. Edit a task
+4. View task list
+5. Undo last move(s)
+6. Redo	undone move(s)
+7. Check a task as completed
+8. Uncheck a task as completed
+9. Search for a task
+10.Clear the task list
+11.Contraints of time tasks
+12.List of alternate keys
+
+------------------------------------------------------------------------
+
+1. To add a task, you can use one of the following ways.
+
+	add <task>		//Simply put add in front
+	add <task with time>	
+	<task> add		//Add can be the last word
+	<task with time> add
+	<task>			//Add can be omitted
+	<task with time>
+
+2. To delete a task, you have to specify the task's index
+number that you want to delete. Otherwise, you have to specify 
+the kind of tasks that you want to delete. If neither the index
+not the task type is specified, delete cannot be done. You can use the following commands.
+
+	delete <index>		//Delete followed by the index
+	<index> delete		//Index followed by delete
+	delete <i j k>		//Delete followed by multiple indices.
+	<i j k> delete		//Multiple indices followed by delete.
+	delete <task type>	//Delete followed by the task type
+	<task type> delete	//Task type followed by delete
+
+	*i j k are examples of the tasks' indices separated by spaces
+
+	*delete all		//Similar to clear but can be undone
+
+3. To edit a task, an index needs to be specified which must
+either follow the edit command on the second position or be on the
+first position if the edit command is behind. Otherwise, if no index
+is found, it will edit the last task which was modified (tailed with a star). You can edit a task through the following ways.
+	
+	edit <index> <task>	//Edits the task
+	edit <index> <time>	//Edits the time of the task
+	edit <index> <task with time> // edits both the task and time
+	<index> <task> edit 	//Edit can be behind with index in front
+	<index> <time> edit
+	<index> <task with time> edit
+
+4. To view the task list, there are 11 default commands
+	
+	view all		//View all the tasks
+	view float		//View all the floating tasks
+	view deadline		//View all the timed tasks
+	view overdue		//View tasks which are overdue
+	view completed		//View all completed tasks
+	view uncompleted 	//View all uncompleted tasks
+	view today		//View today's tasks
+	view tomorrow		//View tomorrow's tasks
+	view thisweek		//View this week's tasks (this 7 days)
+	view nextweek		//View next week's tasks (next 7 days)
+	view thismonth		//View this month's tasks 
+	
+	*Of course, the two words are interchangeable like:
+	 all view, float view, today view...
+	
+	*view			//View alone will invoke view all.
+
+5. To undo a last move, you can simply type undo. However, there are also other variations.
+
+	undo			//Default: undo 1 time
+	undo <index>		//Undo <index> times
+	undo all		//Undo until the first move	
+	<index> undo 		//Interchangeable words
+	all undo
+
+6. To redo an undone move, you can simply type redo. Other variations also exists.
+	
+	redo			//Default: redo 1 time
+	redo <index>		//Redo <index> times
+	redo all 		//Redo until your recent change
+	<index> redo		//Interchangeable words
+	all redo
+
+7. To check a task as done, just type complete for the task. Index must
+be specified. Otherwise, it will just checks the task with recent change (tailed with star) as done.
+
+	complete <index>	//Checks the task at index as completed
+	complete <task type>	//All the tasks of the type is checked
+	complete <i j k> 	//Checks tasks at multiple indices
+	<index> complete	//Interchangeable words
+	<task type> complete
+	<i j k> complete
+
+	complete		//Checks the task with recent change
+
+8. To uncheck a task if it was checked done, just type uncomplete. Similar to complete, index must be specified or the task with recent change will be unchecked even if it was already unchecked.
+
+	uncomplete <index>	//Unchecks the task at index
+	uncomplete <task type>	//All the tasks of the type is unchecked 
+	uncomplete <i j k>	//Unchecks tasks ar multiple indices
+	<index> uncomplete	//Interchangeable words
+	<task type> uncomplete
+	<i j k> uncomplete
+
+	uncomplete		//Unchecks the task with recent change
+
+9. To search for a task, you have to specify the key words of the task.
+
+	search <key words>	//search for the key words in task list
+	<key words> search	//Interchangeable words
+
+10.To clear the whole task list, just a simple clear can do it. This command however, cannot be undone.
+
+	clear			//Clears the whole task list.
+
+11.The time entered by default cannot be a time which is in the past. It can follow either of the formats shown. They are more intuitive.
+	
+	1 May 2015		//Specify year if it's not current year
+	Dec 27			//If in words, day and month can change
+	next sat		//Intuitive natural language
+	New Year		//Can specify a celebration
+	2pm			//Must specify am or pm for time
+	4:35am			//Colon is needed for minutes' accuracy
+	Morning			//Defaults to 8am
+	Afternoon		//Defaults to 12pm
+	Evening			//Defaults to 7pm
+	Night			//Defaults to 8pm
+	
+		
+	The programme recognises digital time format but in American date format.
+	11/29/2014		//American date format. MM/DD/YYYY
+
+	A deadline task's time cannot be a time before now. But the starting time of a timed task can be before now. The starting time must follow the starting date or the date will be set default as today.
+	from 5 May 6pm to 7pm	//5 May 6pm to 5 May 7pm
+	3pm to 4pm next Sat 	//today 3pm to next Saturday 4pm
+	2pm - tomorrow 5pm	//today 2pm to tomorrow 5pm
+	1am mon to wed		//Monday 1am to Wednesday 1am
+	
+
+	Sometimes, you may not have the intention of stating a time but the programme misinteprets it. Use a quotation mark over the time statement so that it is ignored
+	"Day after Tomorrow"	//Movie 
+
+12.Alternate Keys
+
+Commands
+ADD	   : create, -a
+DELETE	   : remove, del, -d
+EDIT	   : update, -e
+VIEW	   : display, -v
+UNDO	   : -u
+REDO	   : -r
+COMPLETE   : did, com, -c
+UNCOMPLETE : undid, uncom, -uc
+SEARCH 	   : -s
+CLEAR	   : clr, -z
+
+Type of Tasks 
+OVERDUE	   : over, -o 		//Tasks which are over but not completed 
+FLOATING   : float, -f		//Tasks which are not timed
+DEADLINE   : dl, -dl		//Tasks which are timed
+COMPLETED  : done, checked	//Tasks which are marked as completed
+UNCOMPLETED: undone, unchecked	//Tasks which are not completed
+
+View times
+TODAY	   : -t
+TOMORROW   : -tom
+THISWEEK   : week, -w		//Thisweek is not separated.
+NEXTWEEK   : next, -nw		//Nextweek is not separated.
+THISMONTH  : month, -m		//Thismonth is not separated.
