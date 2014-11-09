@@ -4,7 +4,7 @@ import indigoSrc.LogicFacade;
 
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -30,7 +30,10 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 /**This is the class which is used to fill the the main window when it is called.
- * It returns components like the Input line, Feedback line, and the Tabbed Pane display
+ * It returns components like the Input line, Feedback line, and the Tab Pane display.  
+ * This class also contains two listeners on is implemented on the command line JTextField and the other 
+ * listens to the keyboard. The listener sub class also contains a method which performs tasks according to the 
+ * keyboard input.
  * 
  * @author Sritam
  *
@@ -43,6 +46,11 @@ public class FillUpMainWindow {
 	private static final int TOP_PANEL_INDEX = 3;
 	private static final int INPUT_FIELD_INDEX = 4;
 	private static final int USER_FEEDBACK_INDEX = 5;
+	private static final int MAIN_PANEL_POS_X= 0;
+	private static final int MAIN_PANEL_POS_Y = 0;
+	private static final int MAIN_PANEL_WIDTH = 450;
+	private static final int MAIN_PANEL_HEIGHT = 650;
+	private static final int FONT_SIZE = 14;
 	
 
 	private JLayeredPane displayLayers = new JLayeredPane();
@@ -56,7 +64,7 @@ public class FillUpMainWindow {
 		Container contentPane = mainWindow.getContentPane();
 		contentPane.add(displayLayers);
 		JPanel mainPanel = new JPanel();
-		mainPanel.setBounds(0, 0, 450, 650);
+		mainPanel.setBounds(MAIN_PANEL_POS_X, MAIN_PANEL_POS_Y, MAIN_PANEL_WIDTH, MAIN_PANEL_HEIGHT);
 		mainPanel.setLayout(new GridBagLayout());
 		mainPanel.setOpaque(false);
 		
@@ -80,7 +88,7 @@ public class FillUpMainWindow {
 		try {
 			img = ImageIO.read(new File("src/gui/wood.jpg"));
 			JLabel background = new JLabel(new ImageIcon(img));
-			background.setBounds(0, -20, 550, 750);
+			background.setBounds(MAIN_PANEL_POS_X,MAIN_PANEL_POS_Y, MAIN_PANEL_WIDTH, MAIN_PANEL_HEIGHT );
 			displayLayers.add(background,new Integer(0));
 		} catch (IOException e) {
 		}
@@ -89,7 +97,6 @@ public class FillUpMainWindow {
 
 	private JPanel createUserInputPanel(){
 		JPanel topPanel = new JPanel(new GridBagLayout());
-		topPanel.setPreferredSize(new Dimension(600,100));
 		topPanel.setOpaque(false);	
 		
 		GridBagConstraints inputFieldConstraints, userFeedbackConstraints;
@@ -112,6 +119,18 @@ public class FillUpMainWindow {
 		readInput.addKeyListener(new readInputTextFieldListener());	
 		return readInput;
 	}
+	private JPanel UserFeedbackPanel(){
+		JPanel feedbackPanel = new JPanel(new GridBagLayout());
+		feedbackPanel.setOpaque(false);
+		feedbackPanel.setLayout(new GridLayout(1,1));
+		JTextArea liveUserFeedback = setLiveUserFeedback();
+		JScrollPane scroll = new JScrollPane(liveUserFeedback);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		feedbackPanel.add(scroll);
+		
+		return feedbackPanel;
+	}
+
 	private JTextArea setLiveUserFeedback() {
 	
 		liveUserFeedback = new JTextArea();
@@ -120,13 +139,13 @@ public class FillUpMainWindow {
 		liveUserFeedback.setLineWrap(true);
 		liveUserFeedback.setEditable(false);
 		liveUserFeedback.setText("Welcome to Indigo!");
-		
+		Font font = new Font("Monospaces", Font.PLAIN, FONT_SIZE);
+		liveUserFeedback.setFont(font);
 		return liveUserFeedback;
 	}
 	
 	private JPanel createOutputPanel() {
 		JPanel bottomPanel = new JPanel(new GridBagLayout());
-		bottomPanel.setPreferredSize(new Dimension(500,150));
 		bottomPanel.setOpaque(false);
 		
 		GridBagConstraints tabbedPaneConstraints;
@@ -138,20 +157,7 @@ public class FillUpMainWindow {
 	
 	}
 
-	private JPanel UserFeedbackPanel(){
-		JPanel feedbackPanel = new JPanel(new GridBagLayout());
-		feedbackPanel.setOpaque(false);
-		JTextArea liveUserFeedback = setLiveUserFeedback();
-		
-		JScrollPane scroll = new JScrollPane(liveUserFeedback);
-		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		feedbackPanel.setLayout(new GridLayout(4,2));
-		
-		feedbackPanel.add(scroll);
-		
-		return feedbackPanel;
-	}
-
+	
 	private TabbedPaneDisplay addTabbedPane(JPanel bottomPanel) {
 		taskDisplay = new TabbedPaneDisplay();		
 		return taskDisplay;

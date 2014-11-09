@@ -16,8 +16,8 @@ import javax.swing.ScrollPaneConstants;
 import parser.CommandKey;
 import parser.Parser;
 
-/**This is the class which contains the information for the TabbedPanedDisplay as
- * it defines them and how they should appear on the GUI.
+/**This is the class deals with the JTabbedPane component of the GUI. It updates the tabs 
+ * according to the users commands.
  * 
  * @author Sritam
  *
@@ -25,9 +25,17 @@ import parser.Parser;
 public class TabbedPaneDisplay extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
+	
+	private static final int INBOX_TAB_INDEX = 0;
+	private static final int TODAY_TAB_INDEX = 1;
+	private static final int THIS_WEEK_TAB_INDEX = 2;
+	private static final int THIS_MONTH_TAB_INDEX = 3;
+	private static final int FLOATING_TAB_INDEX = 4;
+	private static final int PAGE_TOP = 0;
+	private static final int FONT_SIZE = 14;
+
 	private JTabbedPane tabbedPaneDisplay;
 	private JTextPane taskDisplayPane; 
-	//private JTable inboxTable;
 	public LogicFacade id = new LogicFacade();
 	public static ArrayList<JTextPane> PaneArray = new ArrayList<JTextPane>();
 	
@@ -37,26 +45,26 @@ public class TabbedPaneDisplay extends JPanel {
 		tabbedPaneDisplay = new JTabbedPane();
 
 		JComponent allPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view").display);
-		tabbedPaneDisplay.addTab("   Inbox   ", null, allPanel, "Displays all tasks.");
-		tabbedPaneDisplay.setMnemonicAt(0, KeyEvent.VK_1);
+		tabbedPaneDisplay.addTab("    Inbox    ", null, allPanel, "Displays all tasks.");
+		tabbedPaneDisplay.setMnemonicAt(INBOX_TAB_INDEX, KeyEvent.VK_1);
 		
 		JComponent dailyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -t").display);
-		tabbedPaneDisplay.addTab("   Today   ", null, dailyPanel, "Displays daily tasks.");
-		tabbedPaneDisplay.setMnemonicAt(1, KeyEvent.VK_2);
+		tabbedPaneDisplay.addTab("    Today    ", null, dailyPanel, "Displays daily tasks.");
+		tabbedPaneDisplay.setMnemonicAt(TODAY_TAB_INDEX, KeyEvent.VK_2);
 		
 		JComponent weeklyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -w").display);
 		tabbedPaneDisplay.addTab("    This Week    ", null, weeklyPanel, "Displays weekly tasks.");
-		tabbedPaneDisplay.setMnemonicAt(2, KeyEvent.VK_3);
+		tabbedPaneDisplay.setMnemonicAt(THIS_WEEK_TAB_INDEX, KeyEvent.VK_3);
 		
 		JComponent monthlyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -m").display);
 		tabbedPaneDisplay.addTab("    This Month    ", null, monthlyPanel, "Displays monthly tasks.");
-		tabbedPaneDisplay.setMnemonicAt(3, KeyEvent.VK_4);
+		tabbedPaneDisplay.setMnemonicAt(THIS_MONTH_TAB_INDEX , KeyEvent.VK_4);
 		
 		JComponent floatingPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -f").display);
-		tabbedPaneDisplay.addTab("    Floating    ", null, floatingPanel, "Displays floating tasks.");
-		tabbedPaneDisplay.setMnemonicAt(4, KeyEvent.VK_5);
+		tabbedPaneDisplay.addTab("   Floating   ", null, floatingPanel, "Displays floating tasks.");
+		tabbedPaneDisplay.setMnemonicAt(FLOATING_TAB_INDEX, KeyEvent.VK_5);
 		
-		tabbedPaneDisplay.setSelectedIndex(1);
+		tabbedPaneDisplay.setSelectedIndex(TODAY_TAB_INDEX);
 		add(tabbedPaneDisplay);
 		
 		tabbedPaneDisplay.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -67,7 +75,7 @@ public class TabbedPaneDisplay extends JPanel {
 		JPanel tabbedPanel = new JPanel();
 		
 		textPaneTemp = new JTextPane();
-		Font font = new Font("Serif", Font.ITALIC,14);
+		Font font = new Font("Monospaces", Font.PLAIN, FONT_SIZE);
 		PaneArray.add(textPaneTemp);
 
 		JScrollPane scroll = new JScrollPane(textPaneTemp);
@@ -76,7 +84,7 @@ public class TabbedPaneDisplay extends JPanel {
 		textPaneTemp.setFont(font);
 		textPaneTemp.setText(text);
 		textPaneTemp.setEditable(false);
-		textPaneTemp.setCaretPosition(0);
+		textPaneTemp.setCaretPosition(PAGE_TOP);
 		tabbedPanel.setLayout(new GridLayout(1,1));
 		
 		tabbedPanel.add(scroll);
@@ -93,39 +101,41 @@ public class TabbedPaneDisplay extends JPanel {
 		if(parse.getKeyCommand().equals(CommandKey.READ)){
 			LogicFacade lf = new LogicFacade(text);
 			setTab(lf.setTab);
-			PaneArray.get(0).setText(lf.display);
+			PaneArray.get(INBOX_TAB_INDEX).setText(lf.display);
 		} else if(parse.getKeyCommand().equals(CommandKey.SEARCH)){
-			setTab(0);
-			PaneArray.get(0).setText(new LogicFacade(text).display);
+			setTab(INBOX_TAB_INDEX);
+			PaneArray.get(INBOX_TAB_INDEX).setText(new LogicFacade(text).display);
 		} else {
-			setTab(0);
-			PaneArray.get(0).setText(new LogicFacade("-v").display);
+			setTab(INBOX_TAB_INDEX);
+			PaneArray.get(INBOX_TAB_INDEX).setText(new LogicFacade("-v").display);
 		}
-		PaneArray.get(0).setCaretPosition(0);
-		PaneArray.get(1).setText(new LogicFacade("view -t").display);
-		PaneArray.get(1).setCaretPosition(0);
-		PaneArray.get(2).setText(new LogicFacade("view -w").display);
-		PaneArray.get(2).setCaretPosition(0);
-		PaneArray.get(3).setText(new LogicFacade("view -m").display);
-		PaneArray.get(3).setCaretPosition(0);
-		PaneArray.get(4).setText(new LogicFacade("view -f").display);
-		PaneArray.get(4).setCaretPosition(0);
+		PaneArray.get(INBOX_TAB_INDEX).setCaretPosition(PAGE_TOP);
+		
+		PaneArray.get(TODAY_TAB_INDEX).setText(new LogicFacade("view -t").display);
+		PaneArray.get(TODAY_TAB_INDEX).setCaretPosition(PAGE_TOP);
+		
+		PaneArray.get(THIS_WEEK_TAB_INDEX).setText(new LogicFacade("view -w").display);
+		PaneArray.get(THIS_WEEK_TAB_INDEX).setCaretPosition(PAGE_TOP);
+		
+		PaneArray.get(THIS_MONTH_TAB_INDEX).setText(new LogicFacade("view -m").display);
+		PaneArray.get(THIS_MONTH_TAB_INDEX).setCaretPosition(PAGE_TOP);
+		
+		PaneArray.get(FLOATING_TAB_INDEX).setText(new LogicFacade("view -f").display);
+		PaneArray.get(FLOATING_TAB_INDEX).setCaretPosition(PAGE_TOP);
 
 	}
 	
-
-	public void setTab(int index){
-		
-		if (index == 1){
-			tabbedPaneDisplay.setSelectedIndex(1);
-		} else if (index == 2){
-			tabbedPaneDisplay.setSelectedIndex(2);
-		} else if (index == 3){
-			tabbedPaneDisplay.setSelectedIndex(3);
-		} else if (index == 4){
-			tabbedPaneDisplay.setSelectedIndex(4);
+	public void setTab(int index){	
+		if (index == TODAY_TAB_INDEX){
+			tabbedPaneDisplay.setSelectedIndex(TODAY_TAB_INDEX);
+		} else if (index == THIS_WEEK_TAB_INDEX){
+			tabbedPaneDisplay.setSelectedIndex(THIS_WEEK_TAB_INDEX);
+		} else if (index == THIS_MONTH_TAB_INDEX){
+			tabbedPaneDisplay.setSelectedIndex(THIS_MONTH_TAB_INDEX);
+		} else if (index == FLOATING_TAB_INDEX){
+			tabbedPaneDisplay.setSelectedIndex(FLOATING_TAB_INDEX);
 		} else {
-			tabbedPaneDisplay.setSelectedIndex(0);
+			tabbedPaneDisplay.setSelectedIndex(INBOX_TAB_INDEX);
 		}
 	}
 }
