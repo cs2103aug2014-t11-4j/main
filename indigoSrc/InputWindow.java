@@ -8,10 +8,22 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
+/**This is the class initializes the main JFrame of the GUI.
+ * 
+ * @author Sritam
+ *
+ */
+
+
 public class InputWindow extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
-
+	private static final int WINDOW_POS_X= 400;
+	private static final int WINDOW_POS_Y = 10;
+	private static final int WINDOW_WIDTH = 450;
+	private static final int WINDOW_HEIGHT = 650;
+	
+	
 	@Override
 	public void setVisible(boolean value){
 		super.setVisible(value);
@@ -40,7 +52,7 @@ public class InputWindow extends JFrame {
 
 	public void initialize(JFrame mainWindow){	
 		mainWindow.setTitle("Indigo");
-		mainWindow.setBounds(875, 40, 450, 650);
+		mainWindow.setBounds(WINDOW_POS_X, WINDOW_POS_Y, WINDOW_WIDTH, WINDOW_HEIGHT);
 		mainWindow.setResizable(false);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setIconImage(new ImageIcon("gui/goindigologo.jpg").getImage());
