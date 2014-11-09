@@ -64,4 +64,12 @@ public enum TaskIdentifiers {
 				return TaskIdentifiers.INVALID;
 		}
 	}
+	
+	public static String getTaskWord(TaskIdentifiers t){
+		if(t.equals(INVALID)){
+			return "invalid";
+		} else{
+			return "blabla";
+		}
+	}
 }
