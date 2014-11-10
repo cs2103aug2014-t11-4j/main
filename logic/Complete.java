@@ -161,18 +161,27 @@ public class Complete extends CommandClass {
 			Stack<Integer> temp = new Stack<Integer>();
 			Stack<Task> taskTemp = new Stack<Task>();
 			int count = 0;
+			boolean gotOne = false;
 			while(!completeAllIndex.empty()){
 				int indexNum = completeAllIndex.pop();
+				if(indexNum == 1){
+					gotOne = true;
+				}
+				System.out.println(indexNum);
 				taskListVar.unComplete(indexNum);
 				temp.push(indexNum);
+				System.out.println(completeAll.peek());
 				taskTemp.push(completeAll.pop());
 				count++;
 			}
 			completeAllIndex = temp;
 			completeAll = taskTemp;
+			if (!gotOne){
+				taskListVar.complete(1);
+			}
 			return count + " task(s) is/are uncompleted.";
 		}
-		taskListVar.complete(index);
+		taskListVar.unComplete(index);
 		return toDo.toString() + " is uncompleted";
 	}
 
