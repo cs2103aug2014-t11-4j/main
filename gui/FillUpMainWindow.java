@@ -28,15 +28,12 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-
+//@author A0115530W
 /**This is the class which is used to fill the the main window when it is called.
  * It returns components like the Input line, Feedback line, and the Tab Pane display.  
  * This class also contains two listeners on is implemented on the command line JTextField and the other 
  * listens to the keyboard. The listener sub class also contains a method which performs tasks according to the 
  * keyboard input.
- * 
- * @author Sritam
- *
  */
 
 public class FillUpMainWindow {
@@ -86,7 +83,7 @@ public class FillUpMainWindow {
 	private void setBackGroundImage() {
 		BufferedImage img;
 		try {
-			img = ImageIO.read(new File("src/gui/wood.jpg"));
+			img = ImageIO.read(new File("gui/wood.jpg"));
 			JLabel background = new JLabel(new ImageIcon(img));
 			background.setBounds(MAIN_PANEL_POS_X,MAIN_PANEL_POS_Y, MAIN_PANEL_WIDTH, MAIN_PANEL_HEIGHT );
 			displayLayers.add(background,new Integer(0));

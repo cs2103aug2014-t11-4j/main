@@ -7,11 +7,8 @@ import java.awt.EventQueue;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
-
+//@author A0115530W
 /**This is the class initializes the main JFrame of the GUI.
- * 
- * @author Sritam
- *
  */
 
 

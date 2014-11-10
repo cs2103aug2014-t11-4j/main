@@ -1,15 +1,17 @@
 package parser;
-/**This class takes in a string array and decipher it. It will identify the key command words,
- * the indices of input and the task indentifiers.
- * This class is made of the remaining words in the array and the number of words left.
- * 
- * @author KenHua
- */
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+//@author A0112230H
+/**This class takes in a string array and decipher it. It will identify the key command words,
+ * the indices of input and the task indentifiers.
+ * This class is made of the remaining words in the array and the number of words left.
+ */
+
 public class StringDecipher {
+
 	private ArrayList<String> remaining;
 	private int wordsLeft;
 	

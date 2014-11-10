@@ -1,10 +1,8 @@
 package parser;
-
+//@author A0115529E
 /**This is the enum class together with the identifier method of commandKey.
  * This class identifies the possible words for commands and return a commandKey type
  * to the class which invoked it.
- * @author KenHua
- *
  */
 public enum CommandKey {
 	CREATE, READ, UPDATE, DELETE, UNDO, COMPLETE, UNCOMPLETE, REDO, SEARCH, CLEAR, INVALID;

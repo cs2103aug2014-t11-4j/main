@@ -1,0 +1,1604 @@
+//@author: a0112230h
+
+
+
+	/**
+	 * origin: src\indigoSrc\LogicFacade.java
+	 */
+
+/**
+ * This a main Logic of Indigo. Indigo is a software that can store, process
+ * and display tasks on the desktop as a task manager. Indigo takes
+ * input from keyboard only. Indigo stores data on a local disk.
+ * 
+ * This class acts like a facade pattern that the GUI will call. This facade then calls 
+ * the other classes of logic and components like storage and parser to execute a task.
+ *
+ * saveData() and loadData() methods are written by Jiajie as it deals with the storage.
+ */
+
+public class LogicFacade {
+	public String display;			//The one which is displayed on the tabbed pane.
+	public String feedback;			//The one which is displayed below the user input line
+	private static UndoList uList = new UndoList();;	//The invoker for the command class pattern
+	private static Parser parseString;	
+	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd/MM/yyyy, HH:mm");
+	public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm");
+	public static final String FILE_NAME = "myTask";	//By default. Only can save here.
+	private static TaskList taskList = new TaskList();	
+	public int setTab = 0;			//The tab number indicator on tabbedpane display
+	
+	//Default constructor
+	public LogicFacade(){
+		this("-v all");
+	}
+
+	public LogicFacade(String userInput){
+		loadData();
+		parseString = new Parser(userInput);
+		if(parseString.isValid()==false){
+			feedback = "Invalid input";
+		}else{
+			feedback = readCommand(parseString);
+		}
+		if (display==null){
+			display = new Read(taskList).resultString;
+		}
+		saveData();
+	}
+
+	//Reads in a command.
+	private String readCommand(Parser parseString) {
+		return executeCommand(parseString.getKeyCommand());
+	}
+
+	//Execute the task.
+	private String executeCommand(CommandKey commandKey) {
+		switch (commandKey){
+			case CREATE:
+				Create classAdd = new Create(parseString, taskList);
+				if(classAdd.isValid){
+					uList.push(classAdd);		//Push into the invoker for undo
+				}
+				return classAdd.execute();
+			case READ:
+				Read classView = new Read(parseString, taskList);
+				setTab = classView.tabNo;		//Tells which tab to display on GUI
+				display = classView.resultString;
+				return classView.feedback;
+			case UPDATE:
+				Update classEdit = new Update(parseString, taskList);
+				if(classEdit.isValid){
+					uList.push(classEdit);		//Push into the invoker for undo
+				}
+				return classEdit.execute();
+			case DELETE:
+				Delete classDelete = new Delete(parseString, taskList);
+				if(classDelete.isValid){
+					uList.push(classDelete);	//Push into the invoker for undo
+				}
+				return classDelete.execute();
+			case UNDO:
+				return undoMethod();
+			case REDO:
+				return redoMethod();
+			case COMPLETE:
+				Complete classCheck = new Complete(parseString, taskList, true);
+				if(classCheck.isValid){
+					uList.push(classCheck);		//Push into the invoker for undo
+				}
+				return classCheck.execute();
+			case UNCOMPLETE:
+				Complete classUnCheck = new Complete(parseString, taskList, false);
+				if(classUnCheck.isValid){
+					uList.push(classUnCheck);	//Push into the invoker for undo
+				}
+				return classUnCheck.execute(); 
+			case SEARCH:
+				//searches for keywords only. Not for time. 
+				Search classSearch = new Search(parseString, taskList);
+				String result = classSearch.execute();
+				display = classSearch.searchResult;
+				return result;
+			case CLEAR:
+				//By default, this will clear all 
+				return taskList.clear();
+			default:
+				System.exit(0);
+		}
+		return "Saved";
+	}
+
+	public String redoMethod() {
+		//This is for multiple undo on specific types of tasks
+		if(parseString.getTaskWord().equals(TaskIdentifiers.ALL)){
+			int count = 0;
+			while(uList.isRedoAble()){
+				redoFunction();
+				count++;
+			}
+			return printMoves(count, "Redo");
+		//This is for mutliple indices.
+		}else if(parseString.getEditIndex()>0){
+			int index = parseString.getEditIndex();
+			int count = 0; 
+			while(index > 0 && uList.isRedoAble()){
+				redoFunction();
+				index--;
+				count++;
+			}
+			return printMoves(count, "Redo");
+		}else {
+			return printMoves(0, "Redo");
+		}
+	}
+
+	public String undoMethod() {
+		//This is for multiple undo on specific types of tasks
+		if(parseString.getTaskWord().equals(TaskIdentifiers.ALL)){
+			int count = 0;
+			while(uList.isUndoAble()){
+				undoFunction();
+				count++;
+			}
+			return printMoves(count, "Undo");
+		//This is for mutliple undo.
+		} else if (parseString.getEditIndex()>0){
+			int index = parseString.getEditIndex();
+			int count = 0; 
+			while(index > 0 && uList.isUndoAble()){
+				undoFunction();
+				index--;
+				count++;
+			}
+			return printMoves(count, "Undo");
+		//This is the default value=0;
+		} else {
+			return printMoves(0, "Undo");
+		}
+	}
+
+	public void redoFunction() {
+		if(uList.isRedoAble()){
+			uList.redo().execute();
+		}
+	}
+
+	public void undoFunction() {
+		if(uList.isUndoAble()){
+			uList.undo().undo();
+		}
+	}
+
+	public String printMoves(int count, String word){
+		assert count >= 0;
+		if(count == 0){
+			return "There's nothing to " + word.toLowerCase();
+		} else {
+			return word + " " + count + " time(s).";
+		}
+	}
+	
+	// End of segment: src\indigoSrc\LogicFacade.java
+
+
+
+
+
+	/**
+	 * origin: src\logic\CommandClass.java
+	 */
+
+/**This is the Command abstract class used in the Logic component implementing the 
+ * Command of users.
+ */
+
+public abstract class CommandClass {
+
+	protected Parser parserVar; 
+	protected static TaskList taskListVar = new TaskList();
+	public boolean isValid = true;
+	
+	public abstract String execute();
+	public abstract String undo();
+	
+}
+	// End of segment: src\logic\CommandClass.java
+
+
+
+
+
+	/**
+	 * origin: src\logic\Complete.java
+	 */
+
+/** This class is the Complete class which marks a task. This class has 
+ * the function to mark the task either as done or undone.
+ * in the floating tasklist or the deadline tasklist.
+ * 
+ */
+
+public class Complete extends CommandClass {
+	Task toDo;
+	int index;
+	boolean toCheck;
+	TaskIdentifiers type;
+	private Stack<Task> completeAll = new Stack<Task>();
+	private Stack<Integer> completeAllIndex = new Stack<Integer>();
+	
+	public Complete(Parser parsing, TaskList taskList, boolean boolCheck){
+		parserVar = parsing;
+		taskListVar = taskList;
+		toCheck = boolCheck;
+		int totalSize = taskListVar.getSize();
+		index = parserVar.getEditIndex();
+		type = parserVar.getTaskWord();
+		ArrayList<Integer> manyNumbers = new ArrayList<Integer>();
+		manyNumbers = parserVar.getMultipleIndices();
+		
+		if(manyNumbers != null){
+			ArrayList<Integer> check = new ArrayList<Integer>();
+			check = manyNumbers;
+			if(checkValidIndices(check)){
+				completeAllIndex = fillIn(manyNumbers);
+				type = TaskIdentifiers.ALL;
+			} else{
+				isValid = false;
+			}
+		} else if(!type.equals(TaskIdentifiers.INVALID)){
+			completeAllIndex = fillIn(type);
+		} else if ((index <= totalSize) && (index >= 1)){
+			toDo = taskListVar.get(index);
+		} else {
+			isValid = false;
+			toDo = null;
+		}
+	}
+	
+	//Checks if the array of integers are valid index based on the tasklist.
+	private boolean checkValidIndices(ArrayList<Integer> manyNumbers) {
+		// TODO Auto-generated method stub
+		int totalSize = taskListVar.getSize();
+		for(int i=0; i<=manyNumbers.size() - 1; i++){
+			int number = manyNumbers.get(i);
+			if(!((number <= totalSize) && (number >= 1))){
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public Stack<Integer> fillIn(ArrayList<Integer> manyNumbers) {
+		// TODO Auto-generated method stub
+		Stack<Integer> indices = new Stack<Integer>();
+		for(int i=0; i<manyNumbers.size(); i++){
+			int number = manyNumbers.get(i);
+			completeAll.push(taskListVar.get(number));
+			indices.push(number);
+		}
+		return indices;
+	}
+	
+	public Stack<Integer> fillIn(TaskIdentifiers type){
+		Stack<Integer> indices = new Stack<Integer>();
+		if(type.equals(TaskIdentifiers.FLOATING)){
+			int timedListSize = taskListVar.getTimedList().size();
+			int floatListSize = taskListVar.getFloatingList().size();
+			for(int i = 0; i < floatListSize; i++){
+				completeAll.push(taskListVar.getFloatingList().get(i));
+				indices.push(i + timedListSize + 1);
+			}
+		} else if(type.equals(TaskIdentifiers.DEADLINE)){
+			int timedListSize = taskListVar.getTimedList().size();
+			for(int i = 0; i < timedListSize; i++){
+				completeAll.push(taskListVar.getTimedList().get(i));
+				indices.push(i + 1);
+			}
+		} else if(type.equals(TaskIdentifiers.OVERDUE)){
+			indices = taskListVar.findOverdue(completeAll);
+		} else if(type.equals(TaskIdentifiers.COMPLETED)){
+			indices = taskListVar.findCompleted(completeAll);
+		} else if(type.equals(TaskIdentifiers.UNCOMPLETED)){
+			indices = taskListVar.findNoComplete(completeAll);
+		} else if(type.equals(TaskIdentifiers.ALL)){
+			int timeSize = taskListVar.getTimedList().size();
+			int floatSize = taskListVar.getFloatingList().size();
+			for(int i=0; i<timeSize; i++){
+				completeAll.push(taskListVar.getTimedList().get(i));
+				indices.push(i+1);
+			}
+			for(int i=0; i<floatSize; i++){
+				completeAll.push(taskListVar.getFloatingList().get(i));
+				indices.push(i + timeSize + 1);
+			}
+		} else{
+			indices = null;
+		}
+		return indices;
+	}
+	
+	@Override
+	public String execute() {
+		// TODO Auto-generated method stub
+		assert(isValid);
+		if(toCheck){
+			return check();
+		} else {
+			return unCheck();
+		}
+	}
+
+	private String check() {
+		// TODO Auto-generated method stub		
+		if (isValid==false){
+			return "Invalid index";
+		} 
+		assert(isValid);
+		if(!type.equals(TaskIdentifiers.INVALID)){
+			Stack<Integer> temp = new Stack<Integer>();
+			Stack<Task> taskTemp = new Stack<Task>();
+			int count = 0;
+			while(!completeAllIndex.empty()){
+				int indexNum = completeAllIndex.pop();
+				taskListVar.complete(indexNum);
+				temp.push(indexNum);
+				taskTemp.push(completeAll.pop());
+				count++;
+			}
+			completeAllIndex = temp;
+			completeAll = taskTemp;
+			return count + " task(s) is/are completed.";
+		}
+		taskListVar.complete(index);
+		return toDo.toString() + " is completed";
+	}
+	
+	private String unCheck() {
+		// TODO Auto-generated method stub	
+		taskListVar.unComplete(index);
+		//return toDo.toString() + " is not completed!";
+		if (isValid==false){
+			return "Invalid index";
+		} 
+		assert(isValid);
+		if(!type.equals(TaskIdentifiers.INVALID)){
+			Stack<Integer> temp = new Stack<Integer>();
+			Stack<Task> taskTemp = new Stack<Task>();
+			int count = 0;
+			while(!completeAllIndex.empty()){
+				int indexNum = completeAllIndex.pop();
+				taskListVar.unComplete(indexNum);
+				temp.push(indexNum);
+				taskTemp.push(completeAll.pop());
+				count++;
+			}
+			completeAllIndex = temp;
+			completeAll = taskTemp;
+			return count + " task(s) is/are uncompleted.";
+		}
+		taskListVar.complete(index);
+		return toDo.toString() + " is uncompleted";
+	}
+
+	@Override
+	public String undo() {
+		// TODO Auto-generated method stub
+		assert(isValid);
+		if(!toCheck){
+			return check();
+		} else {
+			return unCheck();
+		}
+	}
+
+}
+
+	// End of segment: src\logic\Complete.java
+
+
+
+
+
+	/**
+	 * origin: src\logic\Create.java
+	 */
+
+/** This class is the create class which adds the task that user
+ * would want to add. This class has the function to add task either
+ * in the floating tasklist or the deadline tasklist.
+ */
+
+public class Create extends CommandClass {
+	Task toDo;
+	int index;
+	
+	@Override
+	public String execute() {
+		// TODO Auto-generated method stub
+		return add();
+	}	
+	
+	public Create(Parser parsing, TaskList taskList){
+		parserVar = parsing;
+		taskListVar = taskList;
+		index = parserVar.getEditIndex();
+		int totalSize = taskListVar.getSize() + 1;
+		if (index > totalSize || index < 1){
+			isValid = false;
+		}
+		if (parserVar.isDeadlineTask()){
+			toDo = new DeadlineTask(parserVar.getCommand(),parserVar.getEndTime());
+		} else if (parserVar.isTimedTask()){
+			toDo = new TimedTask(parserVar.getCommand(),parserVar.getStartTime(),parserVar.getEndTime());
+		} else {
+			toDo = new FloatingTask(parserVar.getCommand());
+		}
+	}
+	
+	private String add() {
+		if (isValid==false){
+			return "Invalid index";
+		} else {
+		taskListVar.addTask(index, toDo);
+		return toDo.toString() + "\nis added to taskList!";
+		}
+
+	}
+	
+	public String undo(){
+		int i = taskListVar.search(toDo);
+		taskListVar.deleteTask(i + 1);
+		return toDo.toString() + " is deleted!";
+	}
+
+}
+	// End of segment: src\logic\Create.java
+
+
+
+
+
+	/**
+	 * origin: src\logic\Delete.java
+	 */
+
+/** This class is the delete class which deletes the task that user
+ * would want to delete. User will have to indicate the index which the task 
+ * lies to delete the task.
+ */
+
+public class Delete extends CommandClass{
+	Task toDo;
+	int index;
+	TaskIdentifiers type;
+	private Stack<Task> deleteAll = new Stack<Task>();
+	private Stack<Integer> deleteAllIndex = new Stack<Integer>();
+
+	@Override
+	public String execute() {
+		return delete();
+	}
+	
+	public Delete(Parser parsing, TaskList taskList){
+		parserVar = parsing;
+		taskListVar = taskList;
+		int totalSize = taskListVar.getSize();
+		index = parserVar.getRawEditIndex();
+		type = parserVar.getTaskWord();
+		ArrayList<Integer> manyNumbers = new ArrayList<Integer>();
+		manyNumbers = parserVar.getMultipleIndices();
+		
+		if(manyNumbers != null){
+			ArrayList<Integer> check = new ArrayList<Integer>();
+			check = manyNumbers;
+			if(checkValidIndices(check)){
+				deleteAllIndex = fillDeleteAll(manyNumbers);
+				type = TaskIdentifiers.ALL;
+			} else{
+				isValid = false;
+			}
+		} else if(!type.equals(TaskIdentifiers.INVALID)){
+			deleteAllIndex = fillDeleteAll(type);
+		} else if ((index <= totalSize) && (index >= 1)){
+			toDo = taskListVar.get(index);
+		} else {
+			isValid = false;
+			toDo = null;
+		}
+	}
+	
+	private boolean checkValidIndices(ArrayList<Integer> manyNumbers) {
+		// TODO Auto-generated method stub
+		int totalSize = taskListVar.getSize();
+		for(int i=0; i<=manyNumbers.size() - 1; i++){
+			int number = manyNumbers.get(i);
+			if(!((number <= totalSize) && (number >= 1))){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public Stack<Integer> fillDeleteAll(ArrayList<Integer> manyNumbers) {
+		// TODO Auto-generated method stub
+		Stack<Integer> indices = new Stack<Integer>();
+		for(int i=0; i<manyNumbers.size(); i++){
+			int number = manyNumbers.get(i);
+			deleteAll.push(taskListVar.get(number));
+			indices.push(number);
+		}
+		return indices;
+	}
+	
+	public Stack<Integer> fillDeleteAll(TaskIdentifiers type){
+		Stack<Integer> indices = new Stack<Integer>();
+		if(type.equals(TaskIdentifiers.FLOATING)){
+			int timedListSize = taskListVar.getTimedList().size();
+			int floatListSize = taskListVar.getFloatingList().size();
+			for(int i = 0; i < floatListSize; i++){
+				deleteAll.push(taskListVar.getFloatingList().get(i));
+				indices.push(i + timedListSize + 1);
+			}
+		} else if(type.equals(TaskIdentifiers.DEADLINE)){
+			int timedListSize = taskListVar.getTimedList().size();
+			for(int i = 0; i < timedListSize; i++){
+				deleteAll.push(taskListVar.getTimedList().get(i));
+				indices.push(i + 1);
+			}
+		} else if(type.equals(TaskIdentifiers.OVERDUE)){
+			indices = taskListVar.findOverdue(deleteAll);
+		} else if(type.equals(TaskIdentifiers.COMPLETED)){
+			indices = taskListVar.findCompleted(deleteAll);
+		} else if(type.equals(TaskIdentifiers.UNCOMPLETED)){
+			indices = taskListVar.findNoComplete(deleteAll);
+		} else if(type.equals(TaskIdentifiers.ALL)){
+			int timeSize = taskListVar.getTimedList().size();
+			int floatSize = taskListVar.getFloatingList().size();
+			for(int i=0; i<timeSize; i++){
+				deleteAll.push(taskListVar.getTimedList().get(i));
+				indices.push(i+1);
+			}
+			for(int i=0; i<floatSize; i++){
+				deleteAll.push(taskListVar.getFloatingList().get(i));
+				indices.push(i + timeSize + 1);
+			}
+		} else{
+			indices = null;
+		}
+		return indices;
+	}
+	
+	private String delete() throws ArrayIndexOutOfBoundsException{
+		if (isValid==false){
+			return "Invalid index";
+		} 
+		if(!type.equals(TaskIdentifiers.INVALID)){
+			Stack<Integer> temp = new Stack<Integer>();
+			Stack<Task> taskTemp = new Stack<Task>();
+			int count = 0;
+			while(!deleteAllIndex.empty()){
+				int indexNum = deleteAllIndex.pop();
+				taskListVar.deleteTask(indexNum);
+				temp.push(indexNum);
+				taskTemp.push(deleteAll.pop());
+				count++;
+			}
+			deleteAllIndex = temp;
+			deleteAll = taskTemp;
+			return count + " task(s) is/are deleted.";
+		}
+		taskListVar.deleteTask(index);
+		return toDo.toString() + " is deleted";
+	}
+	
+	public String undo(){
+		if(!type.equals(TaskIdentifiers.INVALID)){
+			Stack<Integer> tempIndices = new Stack<Integer>();
+			Stack<Task> tempTasks = new Stack<Task>();
+			int count = 0;
+			while(!deleteAll.empty()){
+				int indexNum = deleteAllIndex.pop();
+				Task task = deleteAll.pop();
+				taskListVar.addTask(indexNum, task);
+				tempIndices.push(indexNum);
+				tempTasks.push(task);
+				count++;
+			}
+			deleteAll = tempTasks;
+			deleteAllIndex = tempIndices;
+			return count + " task(s) is/are re-added!";
+		}
+		taskListVar.addTask(index, toDo);
+		return toDo.toString() + " is re-added!";
+	}
+}
+
+	// End of segment: src\logic\Delete.java
+
+
+
+
+
+	/**
+	 * origin: src\logic\Read.java
+	 */
+
+/** This class is the read class which will display the list that user
+ * would want to see. This class has different types of views that user
+ * can choose from. The Tabbed Pane Display will have some default view
+ * type implemented like viewToday() and viewThisWeek().
+ */
+
+public class Read extends CommandClass{
+	private static final int TODAY = 0;
+	private static final int TOMORROW = 1;
+	private static final int NEXT_WEEK = 7;
+	private static final int TAB_TODAY = 1;
+	private static final int TAB_WEEK = 2;
+	private static final int TAB_MONTH = 3;
+	private static final int TAB_FLOAT = 4;
+	static final String newLine = System.getProperty("line.separator");
+	public String feedback = "Wrong command";
+	public String resultString = new String();
+	public int tabNo = 0;			//This is for the GUI to decide which tab to display
+	
+	DateTime start = new DateTime();
+	DateTime end = new DateTime();
+
+	@Override
+	public String execute() {
+		// TODO Auto-generated method stub
+		view();
+		return feedback;
+	}
+	
+	public Read(Parser parsing, TaskList taskList){
+		parserVar = parsing;
+		taskListVar = taskList;
+		resultString = view();
+		if (parserVar.isTimedTask()){
+			start = parserVar.getStartTime();
+			end = parserVar.getEndTime();
+		} else if(parserVar.isDeadlineTask()){
+			end = parserVar.getEndTime();
+		} else {
+			assert parserVar.isFloatingTask();
+		}
+	}
+	
+	public Read(TaskList taskList){
+		taskListVar = taskList;
+		resultString = viewAll();
+	}
+	
+	public String view(){
+		TaskIdentifiers word = parserVar.getTaskWord();
+		if(!word.equals(TaskIdentifiers.INVALID)){
+			switch(word){
+				case ALL:
+					feedback = "All tasks are shown";
+					return viewAll();
+				case OVERDUE:
+					feedback = "All tasks overdue are shown";
+					return viewOverDue();
+				case FLOATING:
+					feedback = "All the floating tasks are shown";
+					tabNo = TAB_FLOAT;
+					return viewFloatingTask();
+				case DEADLINE:
+					feedback = "All the deadline tasks are shown";
+					return viewDeadlineTask();
+				case COMPLETED:
+					feedback = "All the completed tasks are shown";
+					return viewDone();
+				case UNCOMPLETED:
+					feedback = "All the uncompleted tasks are shown";
+					return viewUndone();
+				case TODAY:
+					feedback = "All today's tasks are shown";
+					tabNo = TAB_TODAY;
+					String resultTod = viewOverDue() + newLine + viewDay(TODAY);
+					return resultTod.trim();
+				case TOMORROW:
+					feedback = "All tomorrow's tasks are shown";
+					String resultTom = viewDay(TOMORROW);
+					return resultTom.trim();
+				case THIS_WEEK:
+					feedback = "All this week's tasks are shown";
+					tabNo = TAB_WEEK;
+					String resultWk = viewOverDue() + newLine + viewWeek(TODAY);
+					return resultWk.trim();
+				case NEXT_WEEK:
+					feedback = "All next week's tasks are shown";
+					String resultNw = viewWeek(NEXT_WEEK);
+					return resultNw.trim();
+				case THIS_MONTH:
+					feedback = "All this month's tasks are shown";
+					tabNo = TAB_MONTH;
+					return viewThisMonth();
+				default:
+					return viewAll();
+			}
+		}
+		return "-";
+	}
+
+	//The view of all tasks in floating tasklist
+	public String viewFloatingTask(){
+		return viewFloatingTask(0);
+	}
+	
+	//The view of all tasks in floating tasklist with index addendum.
+	public String viewFloatingTask(int index){
+		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
+		for (int i=0,j=index+1;i<taskListVar.getFloatingList().size();i++,j++){
+			assert taskListVar.getFloatingList().get(i).getNumDates()!=1;
+			result.append(j + ". " + taskListVar.getFloatingList().get(i).toString());
+			if(taskListVar.getRecentIndex() == j){
+				result.append(" \u2605");
+			}
+			result.append(newLine);
+		}
+		return result.toString().trim();
+	}
+	
+	//The view of all tasks in deadline tasklist
+	public String viewDeadlineTask(){
+		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
+		for (int i=0,j=1;i<taskListVar.getTimedList().size();i++,j++){
+			DeadlineTask temp = (DeadlineTask) taskListVar.getTimedList().get(i);
+			result.append(j + ". " + temp.toString(LogicFacade.DATE_FORMAT));
+			if(taskListVar.getRecentIndex() == j){
+				result.append(" \u2605");
+			}
+			result.append(newLine);
+		}
+		return result.toString().trim();
+	}
+	
+	//View all basically views deadline tasklist and floating tasklist
+	public String viewAll(){
+		int sum = taskListVar.getFloatingList().size() + taskListVar.getTimedList().size();
+		int index = taskListVar.getTimedList().size();
+		StringBuilder result = new StringBuilder("There are " + sum + " tasks listed:" + newLine);
+		result.append(viewDeadlineTask() + newLine + newLine + viewFloatingTask(index));
+		return result.toString();
+	} 
+	
+	//View all the tasks which are done
+	public String viewDone(){
+		return taskListVar.viewDone();
+	}
+	
+	//View all the tasks which are not done
+	public String viewUndone(){
+		return taskListVar.viewUndone();
+	}
+	
+	//This method is to find tasks which are due today or tomorrow depending on Index.
+	private String viewDay(int index) {
+		DateTime now = new DateTime();
+		now = now.plusDays(index);
+		int yearNow = now.getYear();
+		int dayNow = now.getDayOfYear();
+		StringBuilder result = new StringBuilder();
+		String timeKeeperCompare = dayLeft(now);
+		result.append(timeKeeperCompare + newLine);
+		int tlSize = taskListVar.getTimedList().size();
+		for (int i=1; i<=tlSize; i++){
+				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
+				if((temp.getKeyTime().getYear() == yearNow) && (temp.getKeyTime().getDayOfYear() == dayNow)){
+					result.append(temp.toString(LogicFacade.TIME_FORMAT) + newLine);
+			}
+		}
+		return result.toString().trim();
+	}
+
+	//This method is to find tasks which are due this week or next week. 
+	//It does not follow the pattern on Monday to Sunday. It takes tasks of
+	//the next seven days.
+	private String viewWeek(int index) {
+		// TODO Auto-generated method stub
+		int daysLater = index + 7;
+		StringBuilder result = new StringBuilder();
+		for( ; index <= daysLater; index++){
+			result.append(viewDay(index) + newLine + newLine);
+		}
+		return result.toString().trim();
+	}
+
+	//This method is to find the tasks which are due this current month. Taking Overdue tasks 
+	//for the month into consideration as well.
+	public String viewThisMonth(){
+		DateTime now = new DateTime();
+		int yearNow = now.getYear();
+		int monthNow = now.getMonthOfYear();
+		
+		StringBuilder result = new StringBuilder();
+		int tlSize = taskListVar.getTimedList().size();
+		String timeKeeperCompare = dayLeft(now);
+		for (int i=1; i<=tlSize; i++){
+				DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
+				DateTime tempDate = temp.getTime();
+				String timeKeeper = dayLeft(now, tempDate);
+				int tempMonth = tempDate.getMonthOfYear();
+				if((tempDate.getYear() == yearNow) && (tempMonth == monthNow)){
+					if(!timeKeeperCompare.equals(timeKeeper)){
+						result.append(newLine + timeKeeper + newLine);
+						timeKeeperCompare = timeKeeper;
+					}
+					result.append(temp.toString(LogicFacade.TIME_FORMAT) + newLine);
+				}
+		}
+		return result.toString().trim();
+	}
+	
+	//This method lets user see tasks which are overdue but not done
+	public String viewOverDue(){
+		DateTime now = new DateTime();
+		int yearNow = now.getYear();
+		int dayNow = now.getDayOfYear();
+		
+		StringBuilder result = new StringBuilder();
+		int ntlsize = taskListVar.getTimedList().size();
+		String timeKeeperCompare = dayLeft(now, now);
+		for (int i=1; i<=ntlsize; i++){
+			DeadlineTask temp = (DeadlineTask) taskListVar.get(i);
+			DateTime tempDate = temp.getTime();
+			String timeKeeper = dayLeft(now, tempDate);
+			int tempDateDay = tempDate.getDayOfYear();
+			int tempDateYear = tempDate.getYear();
+			if(((tempDateYear < yearNow)  && !temp.isCompleted()) || 
+				((tempDateDay < dayNow) && (tempDateYear <= yearNow) && !temp.isCompleted())){
+				if(!timeKeeperCompare.equals(timeKeeper)){
+					result.append(newLine + timeKeeper + newLine);
+					timeKeeperCompare = timeKeeper;
+				}
+				result.append(temp.toString(LogicFacade.TIME_FORMAT) + newLine);
+				if(result.equals(newLine)){
+					return result.append("").toString().trim();
+				}
+			}
+		}
+		return result.toString().trim() + newLine;
+	}
+	
+	//Prints the heading for each task separation. Prints out the day and dates
+	private String dayLeft(DateTime taskDate){
+		DateTime today = new DateTime();
+		return dayLeft(today, taskDate);
+	}
+	
+	private String dayLeft(DateTime today, DateTime taskDate){
+		String returnString[] = new String[2];
+		int days = 0;
+		if(today.getYear() == taskDate.getYear()){
+			days = taskDate.getDayOfYear() - today.getDayOfYear();
+		} else if (today.getYear() < taskDate.getYear()){
+			int noOfYears = taskDate.getYear() - today.getYear();
+			days = taskDate.getDayOfYear() + (noOfYears*365) - today.getDayOfYear() + 1;
+		} else if (today.getYear() > taskDate.getYear()){
+			int noOfYears = today.getYear() - taskDate.getYear();
+			days = taskDate.getDayOfYear() - today.getDayOfYear() - (noOfYears*365) - 1;
+		}
+		switch (days){
+			case 0: 
+				returnString[0] = "Today ";
+				break;
+			case 1:
+				returnString[0] = "Tomorrow ";
+				break;
+			case -1:
+				returnString[0] = "Yesterday ";
+				break;
+			default:
+				if(days < -1){
+					returnString[0] = (days*-1) + " days ago ";
+				} else if (days <= 7){
+					DateTime.Property dtp = taskDate.dayOfWeek();
+					returnString[0] = dtp.getAsText() + " ";
+				} else {
+					returnString[0] = "";
+				}
+		}
+		DateTime.Property dtp2 = taskDate.monthOfYear();
+		returnString[1] = taskDate.getDayOfMonth() + " ";
+		returnString[1] += dtp2.getAsShortText();
+		if(today.getYear()!=taskDate.getYear()){
+			returnString[1] += " " + taskDate.getYear();
+		}
+		
+		return returnString[0] + returnString[1];
+	}
+	
+	//Undo is ignored.
+	@Override
+	public String undo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}
+
+	// End of segment: src\logic\Read.java
+
+
+
+
+
+	/**
+	 * origin: src\logic\Search.java
+	 */
+
+/** This class is the search class which finds the task based on the user's
+ * key words. This class has the function to search through the list of tasks to find
+ * the tasks containing the keywords. 
+ */
+
+public class Search extends CommandClass {
+	private static final String NOT_FOUND = "Search words not found";
+	private static final String NO_TASKS_FOUND = "No Tasks with search words found";
+	private static final String FOUND = "Results found";
+	private static final String NO_FLOATING_TASKS = "No floating tasks found with search keys";
+	private static final String FLOATING_TASKS = "Floating Tasks found: ";
+	private static final String NO_DEADLINE_TASKS = "No deadline tasks found with search keys";
+	private static final String DEADLINE_TASKS = "DeadLine Tasks found: ";
+	public String searchResult = new String();
+	private int foundTasks = 0;
+	private ArrayList<SearchListNode> searchList = new ArrayList<SearchListNode>();
+	
+	@Override
+	public String execute() {
+		// TODO Auto-generated method stub
+		return find();
+	}
+	
+	public Search(Parser parser, TaskList taskList) {
+		// TODO Auto-generated constructor stub
+		parserVar = parser;
+		taskListVar = taskList;
+	}
+
+	public String find(){
+		StringBuilder StringList = new StringBuilder();
+		int found = 0;
+		String keyWords = parserVar.getCommand().trim().toLowerCase();
+		ArrayList<Task> floatTaskList = taskListVar.getFloatingList();
+		ArrayList<Task> timeTaskList = taskListVar.getTimedList();
+		int floatTasks = floatTaskList.size();
+		int timeTasks = timeTaskList.size();
+		StringList.append(DEADLINE_TASKS + "\n");
+		for(int i=0; i<timeTasks; i++){
+			if(timeTaskList.get(i).getDescription().toLowerCase().contains(keyWords)){
+				DeadlineTask temp = (DeadlineTask) timeTaskList.get(i);
+				SearchListNode node = new SearchListNode(temp, i);
+				searchList.add(node);
+				StringList.append(i+1 + ". " + temp.toString() + "\n");
+				found++;
+			}
+		}
+		int foundNow = found;
+		if(foundNow==0){
+			StringList.append(NO_DEADLINE_TASKS + "\n");
+		}
+		StringList.append("\n" + FLOATING_TASKS + "\n");
+		for(int j=0; j<floatTasks; j++){
+			if(floatTaskList.get(j).getDescription().toLowerCase().contains(keyWords)){
+				int sum = j + timeTasks + 1;
+				Task temp = floatTaskList.get(j);
+				SearchListNode node = new SearchListNode(temp, j);
+				searchList.add(node);
+				StringList.append(sum + ". " + temp.getDescription() + "\n");
+				found++;
+			}
+		}
+		if(foundNow==found){
+			StringList.append(NO_FLOATING_TASKS + "\n");
+		}
+		foundTasks = found;
+		//display = StringList.toString();
+		if(found!=0){
+			searchResult = "There are " + found + " tasks listed: " + "\n"; 
+			searchResult += StringList.toString();
+			return FOUND;
+		} else {
+			searchResult = NO_TASKS_FOUND + "\n";
+			return NOT_FOUND;
+		}
+	}
+	
+	public String findWithNumInOrder(){
+		StringBuilder StringList = new StringBuilder();
+		int found = 1;
+		String keyWords = parserVar.getCommand().trim().toLowerCase();
+		ArrayList<Task> floatTaskList = taskListVar.getFloatingList();
+		ArrayList<Task> timeTaskList = taskListVar.getTimedList();
+		int floatTasks = floatTaskList.size();
+		int timeTasks = timeTaskList.size();
+		StringList.append(DEADLINE_TASKS + "\n");
+		for(int i=0; i<timeTasks; i++){
+			if(timeTaskList.get(i).getDescription().toLowerCase().contains(keyWords)){
+				DeadlineTask temp = (DeadlineTask) timeTaskList.get(i);
+				SearchListNode node = new SearchListNode(temp, i);
+				searchList.add(node);
+				StringList.append(found++ + ". " + temp.toString() + "\n");
+			}
+		}
+		int foundNow = found-1;
+		if(foundNow==0){
+			StringList.append(NO_DEADLINE_TASKS + "\n");
+		}
+		StringList.append("\n" + FLOATING_TASKS + "\n");
+		for(int j=0; j<floatTasks; j++){
+			if(floatTaskList.get(j).getDescription().toLowerCase().contains(keyWords)){
+				Task temp = floatTaskList.get(j);
+				SearchListNode node = new SearchListNode(temp, j);
+				searchList.add(node);
+				StringList.append(found++ + ". " + floatTaskList.get(j).getDescription() + "\n");
+			}
+		}
+		if(foundNow==found-1){
+			StringList.append(NO_FLOATING_TASKS + "\n");
+		}
+		foundTasks = foundNow;
+		//display = StringList.toString();
+		if(found!=0){
+			searchResult = "There are " + found + " tasks listed: " + "\n"; 
+			searchResult += StringList.toString();
+			return FOUND;
+		} else {
+			searchResult = NO_TASKS_FOUND + "\n";
+			return NOT_FOUND;
+		}
+	}
+	
+	public int getFound(){
+		return foundTasks;
+	}
+	
+	public ArrayList<SearchListNode> getSearchArray(){
+		return searchList;
+	}
+	
+	@Override
+	public String undo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+}
+
+	// End of segment: src\logic\Search.java
+
+
+
+
+
+	/**
+	 * origin: src\logic\SearchListNode.java
+	 */
+
+/** This is an data type object used by the search class. It is used to return two 
+ * data from a search result. Namely, the task and the index number in the taskList.
+ * 
+ */
+
+public class SearchListNode {
+	private Task task;
+	private int originalIndex;
+	
+	public SearchListNode(Task task, int index){
+		this.task = task;
+		originalIndex = index;
+	}
+	
+	public SearchListNode(DeadlineTask task, int index) {
+		// TODO Auto-generated constructor stub
+		this.task = task;
+		originalIndex = index;
+	}
+
+	public Task getTask(){
+		return task;
+	}
+	
+	public int getIndex(){
+		return originalIndex;
+	}
+	
+}
+
+	// End of segment: src\logic\SearchListNode.java
+
+
+
+
+
+	/**
+	 * origin: src\logic\UndoList.java
+	 */
+
+/** This class is used for undo and redo operations.
+ *  It store all the command classes into a list with a pointer indicating the current position.
+ *  A parser needs to be added for any normal command executed other than redo/undo.
+ *  The class works like a linkedlist storing command classes. It acts like an invoker for 
+ *  the command pattern.
+ *  
+ * 	todo:
+ * 	perform safety check if there are more undo/redo operations than the list size
+ *  Limit the size of list to save space.
+ *  
+ */
+public class UndoList {
+
+	private static int currentPos;
+	private static LinkedList<CommandClass> list;
+
+	public UndoList(){
+		list = new LinkedList<CommandClass>();
+		currentPos = -1;
+	}
+
+	public void push(CommandClass cc){
+		clear();
+		list.add(cc);
+		currentPos++;
+	}
+	
+	public void clear(){
+		int i = currentPos+1;
+		while (i < list.size()){
+			list.remove(i);
+		}
+	}
+	
+	public CommandClass undo(){
+		currentPos--;
+		return list.get(currentPos + 1);
+	}
+	
+	public CommandClass redo(){
+		currentPos++;
+		return list.get(currentPos);
+	}
+	
+	public int size(){
+		return list.size();
+	}
+	
+	public boolean isUndoAble(){
+		return currentPos >= 0;
+	}
+	
+	public boolean isRedoAble(){
+		return currentPos + 1 < size();
+	}
+}
+	// End of segment: src\logic\UndoList.java
+
+
+
+
+
+	/**
+	 * origin: src\logic\Update.java
+	 */
+
+/** This class is the update class which can update the task that user
+ * would want to edit. User will have to indicate the index which the task 
+ * lies to update the task.
+ */
+
+public class Update extends CommandClass{
+	Task toDo;
+	Task toDoReplaced;
+	int index;
+	
+	@Override
+	public String execute() {
+		// TODO Auto-generated method stub
+		return edit();
+	}
+
+	public Update(Parser parsing, TaskList taskList){
+		parserVar = parsing;
+		taskListVar = taskList; 
+		int totalSize = taskListVar.getSize();
+		index = parserVar.getRawEditIndex();
+		if (index > totalSize || index < 1){
+			index = taskListVar.getRecentIndex();
+		}
+		toDoReplaced = taskListVar.get(index);
+		
+		String newTaskDescription = parserVar.getCommand();
+		DateTime newStartTime = parserVar.getStartTime();
+		
+		DateTime newEndTime = parserVar.getEndTime();
+		if(newTaskDescription.equals("")){
+			newTaskDescription = toDoReplaced.getDescription();
+		}
+		if(newEndTime==null){
+			newEndTime = toDoReplaced.getKeyTime();
+		}
+		if(newStartTime==null){
+			newStartTime = toDoReplaced.getStartTime();
+		}
+		toDo = getTask(newTaskDescription, newEndTime, newStartTime);
+	}
+
+	public Task getTask(String details, DateTime end, DateTime start) {
+		Task toDo = null;
+		if (start == null && end == null){
+			toDo = new FloatingTask(details);
+		} else if (start == null){
+			toDo = new DeadlineTask(details, end);
+		} else {
+			toDo = new TimedTask(details, start, end);
+		}
+		return toDo;
+	}
+	
+	
+	private String edit() throws ArrayIndexOutOfBoundsException{
+		if (isValid==false){
+			return "Invalid index";
+		} else {
+			assert(toDoReplaced != null);
+			index = taskListVar.search(toDoReplaced) + 1;
+			taskListVar.editTask(index, toDo);
+			return "Task updated to " + toDo.toString();
+		}
+	}
+
+	@Override
+	public String undo() {
+		// TODO Auto-generated method stub
+		index = taskListVar.search(toDo) + 1;
+		taskListVar.editTask(index, toDoReplaced);
+		return "Task updated to " + toDoReplaced.toString();
+	}
+
+}
+
+	// End of segment: src\logic\Update.java
+
+
+
+
+
+	/**
+	 * origin: src\parser\Parser.java
+	 */
+
+	// Command containing key command and its description.
+	public String getRawCommand() {
+		if (rawCommand != null) {
+			return rawCommand.trim();
+		} else {
+			return "";
+		}
+	}
+
+	// Get the raw edit index, which is not tampered to return
+	// default 1.
+	public int getRawEditIndex() {
+		return editIndex;
+	}
+
+	public ArrayList<Integer> getMultipleIndices() {
+		return multipleIndices;
+	}
+
+	// Checks if the date and time entered by user is not a past time. If it is,
+	// this method will auto correct the timing. If there is a start time (timed
+	// task),
+	// the start time will not change even is it has past.
+	public void smartParserCheck() {
+		now = new DateTime();
+		timeRef = now.plusMinutes(2);
+		if (endTime.isBefore(now)) {
+			if (endTime.getYear() == now.getYear()
+					&& endTime.getDayOfYear() == now.getDayOfYear()) {
+				if (endTime.isBefore(timeRef)) {
+					DateTime newDate = endTime.plusDays(1);
+					endTime = newDate;
+				}
+			} else {
+				int days = now.getDayOfYear() - endTime.getDayOfYear();
+				if (now.getYear() > endTime.getYear()) {
+					days += 365 * (now.getYear() - endTime.getYear());
+				}
+				DateTime newDate = endTime.plusDays(days);
+				if (newDate.isBefore(timeRef)) {
+					newDate = newDate.plusDays(1);
+				}
+				endTime = newDate;
+			}
+		}
+	}
+}
+	// End of segment: src\parser\Parser.java
+
+
+
+
+
+	/**
+	 * origin: src\parser\StringDecipher.java
+	 */
+
+/**This class takes in a string array and decipher it. It will identify the key command words,
+ * the indices of input and the task indentifiers.
+ * This class is made of the remaining words in the array and the number of words left.
+ */
+
+public class StringDecipher {
+
+	private ArrayList<String> remaining;
+	private int wordsLeft;
+	
+	public StringDecipher(String[] sentence){
+		remaining = new ArrayList<String>(Arrays.asList(sentence));
+		wordsLeft = sentence.length;
+	}
+	
+	public String[] getRemaining(){
+		String[] sentence = remaining.toArray(new String[wordsLeft]);
+		return sentence;
+	}
+	
+	public int getWordsLeft(){
+		return wordsLeft;
+	}
+	
+	//Gets the command key word. It extracts either the first or last word depending on 
+	//the command ket word's position.
+	public CommandKey getKey(){
+		int arraySize = wordsLeft;
+		CommandKey key = CommandKey.identifyKey(remaining.get(0).toLowerCase());
+		if(key.equals(CommandKey.INVALID)){
+			key = CommandKey.identifyKey(remaining.get(arraySize-1).toLowerCase());
+			if(key.equals(CommandKey.INVALID)){
+				key = CommandKey.CREATE;
+			} else {
+				remaining.remove(arraySize-1);
+			}
+		} else {
+			remaining.remove(0);
+		}
+		
+		wordsLeft = remaining.size();
+		return key;
+	}
+	
+	//Gets the index from the sentence. It takes the second position if the key
+	//command is at the first position or the first position if the key command
+	//is at the last position.
+	public int getIndex(){
+		int index = -1;
+		try{
+			 index = Integer.parseInt(remaining.get(0));
+			 remaining.remove(0);
+		} catch(NumberFormatException er){
+		}
+		this.wordsLeft = remaining.size();
+		return index;
+	}
+	
+	//Identifies the key word is the following commands are identified:
+	//Delete, complete, uncomplete, undo, redo, and view.
+	public TaskIdentifiers checkTaskWords(CommandKey keyWord) {
+		TaskIdentifiers taskWord = TaskIdentifiers.INVALID;
+		assert this.getWordsLeft() >=0 && this.getWordsLeft() <=2;
+		if(this.getWordsLeft() == 0){
+			if(keyWord.equals(CommandKey.READ)){
+				taskWord = TaskIdentifiers.ALL;
+			}
+		} else if(this.getWordsLeft() == 1){
+			String word = remainingToString().toLowerCase().trim();
+			taskWord = TaskIdentifiers.indentifyWords(word);
+		} else if(this.getWordsLeft() == 2){
+			TaskIdentifiers all = TaskIdentifiers.indentifyWords(remaining.get(0).toLowerCase().trim());
+			if(all.equals(TaskIdentifiers.ALL)){
+				taskWord = TaskIdentifiers.indentifyWords(remaining.get(1).toLowerCase().trim());
+			}
+		}
+		if(!taskWord.equals(TaskIdentifiers.INVALID)){
+			remaining.clear();
+			wordsLeft = 0;
+		}
+		return taskWord;
+	}
+	
+	//Returns the remaining words after deciphering.
+	public String remainingToString(){
+		String printup = "";
+		for(int i=0; i<wordsLeft; i++){
+			printup += remaining.get(i) + " ";
+		}
+		return printup;
+	}
+
+	//Find indices input by user. This method is invoked by command keys:
+	//Delete, complete and uncomplete.
+	public ArrayList<Integer> extractIndices() {
+		ArrayList<Integer> indices = new ArrayList<Integer>();
+		if(getWordsLeft()==0){
+			return null;
+		}else{
+			int instances = getWordsLeft();
+			int i = 0;
+			int count=0;
+			while(i < instances){
+				try{
+					indices.add(Integer.parseInt(remaining.get(i)));
+					count++;
+				}catch(Exception err){
+				}
+				i++;
+			}
+			if(count!=instances){ //That means not all the input is number.
+				return null;
+			}
+		}
+		Collections.sort(indices);
+		remaining.clear();
+		wordsLeft = 0;
+		return indices;
+	}
+
+}
+
+	// End of segment: src\parser\StringDecipher.java
+
+
+
+
+
+	/**
+	 * origin: src\Storage\TaskList.java
+	 */
+
+	public int search(Task task) {
+		// TODO Searches keyWords in the TaskList. Returns a list of Strings.
+		int floatSize = floatingTaskList.size();
+		int timeSize = timedTaskList.size();
+		if(task.getNumDates() == 1 || task.getNumDates() == 2){
+			for(int i=0; i<timeSize; i++){
+				if(timedTaskList.get(i).equals(task)){
+					return i;
+				}
+			}
+		} else if(task.numDates == 0){
+			for(int j=0; j<floatSize; j++){
+				if(floatingTaskList.get(j).equals(task)){
+					return j + timeSize;
+				}
+			}
+		} else {
+			return NOT_FOUND;
+		}
+		return NOT_FOUND;
+	}
+
+	public Stack<Integer> findOverdue(Stack<Task> listOfTasks) {
+		Stack<Integer> indices = new Stack<Integer>();
+		int timeSize = timedTaskList.size();
+		for(int i=0; i<timeSize; i++){
+			if(timedTaskList.get(i).isOverdue()){
+				listOfTasks.push(timedTaskList.get(i));
+				indices.push(i);
+			}
+		}
+		return indices;
+	}
+
+	public Stack<Integer> findCompleted(Stack<Task> listOfTasks) {
+		Stack<Integer> indices = new Stack<Integer>();
+		int floatSize = floatingTaskList.size();
+		int timeSize = timedTaskList.size();
+		for(int i=0; i<timeSize; i++){
+			if(timedTaskList.get(i).isCompleted()){
+				listOfTasks.push(timedTaskList.get(i));
+				indices.push(i+1);
+			}
+		}
+		for(int i=0; i<floatSize; i++){
+			if(floatingTaskList.get(i).isCompleted()){
+				listOfTasks.push(timedTaskList.get(i));
+				indices.push(i + timeSize + 1);
+			}
+		}
+		return indices;
+	}
+
+	public Stack<Integer> findNoComplete(Stack<Task> listOfTasks) {
+		Stack<Integer> indices = new Stack<Integer>();
+		int timeSize = timedTaskList.size();
+		int floatSize = floatingTaskList.size();
+		for(int i=0; i<timeSize; i++){
+			if(!timedTaskList.get(i).isCompleted()){
+				listOfTasks.push(timedTaskList.get(i));
+				indices.push(i+1);
+			}
+		}
+		for(int i=0; i<floatSize; i++){
+			if(!floatingTaskList.get(i).isCompleted()){
+				listOfTasks.push(timedTaskList.get(i));
+				indices.push(i + timeSize + 1);
+			}
+		}
+		return indices;
+	}
+}
+
+	// End of segment: src\Storage\TaskList.java
+
+
+
+
+
+	/**
+	 * origin: src\test\TestLogic.java
+	 */
+
+public class TestLogic {
+
+	private static String[] testInputsBasic;
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		String[] inputs = {
+				"write diary entry",
+				"go to developer fest on 5 March 2015",
+				"interview for backend programming job 12 Dec 2pm to 4pm",
+				"-a attend N-house workshop next sat 7pm",
+				"submit assignment by 2359pm addd",
+				"yesterday celebrate high school reunion",
+				"buy 30 cartons of Milo for welfare event on Monday",
+				"del 2",
+				"del 3 1 4",
+				"undo",
+				"undo 3",
+				"undo -11",
+				"-3 1 del",
+				"redo all",
+				"-e 2 6pm next week",
+				"go to karaoke -e",
+				"-c 2 4 6",
+				"-uc 2 -1",
+				"undo -1",
+				"view -f",
+				"view next week",
+				"-v completed",
+				"undone -v",
+				"go to friday night party at 2300pm",
+				"del1",
+				"del 42",
+				};
+		testInputsBasic = inputs;
+		
+	}
+
+	@Test
+	public void testBasic() {
+		LogicFacade test = new LogicFacade();
+		for (String str: testInputsBasic){
+			LogicFacade lc = new LogicFacade(str);
+			System.out.println(lc.feedback);
+		}
+		test = new LogicFacade();
+		int expectedSizeOfFloatingList = test.getTasks().getFloatingList().size();
+		int expectedSizeOfTimedList = test.getTasks().getTimedList().size();
+		assertEquals(expectedSizeOfFloatingList+expectedSizeOfTimedList, 5);
+		test = new LogicFacade("-z");
+	}
+
+}
+
+	// End of segment: src\test\TestLogic.java
+
+
+
+
+

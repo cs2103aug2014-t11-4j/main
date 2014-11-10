@@ -1,13 +1,11 @@
 package parser;
-
+//@author A0115529E
 /**This is the enum class together with the identifier method of TaskIdentifiers.
  * Task Identifiers are the type of keywords important for certain command class.
  * eg. Delete class needs most of the identifiers except Today, tomorrow and ... (time based)
  * 	   Read class will use all of the identifiers.
  * This class identifies the possible words for TaskIdentifiers and return the result
  * to the class which invoked it.
- * 
- * @author KenHua
  *
  */
 public enum TaskIdentifiers {

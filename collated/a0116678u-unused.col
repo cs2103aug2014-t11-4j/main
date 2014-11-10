@@ -1,0 +1,41 @@
+//@author: a0116678u-unused
+
+
+
+	/**
+	 * origin: src\Storage\TaskList.java
+	 */
+
+	public String viewAll(DateTimeFormatter dtf){
+		int sum = floatingTaskList.size() + timedTaskList.size();
+		StringBuilder result = new StringBuilder("There are " + sum + " tasks listed:" + newLine);
+		result.append(viewDeadlineTask(dtf) + viewFloatingTask());
+		return result.toString();
+	}
+
+	// view the taskList in a particular format
+	public String viewFloatingTask(){
+		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
+		for (int i=0,j=1;i<floatingTaskList.size();i++,j++){
+			assert floatingTaskList.get(i).numDates!=1;
+			result.append(j + ". " + floatingTaskList.get(i).toString() + newLine);
+		}
+		return result.toString();
+	}
+
+	public String viewDeadlineTask(DateTimeFormatter dtf){
+		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
+	
+		for (int i=0,j=1;i<timedTaskList.size();i++,j++){
+			Task temp = timedTaskList.get(i);
+			result.append(j + ". " + temp.toString(dtf) + newLine);
+		}
+		return result.toString();
+	}
+
+	// End of segment: src\Storage\TaskList.java
+
+
+
+
+

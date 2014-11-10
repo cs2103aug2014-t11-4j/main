@@ -7,16 +7,13 @@ import Storage.Task;
 import Storage.TaskList;
 import parser.Parser;
 import parser.TaskIdentifiers;
-
+//@author A0112230H
 /** This class is the delete class which deletes the task that user
  * would want to delete. User will have to indicate the index which the task 
  * lies to delete the task.
- * 
- * @author KenHua
  */
 
 public class Delete extends CommandClass{
-	
 	Task toDo;
 	int index;
 	TaskIdentifiers type;

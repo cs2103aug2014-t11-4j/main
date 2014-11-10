@@ -2,12 +2,10 @@ package gui;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-
-
+//@author A0115530W
 /**This class is used to define the GridBagConstraints of the various JComponents 
  * used in the FillUpMainWindow class.
  * 
- * @author Sritam
  */
 
 public class DefiningConstraints {

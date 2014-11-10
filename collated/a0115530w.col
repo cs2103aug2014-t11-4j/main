@@ -1,0 +1,469 @@
+//@author: a0115530w
+
+
+
+	/**
+	 * origin: src\gui\DefiningConstraints.java
+	 */
+
+/**This class is used to define the GridBagConstraints of the various JComponents 
+ * used in the FillUpMainWindow class.
+ * 
+ */
+
+public class DefiningConstraints {
+	
+	private static final int BOTTOM_PANEL_INDEX = 1;
+	private static final int TABBED_PANE_INDEX = 2;
+	private static final int TOP_PANEL_INDEX = 3;
+	private static final int INPUT_FIELD_INDEX = 4;
+	private static final int USER_FEEDBACK_INDEX = 5;
+	
+	public GridBagConstraints setConstraints(int componentIndex) {
+		GridBagConstraints constraints;
+		Insets topPanel = new Insets(20,20,5,20);
+		Insets insetsOfReadInput = new Insets(0,20,0,20);
+		Insets insetsOfUserFeedback = new Insets(0, 20,0,20);		
+		Insets bottomPanel = new Insets(5,20,50,20);
+		Insets insetsOfTabbedPane = new Insets(10,20,5,20);
+		
+		
+		if(componentIndex ==  TOP_PANEL_INDEX){
+			constraints = new GridBagConstraints(0,0,3,3,0.1,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,topPanel,0,0);
+			return constraints;
+		}
+		
+		else if(componentIndex == INPUT_FIELD_INDEX){
+			constraints = new GridBagConstraints(0,1,3,1,0.1,0.0,GridBagConstraints.CENTER,GridBagConstraints.BOTH,insetsOfReadInput,0,0);
+			return constraints;
+		}
+		
+		else if(componentIndex == USER_FEEDBACK_INDEX){
+			constraints = new GridBagConstraints(0,2,1,1,0.1,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,insetsOfUserFeedback,0,0);
+			return constraints;
+		}
+		
+		else if(componentIndex ==BOTTOM_PANEL_INDEX){
+			constraints = new GridBagConstraints(0,3,3,9,0.0,0.7,GridBagConstraints.CENTER,GridBagConstraints.BOTH,bottomPanel,0,0);
+			return constraints;
+		}
+		
+		else if(componentIndex == TABBED_PANE_INDEX){
+			constraints = new GridBagConstraints(0,1,2,8,0.1,0.1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,insetsOfTabbedPane,0,0);
+			return constraints;
+		}
+
+		return null;
+	}
+}
+
+	// End of segment: src\gui\DefiningConstraints.java
+
+
+
+
+
+	/**
+	 * origin: src\gui\FillUpMainWindow.java
+	 */
+
+/**This is the class which is used to fill the the main window when it is called.
+ * It returns components like the Input line, Feedback line, and the Tab Pane display.  
+ * This class also contains two listeners on is implemented on the command line JTextField and the other 
+ * listens to the keyboard. The listener sub class also contains a method which performs tasks according to the 
+ * keyboard input.
+ */
+
+public class FillUpMainWindow {
+	
+	private static final int BOTTOM_PANEL_INDEX = 1;
+	private static final int TABBED_PANE_INDEX = 2;
+	private static final int TOP_PANEL_INDEX = 3;
+	private static final int INPUT_FIELD_INDEX = 4;
+	private static final int USER_FEEDBACK_INDEX = 5;
+	private static final int MAIN_PANEL_POS_X= 0;
+	private static final int MAIN_PANEL_POS_Y = 0;
+	private static final int MAIN_PANEL_WIDTH = 450;
+	private static final int MAIN_PANEL_HEIGHT = 650;
+	private static final int FONT_SIZE = 14;
+	
+
+	private JLayeredPane displayLayers = new JLayeredPane();
+	private JTextField readInput;
+	private JTextArea liveUserFeedback;
+	public TabbedPaneDisplay taskDisplay;
+	
+	public DefiningConstraints gridBag = new DefiningConstraints();
+	
+	public void addComponentsToTheFrame(JFrame mainWindow){
+		Container contentPane = mainWindow.getContentPane();
+		contentPane.add(displayLayers);
+		JPanel mainPanel = new JPanel();
+		mainPanel.setBounds(MAIN_PANEL_POS_X, MAIN_PANEL_POS_Y, MAIN_PANEL_WIDTH, MAIN_PANEL_HEIGHT);
+		mainPanel.setLayout(new GridBagLayout());
+		mainPanel.setOpaque(false);
+		
+		GridBagConstraints bottomPanelConstraints, topPanelConstraints;
+		bottomPanelConstraints =  gridBag.setConstraints(BOTTOM_PANEL_INDEX);
+		topPanelConstraints =  gridBag.setConstraints(TOP_PANEL_INDEX);
+		
+		setBackGroundImage();
+		
+		JPanel inputPanel = createUserInputPanel();
+		mainPanel.add(inputPanel, topPanelConstraints);
+		
+		JPanel outputPanel = createOutputPanel();
+		mainPanel.add(outputPanel, bottomPanelConstraints);
+		
+		displayLayers.add(mainPanel,new Integer(1)); 
+	}
+
+	private void setBackGroundImage() {
+		BufferedImage img;
+		try {
+			img = ImageIO.read(new File("src/gui/wood.jpg"));
+			JLabel background = new JLabel(new ImageIcon(img));
+			background.setBounds(MAIN_PANEL_POS_X,MAIN_PANEL_POS_Y, MAIN_PANEL_WIDTH, MAIN_PANEL_HEIGHT );
+			displayLayers.add(background,new Integer(0));
+		} catch (IOException e) {
+		}
+		
+	}
+
+	private JPanel createUserInputPanel(){
+		JPanel topPanel = new JPanel(new GridBagLayout());
+		topPanel.setOpaque(false);	
+		
+		GridBagConstraints inputFieldConstraints, userFeedbackConstraints;
+		inputFieldConstraints =  gridBag.setConstraints(INPUT_FIELD_INDEX);
+		userFeedbackConstraints = gridBag.setConstraints(USER_FEEDBACK_INDEX);
+		
+		JTextField readInput = setReadInput();
+		topPanel.add(readInput,inputFieldConstraints);	
+		JPanel feedbackPanel = UserFeedbackPanel();
+		topPanel.add(feedbackPanel, userFeedbackConstraints);
+		
+		return topPanel;
+		
+	}
+
+	private JTextField setReadInput() {
+	
+		readInput = new JTextField();
+		readInput.addActionListener(new readInputTextFieldListener());
+		readInput.addKeyListener(new readInputTextFieldListener());	
+		return readInput;
+	}
+	private JPanel UserFeedbackPanel(){
+		JPanel feedbackPanel = new JPanel(new GridBagLayout());
+		feedbackPanel.setOpaque(false);
+		feedbackPanel.setLayout(new GridLayout(1,1));
+		JTextArea liveUserFeedback = setLiveUserFeedback();
+		JScrollPane scroll = new JScrollPane(liveUserFeedback);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		feedbackPanel.add(scroll);
+		
+		return feedbackPanel;
+	}
+
+	private JTextArea setLiveUserFeedback() {
+	
+		liveUserFeedback = new JTextArea();
+		Border liveUserFeedbackBorder = new LineBorder(Color.blue);
+		liveUserFeedback.setBorder(liveUserFeedbackBorder);
+		liveUserFeedback.setLineWrap(true);
+		liveUserFeedback.setEditable(false);
+		liveUserFeedback.setText("Welcome to Indigo!");
+		Font font = new Font("Monospaces", Font.PLAIN, FONT_SIZE);
+		liveUserFeedback.setFont(font);
+		return liveUserFeedback;
+	}
+	
+	private JPanel createOutputPanel() {
+		JPanel bottomPanel = new JPanel(new GridBagLayout());
+		bottomPanel.setOpaque(false);
+		
+		GridBagConstraints tabbedPaneConstraints;
+		tabbedPaneConstraints =  gridBag.setConstraints(TABBED_PANE_INDEX);
+		
+		addTabbedPane(bottomPanel);
+		bottomPanel.add(taskDisplay, tabbedPaneConstraints);	
+		return bottomPanel; 
+	
+	}
+
+	
+	private TabbedPaneDisplay addTabbedPane(JPanel bottomPanel) {
+		taskDisplay = new TabbedPaneDisplay();		
+		return taskDisplay;
+		
+	}
+
+	public class readInputTextFieldListener implements ActionListener, KeyListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String text = readInput.getText();
+			readInput.selectAll();
+			LogicFacade controller = new LogicFacade(text);
+			liveUserFeedback.setText(controller.feedback);
+			taskDisplay.update(text);
+			readInput.requestFocusInWindow();
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			 displayInfo(e, readInput.getText());
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			displayInfo(e, readInput.getText());
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			displayInfo(e, readInput.getText());
+		}
+
+	}
+	private void displayInfo(KeyEvent e, String command) {
+        int id = e.getID();
+        if (id == KeyEvent.KEY_TYPED) {	
+        } else if(id == KeyEvent.KEY_PRESSED) {	
+        	if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Z) {
+        		LogicFacade lc = new LogicFacade("undo");
+        		taskDisplay.update(lc.display);
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Y){
+        		LogicFacade lc = new LogicFacade("redo");
+        		taskDisplay.update(lc.display);
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_D){
+        		readInput.setText("delete ");
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_N){
+        		readInput.setText("add ");
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_E){
+        		readInput.setText("edit ");
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_F){
+        		readInput.setText("search ");
+        	} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
+        		
+        	}
+        } 
+        
+        else if(id == KeyEvent.KEY_RELEASED) {
+        	if (command.equals("a") || command.equals("ad") || command.equals("add")) 
+        		liveUserFeedback.setText( "add <some task>");
+        	else if (command.equals("d") ||command.equals("de") || command.equals("del") || command.equals("dele")|| command.equals("delet")|| command.equals("delete"))
+        		liveUserFeedback.setText( "delete <index>");
+        	else if (command.equals("v") || command.equals("vi") || command.equals("vie"))
+        		liveUserFeedback.setText( "view <today/thisweek/thismonth/done/undone>");
+        	else if (command.equals("e") || command.equals("ed") || command.equals("edi") || command.equals("edit"))
+        		liveUserFeedback.setText( "edit <index> <some task>");
+        	else if (command.equals("c")||command.equals("co")||command.equals("com")||command.equals("comp")||command.equals("compl")
+        			||command.equals("comple")||command.equals("complet")||command.equals("complete")){
+        		liveUserFeedback.setText("complete <index>");
+        	}
+
+        }
+	}
+	
+
+}
+
+	// End of segment: src\gui\FillUpMainWindow.java
+
+
+
+
+
+	/**
+	 * origin: src\gui\TabbedPaneDisplay.java
+	 */
+
+/**This is the class deals with the JTabbedPane component of the GUI. It updates the tabs 
+ * according to the users commands.
+ */
+public class TabbedPaneDisplay extends JPanel {
+	
+	private static final long serialVersionUID = 1L;
+	
+	private static final int INBOX_TAB_INDEX = 0;
+	private static final int TODAY_TAB_INDEX = 1;
+	private static final int THIS_WEEK_TAB_INDEX = 2;
+	private static final int THIS_MONTH_TAB_INDEX = 3;
+	private static final int FLOATING_TAB_INDEX = 4;
+	private static final int PAGE_TOP = 0;
+	private static final int FONT_SIZE = 14;
+
+	private JTabbedPane tabbedPaneDisplay;
+	private JTextPane taskDisplayPane; 
+	public LogicFacade id = new LogicFacade();
+	public static ArrayList<JTextPane> PaneArray = new ArrayList<JTextPane>();
+	
+	public TabbedPaneDisplay(){
+		super(new GridLayout(1,1));
+
+		tabbedPaneDisplay = new JTabbedPane();
+
+		JComponent allPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view").display);
+		tabbedPaneDisplay.addTab("    Inbox    ", null, allPanel, "Displays all tasks.");
+		tabbedPaneDisplay.setMnemonicAt(INBOX_TAB_INDEX, KeyEvent.VK_1);
+		
+		JComponent dailyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -t").display);
+		tabbedPaneDisplay.addTab("    Today    ", null, dailyPanel, "Displays daily tasks.");
+		tabbedPaneDisplay.setMnemonicAt(TODAY_TAB_INDEX, KeyEvent.VK_2);
+		
+		JComponent weeklyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -w").display);
+		tabbedPaneDisplay.addTab("    This Week    ", null, weeklyPanel, "Displays weekly tasks.");
+		tabbedPaneDisplay.setMnemonicAt(THIS_WEEK_TAB_INDEX, KeyEvent.VK_3);
+		
+		JComponent monthlyPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -m").display);
+		tabbedPaneDisplay.addTab("    This Month    ", null, monthlyPanel, "Displays monthly tasks.");
+		tabbedPaneDisplay.setMnemonicAt(THIS_MONTH_TAB_INDEX , KeyEvent.VK_4);
+		
+		JComponent floatingPanel = makeTextPanel(taskDisplayPane, new LogicFacade("view -f").display);
+		tabbedPaneDisplay.addTab("   Floating   ", null, floatingPanel, "Displays floating tasks.");
+		tabbedPaneDisplay.setMnemonicAt(FLOATING_TAB_INDEX, KeyEvent.VK_5);
+		
+		tabbedPaneDisplay.setSelectedIndex(TODAY_TAB_INDEX);
+		add(tabbedPaneDisplay);
+		
+		tabbedPaneDisplay.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+	}
+
+	private JComponent makeTextPanel(JTextPane textPaneTemp, String text) {
+		
+		JPanel tabbedPanel = new JPanel();
+		
+		textPaneTemp = new JTextPane();
+		Font font = new Font("Monospaces", Font.PLAIN, FONT_SIZE);
+		PaneArray.add(textPaneTemp);
+
+		JScrollPane scroll = new JScrollPane(textPaneTemp);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		
+		textPaneTemp.setFont(font);
+		textPaneTemp.setText(text);
+		textPaneTemp.setEditable(false);
+		textPaneTemp.setCaretPosition(PAGE_TOP);
+		tabbedPanel.setLayout(new GridLayout(1,1));
+		
+		tabbedPanel.add(scroll);
+		return tabbedPanel;
+		
+		
+	} 
+	
+
+	public void update(String text){
+		//TODO
+
+		Parser parse = new Parser(text + "");
+		if(parse.getKeyCommand().equals(CommandKey.READ)){
+			LogicFacade lf = new LogicFacade(text);
+			setTab(lf.setTab);
+			PaneArray.get(INBOX_TAB_INDEX).setText(lf.display);
+		} else if(parse.getKeyCommand().equals(CommandKey.SEARCH)){
+			setTab(INBOX_TAB_INDEX);
+			PaneArray.get(INBOX_TAB_INDEX).setText(new LogicFacade(text).display);
+		} else {
+			setTab(INBOX_TAB_INDEX);
+			PaneArray.get(INBOX_TAB_INDEX).setText(new LogicFacade("-v").display);
+		}
+		PaneArray.get(INBOX_TAB_INDEX).setCaretPosition(PAGE_TOP);
+		
+		PaneArray.get(TODAY_TAB_INDEX).setText(new LogicFacade("view -t").display);
+		PaneArray.get(TODAY_TAB_INDEX).setCaretPosition(PAGE_TOP);
+		
+		PaneArray.get(THIS_WEEK_TAB_INDEX).setText(new LogicFacade("view -w").display);
+		PaneArray.get(THIS_WEEK_TAB_INDEX).setCaretPosition(PAGE_TOP);
+		
+		PaneArray.get(THIS_MONTH_TAB_INDEX).setText(new LogicFacade("view -m").display);
+		PaneArray.get(THIS_MONTH_TAB_INDEX).setCaretPosition(PAGE_TOP);
+		
+		PaneArray.get(FLOATING_TAB_INDEX).setText(new LogicFacade("view -f").display);
+		PaneArray.get(FLOATING_TAB_INDEX).setCaretPosition(PAGE_TOP);
+
+	}
+	
+	public void setTab(int index){	
+		if (index == TODAY_TAB_INDEX){
+			tabbedPaneDisplay.setSelectedIndex(TODAY_TAB_INDEX);
+		} else if (index == THIS_WEEK_TAB_INDEX){
+			tabbedPaneDisplay.setSelectedIndex(THIS_WEEK_TAB_INDEX);
+		} else if (index == THIS_MONTH_TAB_INDEX){
+			tabbedPaneDisplay.setSelectedIndex(THIS_MONTH_TAB_INDEX);
+		} else if (index == FLOATING_TAB_INDEX){
+			tabbedPaneDisplay.setSelectedIndex(FLOATING_TAB_INDEX);
+		} else {
+			tabbedPaneDisplay.setSelectedIndex(INBOX_TAB_INDEX);
+		}
+	}
+}
+
+	// End of segment: src\gui\TabbedPaneDisplay.java
+
+
+
+
+
+	/**
+	 * origin: src\indigoSrc\InputWindow.java
+	 */
+
+/**This is the class initializes the main JFrame of the GUI.
+ */
+
+
+public class InputWindow extends JFrame {
+	
+	private static final long serialVersionUID = 1L;
+	private static final int WINDOW_POS_X= 400;
+	private static final int WINDOW_POS_Y = 10;
+	private static final int WINDOW_WIDTH = 450;
+	private static final int WINDOW_HEIGHT = 650;
+	
+	
+	@Override
+	public void setVisible(boolean value){
+		super.setVisible(value);
+	}
+	
+	public static void main(String[] args){
+		EventQueue.invokeLater(new Runnable(){
+			public void run(){
+				try {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					InputWindow mainWindow = new InputWindow();
+					mainWindow.setVisible(true);
+				}
+				catch (Exception e){
+						e.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	public InputWindow(){
+		initialize(this);
+		FillUpMainWindow filler = new FillUpMainWindow();
+		filler.addComponentsToTheFrame(this);
+	}
+
+	public void initialize(JFrame mainWindow){	
+		mainWindow.setTitle("Indigo");
+		mainWindow.setBounds(WINDOW_POS_X, WINDOW_POS_Y, WINDOW_WIDTH, WINDOW_HEIGHT);
+		mainWindow.setResizable(false);
+		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainWindow.setIconImage(new ImageIcon("gui/goindigologo.jpg").getImage());
+	}
+
+}
+
+
+	// End of segment: src\indigoSrc\InputWindow.java
+
+
+
+
+

@@ -6,7 +6,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-
+//@author A0116678U
 public class SaxHandler extends DefaultHandler {
 	private DateTime tempStartTime;
 	private DateTime tempEndTime;

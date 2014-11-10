@@ -24,14 +24,10 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
+//@author A0116678U
 /** This class stores the task-list as an arrayList.
  *  The basic functions have been provided as a skeleton program.
- * @author jjlu
- *
- *
  */
-
 
 public class TaskList {
 	
@@ -105,26 +101,6 @@ public class TaskList {
 		return tempFloatingTask;
 	}
 	
-	// view the taskList in a particular format
-	public String viewFloatingTask(){
-		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
-		for (int i=0,j=1;i<floatingTaskList.size();i++,j++){
-			assert floatingTaskList.get(i).numDates!=1;
-			result.append(j + ". " + floatingTaskList.get(i).toString() + newLine);
-		}
-		return result.toString();
-	}
-	
-	public String viewDeadlineTask(DateTimeFormatter dtf){
-		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
-
-		for (int i=0,j=1;i<timedTaskList.size();i++,j++){
-			Task temp = timedTaskList.get(i);
-			result.append(j + ". " + temp.toString(dtf) + newLine);
-		}
-		return result.toString();
-	}
-	
 	public String viewDone(){
 		StringBuilder str = new StringBuilder("Tasks Completed: " + newLine);
 		int j=1; // for indexing
@@ -156,13 +132,6 @@ public class TaskList {
 		}
 		return str.toString();
 	}
-	
-	public String viewAll(DateTimeFormatter dtf){
-		int sum = floatingTaskList.size() + timedTaskList.size();
-		StringBuilder result = new StringBuilder("There are " + sum + " tasks listed:" + newLine);
-		result.append(viewDeadlineTask(dtf) + viewFloatingTask());
-		return result.toString();
-	} 
 	
 	// write and read
 	public void writeXMLDocument(String fileName){
@@ -347,6 +316,43 @@ public class TaskList {
 		return "List is cleared";
 	}
 	
+	public void deleteTask(Task toDo) {
+		// TODO Auto-generated method stub
+		if(floatingTaskList.contains(toDo)){
+			floatingTaskList.remove(toDo);
+		} else {
+			timedTaskList.remove(toDo);
+		}
+	}
+	//@author A0116678U -unused
+	public String viewAll(DateTimeFormatter dtf){
+		int sum = floatingTaskList.size() + timedTaskList.size();
+		StringBuilder result = new StringBuilder("There are " + sum + " tasks listed:" + newLine);
+		result.append(viewDeadlineTask(dtf) + viewFloatingTask());
+		return result.toString();
+	}
+
+	// view the taskList in a particular format
+	public String viewFloatingTask(){
+		StringBuilder result = new StringBuilder("Floating tasks are:" + newLine);
+		for (int i=0,j=1;i<floatingTaskList.size();i++,j++){
+			assert floatingTaskList.get(i).numDates!=1;
+			result.append(j + ". " + floatingTaskList.get(i).toString() + newLine);
+		}
+		return result.toString();
+	}
+
+	public String viewDeadlineTask(DateTimeFormatter dtf){
+		StringBuilder result = new StringBuilder("Deadline tasks are:" + newLine);
+	
+		for (int i=0,j=1;i<timedTaskList.size();i++,j++){
+			Task temp = timedTaskList.get(i);
+			result.append(j + ". " + temp.toString(dtf) + newLine);
+		}
+		return result.toString();
+	}
+
+	//@author A0112230H
 	public int search(Task task) {
 		// TODO Searches keyWords in the TaskList. Returns a list of Strings.
 		int floatSize = floatingTaskList.size();
@@ -368,16 +374,7 @@ public class TaskList {
 		}
 		return NOT_FOUND;
 	}
-	
-	public void deleteTask(Task toDo) {
-		// TODO Auto-generated method stub
-		if(floatingTaskList.contains(toDo)){
-			floatingTaskList.remove(toDo);
-		} else {
-			timedTaskList.remove(toDo);
-		}
-	}
-	
+
 	public Stack<Integer> findOverdue(Stack<Task> listOfTasks) {
 		Stack<Integer> indices = new Stack<Integer>();
 		int timeSize = timedTaskList.size();
@@ -389,7 +386,7 @@ public class TaskList {
 		}
 		return indices;
 	}
-	
+
 	public Stack<Integer> findCompleted(Stack<Task> listOfTasks) {
 		Stack<Integer> indices = new Stack<Integer>();
 		int floatSize = floatingTaskList.size();
@@ -408,7 +405,7 @@ public class TaskList {
 		}
 		return indices;
 	}
-	
+
 	public Stack<Integer> findNoComplete(Stack<Task> listOfTasks) {
 		Stack<Integer> indices = new Stack<Integer>();
 		int timeSize = timedTaskList.size();

@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import indigoSrc.LogicFacade;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
+//@author A0116678U
 public class testSystem {
 	private static String[] testInputsBasic;
 	private static String[] testInputAdvanced;

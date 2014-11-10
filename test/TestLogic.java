@@ -5,8 +5,9 @@ import indigoSrc.LogicFacade;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-
+//@author A0112230H
 public class TestLogic {
+
 	private static String[] testInputsBasic;
 
 	@BeforeClass

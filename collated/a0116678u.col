@@ -1,0 +1,892 @@
+//@author: a0116678u
+
+
+
+	/**
+	 * origin: src\indigoSrc\LogicFacade.java
+	 */
+
+	private static void saveData() {
+		//  save taskList into TEXT file
+		taskList.writeXMLDocument(FILE_NAME);
+	}
+
+	private static String loadData() {
+		// load data from the local disk into memory
+		return taskList.readFromXML(FILE_NAME);
+	}
+
+	public TaskList getTasks() {
+		return taskList;
+	}
+}
+
+	// End of segment: src\indigoSrc\LogicFacade.java
+
+
+
+
+
+	/**
+	 * origin: src\Storage\DeadlineTask.java
+	 */
+
+public class DeadlineTask extends FloatingTask{
+	
+	public static void main(String[] args){
+		DeadlineTask time = new DeadlineTask("deadline task", new DateTime(2014,10,9,19,15,00));
+
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("YY-MM-dd HH:mm");
+
+		Task time2 = time;
+		
+		System.out.println(time.toString(dtf));
+		System.out.println(time2.toString(dtf));
+	}
+
+	public DeadlineTask(String description, DateTime time) {
+		super(description);
+		endTime = time;
+		numDates = 1;
+		keyTime = endTime;
+	}
+	
+
+	
+	@Override
+	public String toString(DateTimeFormatter format){
+
+		StringBuilder result = new StringBuilder(format.print(endTime)+", ");
+		result.append(super.toString());
+		return result.toString();
+	}
+
+	@Override
+	public int compareTo(Task aTask) {
+		// TODO Auto-generated method stub
+		if (aTask.getNumDates()==0){
+			return -1;
+		} else {
+			if (this.getKeyTime().isBefore(aTask.getKeyTime())){
+				return -1;
+			} else {
+				return 1;
+			}
+		}
+	}
+
+	@Override
+	public boolean equals(Object anotherTask) {
+		if (anotherTask instanceof DeadlineTask){
+			Task myTask = (DeadlineTask) anotherTask;
+			return super.equals(anotherTask) && this.endTime.equals(myTask.endTime);
+		} else {
+			return false;
+		}
+	}	
+}
+
+	// End of segment: src\Storage\DeadlineTask.java
+
+
+
+
+
+	/**
+	 * origin: src\Storage\FloatingTask.java
+	 */
+
+/**
+ * A floating task is a task with the following 4 fields
+ * -isDone
+ * -taskDescription
+ * -taskDetails
+ * -isImportant
+ */
+
+public class FloatingTask extends Task{
+	
+	public static void main(String[] args){
+		Task task = new FloatingTask();
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
+		System.out.println(task.toString(dtf));
+		System.out.println(task.getKeyTime());
+	}
+	
+	public FloatingTask(FloatingTask another){
+		super(another.getDescription());
+		this.isDone = another.isCompleted();
+		this.isImportant = another.isImportant();
+		this.numDates = another.getNumDates();
+		this.location = another.getLocation();
+	}
+	
+	public FloatingTask() {
+		// a stub default value for default constructor
+		this("default task.");
+	}
+
+	public FloatingTask(String description) {
+		super(description);
+	}
+	
+	public FloatingTask(String description, String place){
+		super(description);
+		isDone = false;
+		isImportant = false;
+		numDates = 0;
+		this.location = place + "";
+	}
+
+
+	@Override
+	public int compareTo(Task aTask) {
+		if (aTask.getNumDates()==0){
+			return this.taskDescription.compareTo(aTask.taskDescription);
+		} else {
+			return -1;
+		}
+	}
+
+}
+
+	// End of segment: src\Storage\FloatingTask.java
+
+
+
+
+
+	/**
+	 * origin: src\Storage\SaxHandler.java
+	 */
+
+public class SaxHandler extends DefaultHandler {
+	private DateTime tempStartTime;
+	private DateTime tempEndTime;
+	private String tempTaskName;
+	private ArrayList<Task> timedList;
+	private ArrayList<Task> floatingList;
+	private Task tempTask;
+	private String tempValue;
+    
+    public ArrayList<Task> getFloatingList(){
+    	return floatingList;
+    }
+    
+    public ArrayList<Task> getTimedList(){
+    	return timedList;
+    }
+    
+    public void startElement(String s, String s1, String tagName, Attributes attributes) 
+    		throws SAXException {
+    	if (tagName.equalsIgnoreCase("rootTaskList")){
+    		floatingList = new ArrayList<Task>();
+    		timedList = new ArrayList<Task>();
+    	}
+    	
+    }
+
+    public void endElement(String uri, String localName, String tagName)
+    throws SAXException {
+    	if (tagName.equalsIgnoreCase("TaskDescription")){
+    		tempTaskName = tempValue;
+    	}
+    	
+    	if (tagName.equalsIgnoreCase("DueDate") ||
+    			tagName.equalsIgnoreCase("To")){
+    		tempEndTime = new DateTime(tempValue);
+    	}
+    	
+    	if (tagName.equalsIgnoreCase("From")){
+    		tempStartTime = new DateTime(tempValue);
+    	}
+    	
+    	if (tagName.equalsIgnoreCase("numDates")){
+    		if (Integer.parseInt(tempValue)== 0){
+    			tempTask= new FloatingTask(tempTaskName);
+    			floatingList.add(tempTask);
+    		} else if (Integer.parseInt(tempValue) == 1){
+    			tempTask = new DeadlineTask(tempTaskName, tempEndTime);
+    			timedList.add(tempTask);
+    		} else if (Integer.parseInt(tempValue) == 2){
+    			tempTask = new TimedTask(tempTaskName, tempStartTime, tempEndTime);
+    			timedList.add(tempTask);
+    		}
+    	}
+    	
+    	if (tagName.equalsIgnoreCase("CompletionStatus") && tempValue.equalsIgnoreCase("true")){
+    		tempTask.complete();
+    	}
+    	
+    	if (tagName.equalsIgnoreCase("Importance") && tempValue.equalsIgnoreCase("true")){
+    		tempTask.highlight();
+    	}
+    	
+    }
+
+    public void characters(char ch[], int start, int length)
+    throws SAXException {
+    	tempValue = new String(ch,start,length);
+    }
+
+}
+
+	// End of segment: src\Storage\SaxHandler.java
+
+
+
+
+
+	/**
+	 * origin: src\Storage\Task.java
+	 */
+
+public abstract class Task implements Comparable<Task>{
+	protected boolean isDone; // to indicate the status of task e.g is it done or due
+	protected String taskDescription;
+	protected boolean isImportant; // a mark up to tell whether the task is important
+	protected int numDates;
+	protected String location;
+	
+	protected DateTime endTime;
+	protected DateTime currentTime = DateTime.now();
+	protected DateTime keyTime;
+	
+	protected DateTime startTime;	
+	protected String newLine = System.getProperty("line.separator");
+	
+	public Task(String description){
+		taskDescription = description + "";
+		isDone = false;
+		isImportant = false;
+		numDates = 0;
+		this.location = "home";
+	}
+	
+	//getter	
+	public String getLocation(){
+		return this.location;
+	}
+	
+	public String getDescription() {
+		return this.taskDescription;
+	}
+
+	public boolean isImportant() {
+		return isImportant;
+	}
+	
+	public boolean isCompleted(){
+		return isDone;
+	}
+	
+	public DateTime getTime(){
+		return endTime;
+	}
+	
+	public int getNumDates(){
+		return numDates;
+	}
+	
+	public DateTime getKeyTime(){
+		return keyTime;
+	}
+	
+	public DateTime getStartTime(){
+		return startTime;
+	}
+	
+	
+	// setter
+	public String editDescription(String newDescription) {
+		taskDescription = newDescription;
+		return taskDescription;
+	}
+	
+	public DateTime editTime(DateTime newTime){
+		endTime = newTime;
+		return endTime;
+	}
+	
+	public boolean isOverdue(){
+		return endTime.isBefore(currentTime) && (isDone);
+	}
+	
+	public String editLocation(String newPlace){
+		location = newPlace;
+		return newPlace;
+	}
+	
+	@Override
+	public String toString(){
+		return toStringWODate();
+	}
+
+
+	public String toString(DateTimeFormatter dtf){
+		return toStringWODate();
+	}
+	
+	public String toStringWODate(){
+		StringBuilder result = new StringBuilder("");
+		result.append(taskDescription);
+		if (isCompleted()){
+			result.append('\u2713');
+		}
+		return result.toString();
+	}
+	
+	public boolean complete(){
+		isDone = true;
+		return isDone;
+	}
+	
+	public boolean unComplete(){
+		isDone = false;
+		return isDone;
+	}
+	
+	public boolean highlight(){
+		isImportant = true;
+		return isImportant;
+	}
+	
+	public boolean hide(){
+		isImportant = false;
+		return isImportant;
+	}
+	
+	@Override
+	/* compare the two floating task
+		by default: deadlinetask and timedtask will be placed at the front, follow a chronological order
+		then it is arranged by taskDescription alphabetically
+		*/
+	abstract public int compareTo(Task aTask);
+	
+	@Override
+	public boolean equals(Object anotherTask) {
+		// TODO Auto-generated method stub
+		if (anotherTask instanceof FloatingTask){
+			FloatingTask myTask = (FloatingTask) anotherTask;
+			return this.getDescription().equals(myTask.getDescription()) &&
+					this.isDone == myTask.isDone && this.numDates == myTask.numDates;
+		} else {
+			return false;
+		}
+	}
+}
+
+	// End of segment: src\Storage\Task.java
+
+
+
+
+
+	/**
+	 * origin: src\Storage\TaskList.java
+	 */
+
+/** This class stores the task-list as an arrayList.
+ *  The basic functions have been provided as a skeleton program.
+ */
+
+public class TaskList {
+	
+	private static final int NOT_FOUND = -1;
+	private ArrayList<Task> floatingTaskList;
+	private ArrayList<Task> timedTaskList;
+	private int indexRecentTask;
+	
+	public String newLine = System.getProperty("line.separator");
+
+	public TaskList() {
+		floatingTaskList = new ArrayList<Task>();
+		timedTaskList = new ArrayList<Task>();
+	}	
+	
+	// basic functions
+	// add
+	public Task addTask(Task newTask){
+		return addTask(1,newTask);
+	}
+	
+	public Task addTask(int index, Task newTask){
+		if (newTask.numDates==0){
+			if ( index > timedTaskList.size()){
+				indexRecentTask = index;
+				floatingTaskList.add(index-timedTaskList.size()-1,newTask);
+			}	else {
+				indexRecentTask = timedTaskList.size()+1;
+				floatingTaskList.add(0,newTask);
+			}
+		} else {
+			// a timedtask should place at a position according to key time
+			for (int i=0; i<timedTaskList.size();){
+				DateTime timeToBeAdded = newTask.getKeyTime();
+				DateTime timeInList = timedTaskList.get(i).getKeyTime();
+				if (timeToBeAdded.isBefore(timeInList)){
+					indexRecentTask = i+1;
+					timedTaskList.add(i,newTask);
+					return newTask;
+				} else {
+					i++;
+				}
+			}
+			indexRecentTask = timedTaskList.size()+1;
+			timedTaskList.add(timedTaskList.size(),newTask);
+			return newTask;
+		}
+		return newTask;
+	}
+
+	public int getRecentIndex(){
+		return indexRecentTask;
+	}
+	
+	// delete
+	public Task deleteTask(int index){
+		Task tempFloatingTask;
+		indexRecentTask = -1;
+		if (index>timedTaskList.size()){
+			tempFloatingTask = floatingTaskList.remove(index-timedTaskList.size()-1);
+		} else {
+			tempFloatingTask = timedTaskList.remove(index-1);
+		}
+		return tempFloatingTask;
+	}
+
+	// edit
+	public Task editTask(int index,  Task newTask){
+		Task tempFloatingTask = deleteTask(index);
+		addTask(index,newTask);
+		return tempFloatingTask;
+	}
+	
+	public String viewDone(){
+		StringBuilder str = new StringBuilder("Tasks Completed: " + newLine);
+		int j=1; // for indexing
+		for (int i=0; i<timedTaskList.size();i++,j++){
+			if (timedTaskList.get(i).isCompleted()){
+				str.append( j + ". " + timedTaskList.get(i).toString() + newLine);
+			}
+		}
+		for (int i=0; i<floatingTaskList.size();i++,j++){
+			if (floatingTaskList.get(i).isCompleted()){
+				str.append( j + ". " + floatingTaskList.get(i).toString() + newLine);
+			}
+		}
+		return str.toString();
+	}
+	
+	public String viewUndone(){
+		StringBuilder str = new StringBuilder("Tasks Due: " + newLine);
+		int j = 1;
+		for (int i=0; i<timedTaskList.size();i++,j++){
+			if (!timedTaskList.get(i).isCompleted()){
+				str.append( j + ". " + timedTaskList.get(i).toString(LogicFacade.DATE_FORMAT) + newLine);
+			}
+		}
+		for (int i=0; i<floatingTaskList.size();i++,j++){
+			if (!floatingTaskList.get(i).isCompleted()){
+				str.append( j + ". " + floatingTaskList.get(i).toString(LogicFacade.DATE_FORMAT) + newLine);
+			}
+		}
+		return str.toString();
+	}
+	
+	// write and read
+	public void writeXMLDocument(String fileName){
+		 DocumentBuilderFactory dFact = DocumentBuilderFactory.newInstance();
+	     DocumentBuilder build;
+		try {
+			build = dFact.newDocumentBuilder();
+		    Document doc = build.newDocument();
+
+	        Element root = (Element) doc.createElement("rootTaskList");
+	        doc.appendChild(root);
+	        
+	        
+	        for (int i =0; i<timedTaskList.size(); i++){
+	        	Element timedTask = doc.createElement("TimedTasks");
+	        	root.appendChild(timedTask);
+	        	
+	        	Element taskTag = doc.createElement("Task");
+	         	timedTask.appendChild(taskTag);
+	        	
+	        	Element taskDetail = doc.createElement("TaskDescription");
+	        	taskDetail.appendChild(doc.createTextNode(timedTaskList.get(i).getDescription()));
+	        	taskTag.appendChild(taskDetail);
+	        	
+	        	switch (timedTaskList.get(i).numDates){
+	        		case 0:
+	        			assert false;
+	        			break;
+	        		case 1:
+	        			Element endTime = doc.createElement("DueDate");
+	        			endTime.appendChild(doc.createTextNode(timedTaskList.get(i).endTime.toString()));
+	        			taskTag.appendChild(endTime);
+	        			break;
+	        		case 2:
+	        			Element startDate = doc.createElement("From");
+	        			startDate.appendChild(doc.createTextNode(timedTaskList.get(i).startTime.toString()));
+	        			taskTag.appendChild(startDate);
+	        			
+	        			Element endDate = doc.createElement("To");
+	        			endDate.appendChild(doc.createTextNode(timedTaskList.get(i).endTime.toString()));
+	        			taskTag.appendChild(endDate);
+	        			break;
+	        		default:
+	        		assert false;
+	        	}
+	        	
+	        	Element numDates = doc.createElement("numDates");
+	        	numDates.appendChild(doc.createTextNode(timedTaskList.get(i).numDates + ""));
+	        	taskTag.appendChild(numDates);
+	        	
+	        	Element isCompleted = doc.createElement("CompletionStatus");
+	        	isCompleted.appendChild(doc.createTextNode(timedTaskList.get(i).isCompleted() + ""));
+	        	taskTag.appendChild(isCompleted);
+	        	
+	        	Element isImportant = doc.createElement("Importance");
+	        	isImportant.appendChild(doc.createTextNode(timedTaskList.get(i).isImportant()+ ""));
+	        	taskTag.appendChild(isImportant);
+	        }
+	        
+	        for (int i=0;i<floatingTaskList.size();i++){
+
+	        	Element floatingTask = doc.createElement("FloatingTasks");
+	        	root.appendChild(floatingTask);
+	        	
+	        	Element taskTag = doc.createElement("Task");
+	         	floatingTask.appendChild(taskTag);
+	        	
+	        	Element taskDetail = doc.createElement("TaskDescription");
+	        	taskDetail.appendChild(doc.createTextNode(floatingTaskList.get(i).getDescription()));
+	        	taskTag.appendChild(taskDetail);
+	        	
+	        	Element numDates = doc.createElement("numDates");
+	        	numDates.appendChild(doc.createTextNode(floatingTaskList.get(i).numDates + ""));
+	        	taskTag.appendChild(numDates);
+	        	
+	        	Element isCompleted = doc.createElement("CompletionStatus");
+	        	isCompleted.appendChild(doc.createTextNode(floatingTaskList.get(i).isCompleted() + ""));
+	        	taskTag.appendChild(isCompleted);
+	        	
+	        	Element isImportant = doc.createElement("Importance");
+	        	isImportant.appendChild(doc.createTextNode(floatingTaskList.get(i).isImportant()+ ""));
+	        	taskTag.appendChild(isImportant);
+	        }
+	        
+	        writeToDisk(fileName, doc);
+	        
+		} catch (ParserConfigurationException e) {
+			System.out.println("Parser Exception found.");
+		}
+	        
+	}
+	
+	private void writeToDisk(String fileName, Document doc) {
+		try {
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer;
+			transformer = transformerFactory.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new File(fileName+".xml"));
+			
+			transformer.transform(source, result);
+			 
+			//System.out.println("File saved!");
+		} catch (TransformerConfigurationException e) {
+			System.out.println("TransformerConfig Exception Found.");
+		} catch (TransformerException e) {
+			System.out.println("Transformer Exception Found.");
+		}
+		
+	}
+
+	public String readFromXML(String fileName){
+		//String existingFileContent = "";
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		try {
+			
+		    InputStream xmlInput  = new FileInputStream(fileName+".xml");
+		    SAXParser saxParser = factory.newSAXParser();
+
+		    SaxHandler handler   = new SaxHandler();
+		    saxParser.parse(xmlInput, handler);
+		    floatingTaskList = handler.getFloatingList();
+		    timedTaskList = handler.getTimedList();
+
+		} catch (Throwable err) {
+		    System.out.println("SAXparser Exception.");
+		    return fileName + " is corrupted.";
+		    //writeXMLDocument(fileName);
+		}
+		return fileName + " is loaded.";
+	}
+	
+	// index start from 1
+	public boolean complete(int index) {
+		indexRecentTask = index;
+		if (index>timedTaskList.size()){
+			return floatingTaskList.get(index-1-timedTaskList.size()).complete();
+		} else {
+			return timedTaskList.get(index-1).complete();
+		}
+	}
+	
+	public boolean unComplete(int index){
+		indexRecentTask = index;
+		if (index>timedTaskList.size()){
+			return floatingTaskList.get(index-1-timedTaskList.size()).unComplete();
+		} else {
+			return timedTaskList.get(index-1).unComplete();
+		}
+	}
+
+	// index start from 1
+	public Task get(int index) {
+		if (index>timedTaskList.size()){
+			return floatingTaskList.get(index-1-timedTaskList.size());
+		} else {
+			return timedTaskList.get(index-1);
+		}
+	}
+	
+	public ArrayList<Task> getTimedList(){
+		return timedTaskList;
+	}
+	
+	public ArrayList<Task> getFloatingList(){
+		return floatingTaskList;
+	}
+	
+	public int getSize(){
+		int floatSize = floatingTaskList.size();
+		int timeSize = timedTaskList.size();
+		return floatSize + timeSize;
+	}
+	
+	public String clear(){
+		while(getSize()!=0){
+			floatingTaskList.clear();
+			timedTaskList.clear();
+		}
+		return "List is cleared";
+	}
+	
+	public void deleteTask(Task toDo) {
+		// TODO Auto-generated method stub
+		if(floatingTaskList.contains(toDo)){
+			floatingTaskList.remove(toDo);
+		} else {
+			timedTaskList.remove(toDo);
+		}
+	}
+	// End of segment: src\Storage\TaskList.java
+
+
+
+
+
+	/**
+	 * origin: src\Storage\TimedTask.java
+	 */
+
+public class TimedTask extends DeadlineTask {
+	public static void main(String[] args){
+		Task time = new TimedTask("timed task", new DateTime(2014,10,9,19,15,00), new DateTime());
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
+		System.out.println(time.toString(dtf));
+	}
+	
+	public TimedTask(String description, DateTime beginTime, DateTime endTime){
+		super(description,endTime);
+		this.endTime = endTime;
+		startTime = beginTime;
+		numDates = 2;
+		keyTime = beginTime;
+	}
+	
+
+	public String toString(DateTimeFormatter dtf){
+	StringBuilder result = new StringBuilder(dtf.print(startTime) + " - " + dtf.print(endTime) + "," + newLine);
+		result.append(toString());
+		return result.toString();
+	}
+	
+	@Override
+	public boolean equals(Object anotherTask) {
+		if (anotherTask instanceof TimedTask){
+			TimedTask myTask = (TimedTask) anotherTask;
+			return super.equals(anotherTask) && this.startTime.equals(myTask.startTime);
+		} else{
+			return false;
+		}
+	}
+
+}
+
+	// End of segment: src\Storage\TimedTask.java
+
+
+
+
+
+	/**
+	 * origin: src\test\testSystem.java
+	 */
+
+public class testSystem {
+	private static String[] testInputsBasic;
+	private static String[] testInputAdvanced;
+	private int numOfAllTask;
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		String[] inputs = {"undo",
+				"add some task",
+				"add 2 another task",
+				"add 300 valid task",
+				"add time task today",
+				"add another time task tomorrow",
+				"add a third time task from 11am to 2pm yesterday",
+				"add a 4th wrong time task from 3pm to 11am next Monday",
+				"delete 1",
+				"delete 5",
+				"delete 7",
+				"delete 0",
+				"delete -100",
+				"add 0 a suspicious task",
+				"edit 1 next friday edited time task",
+				"edit 100 wrong edited task",
+				"edit 7 last task",
+				"edit a edited time task on 2014-10-30",
+				"add a random task"};
+		testInputsBasic = inputs;
+		
+		String[] moreInputs = new String[]{};
+		testInputAdvanced = moreInputs;
+	}
+
+	@Test
+	public void testBasic() {
+		LogicFacade test = new LogicFacade();
+		int sizeOfFloatingList = test.getTasks().getFloatingList().size();
+		int sizeOfTimedList = test.getTasks().getTimedList().size();
+		numOfAllTask = sizeOfFloatingList + sizeOfTimedList;
+		for (String str: testInputsBasic){
+			LogicFacade lc = new LogicFacade(str);
+			if (str.contains("add") && !str.contains("wrong")){
+				numOfAllTask ++;
+			} if (str.contains("delete") && !lc.feedback.contains("Invalid")){
+				numOfAllTask --;
+			}
+		}
+		test = new LogicFacade();
+		int expectedSizeOfFloatingList = test.getTasks().getFloatingList().size();
+		int expectedSizeOfTimedList = test.getTasks().getTimedList().size();
+		assertEquals(expectedSizeOfFloatingList+expectedSizeOfTimedList, numOfAllTask);
+	}
+	
+	@Test
+	public void testAdvance(){
+		System.out.println(testInputAdvanced);
+		//TODO
+	}
+
+}
+
+	// End of segment: src\test\testSystem.java
+
+
+
+
+
+	/**
+	 * origin: src\test\testTaskList.java
+	 */
+
+public class testTaskList {
+	private static String[] testStr;
+	private static DateTime[] testDates;
+	private static TaskList testList;
+	private static String newLine = System.getProperty("line.separator");
+	private static StringBuilder outputStr = new StringBuilder("There are 9 tasks listed:"+newLine
+			+ "Deadline tasks are:"+newLine
+			+ "[No.1][10-10-10, 18:00:00]buy a fish"+newLine
+			+ "[No.2][10-10-10, 18:00:00 - 11-09-01, 22:22:22]: "+newLine
+			+ "something happens [Completed]"+newLine
+			+ "[No.3][11-09-01, 22:22:22 - 15-03-04, 05:08:09]: "+newLine
+			+ "something happens"+newLine);
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		String[] strs = {"buy a fish",
+				"project meeting",
+				"something happens",
+				"buy a cat",
+				"lecture on Monday"};
+		// boundary case for string with spaces, special chars
+		testStr = strs;
+		DateTime[] dates = {new DateTime(2010,10,10,18,0,0),
+				new DateTime(2011,9,1,22,22,22),
+				new DateTime(2015,3,4,5,8,9)};
+		testDates = dates;
+		testList = new TaskList();
+		// add 5 floatingTask
+		for (String str: testStr){
+			Task testTask = new FloatingTask(str);
+			testList.addTask(testTask);
+		}
+		Task newTask = new FloatingTask();
+		testList.complete(2);
+		testList.editTask(2,newTask);
+		//add 3 deadlineTask, 3 timedTask
+		for (int i=0;i<testDates.length-1;i++){
+			DeadlineTask testTask1 = new DeadlineTask(testStr[0],testDates[i]);
+			DeadlineTask testTask2 = new TimedTask(testStr[2],testDates[i],testDates[i+1]);
+			testList.addTask(testTask1);
+			testList.addTask(testTask2);
+		}
+		DateTime now = DateTime.now();
+		Task anotherTask = new DeadlineTask("edited Task",now);
+		outputStr.append("[No.4][" + LogicFacade.DATE_FORMAT.print(now)+ "]edited Task"+newLine);
+		testList.complete(2);
+		testList.editTask(3, anotherTask);
+		testList.complete(8);
+		testList.editTask(8,newTask);
+		
+	}
+
+	@Test
+	public void testSaveAndRead() {
+		TaskList list1 = new TaskList();
+		testList.writeXMLDocument("testStorage1");
+		list1.readFromXML("testStorage1");
+		assertEquals(list1.viewFloatingTask(),testList.viewFloatingTask());
+		assertEquals(list1.viewDeadlineTask(LogicFacade.DATE_FORMAT),testList.viewDeadlineTask(LogicFacade.DATE_FORMAT));
+		assertEquals(list1.viewAll(LogicFacade.DATE_FORMAT),testList.viewAll(LogicFacade.DATE_FORMAT));
+	}
+	
+	@Test
+	public void testDeadlineTask(){
+		outputStr.append("Floating tasks are:"+newLine
+				+ "[No.1]lecture on Monday"+newLine
+				+ "[No.2]default task."+newLine
+				+ "[No.3]something happens"+newLine
+				+ "[No.4]default task."+newLine
+				+ "[No.5]buy a fish"+newLine);
+		assertEquals(testList.viewAll(LogicFacade.DATE_FORMAT),outputStr.toString());
+	}
+
+}
+
+	// End of segment: src\test\testTaskList.java
+
+
+
+
+

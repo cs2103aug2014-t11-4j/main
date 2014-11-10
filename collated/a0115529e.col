@@ -1,0 +1,987 @@
+//@author: a0115529e
+
+
+
+	/**
+	 * origin: src\parser\CommandKey.java
+	 */
+
+/**This is the enum class together with the identifier method of commandKey.
+ * This class identifies the possible words for commands and return a commandKey type
+ * to the class which invoked it.
+ */
+public enum CommandKey {
+	CREATE, READ, UPDATE, DELETE, UNDO, COMPLETE, UNCOMPLETE, REDO, SEARCH, CLEAR, INVALID;
+
+	public static CommandKey identifyKey(String keyCommand){
+		switch(keyCommand){
+			case "add":		//default command
+			case "addd":	//Spelling mistake
+			case "create":	//alternate name
+			case "-a":		//Pro short key
+				return CommandKey.CREATE;
+			case "view":	//default command
+			case "-v":		//pro short key
+			case "display": //Alternate name
+			case "veiw":	//spelling mistake
+				return CommandKey.READ;
+			case "edit":	//default command
+			case "update": 	//alternate name
+			case "-e":		//Pro short key
+				return CommandKey.UPDATE;
+			case "delete":	//default command
+			case "remove": 	//alternate name
+			case "del": 	//user short key
+			case "-d":		//pro short key
+				return CommandKey.DELETE;
+			case "undo":	//default command
+			case "-u":		//pro short key
+				return CommandKey.UNDO;
+			case "redo":	//default command
+			case "-r" :		//pro short key
+				return CommandKey.REDO;
+			case "complete"://default command
+			case "did":		//alternate name
+			case "com":		//user short key
+			case "-c":		//pro short key
+				return CommandKey.COMPLETE;
+			case "uncomplete"://default command
+			case "undid":	//alternate name
+			case "uncom":	//user short key
+			case "-uc":		//pro short key
+				return CommandKey.UNCOMPLETE;
+			case "search":	//default command
+			case "-s" :		//pro short key
+				return CommandKey.SEARCH;
+			case "clear":	//default command
+			case "-z":		//pro short key
+			case "clr":		//user short key
+				return CommandKey.CLEAR; //Very specific. Must delete all.
+			default:
+				return CommandKey.INVALID;
+		}
+	}
+	
+	//List down all the valid commands which can stand alone.
+	public boolean checkValidAlone(){
+		if(this.equals(READ) || this.equals(CLEAR) || this.equals(UNDO) || this.equals(REDO)){
+			return true;
+		}
+		return false;
+	}	
+}
+
+	// End of segment: src\parser\CommandKey.java
+
+
+
+
+
+	/**
+	 * origin: src\parser\Parser.java
+	 */
+
+/** This class is meant to read in the command line from the user in the form of a string
+ * 	and parse it so that the logic can access it simply. 
+ * 
+ * It can also parse index and return the type of tasks which needs to be invoked for commands
+ * like read, delete, complete and undo
+ *
+ */
+public class Parser {
+	private boolean isValid;
+	private String message;
+	private DateTime now;
+	private DateTime timeRef;
+	// private static Logger logger = Logger.getLogger("Parser");
+	// private String sortedCommand;
+	private TaskIdentifiers taskWord;
+	private CommandKey keyWord;// stores the key command "add"/"delete" to
+								// return to logic
+	private String toDo = "";// stores the final command to return to logic
+	private String rawCommand;
+	private DateTime startTime;
+	private DateTime endTime;
+	private int editIndex;
+	private boolean isFloatingTask;
+	private boolean isDeadlineTask;
+	private boolean isTimedTask;
+	static TimeParser testParser;
+	private String ignoreChar = "";
+	private int ignoreStart = 0;
+	private int ignoreEnd = 0;
+	private boolean ifContainQuo = false;
+	ArrayList<String> detailsList = new ArrayList<String>();
+	private final static Logger LOGGER = Logger.getLogger(Parser.class
+			.getName());
+	private ArrayList<Integer> multipleIndices = new ArrayList<Integer>();
+
+	public Parser(String userCommand) {
+		isValid = ifEmpty(userCommand);
+		message = "Command is sucessfully processed.";
+		editIndex = -1;
+	
+		String[] sentenceArray = userCommand.split("\\s+");
+		if (sentenceArray.length > 1) {
+			rawCommand = sentenceArray[1] + "";
+		}
+		StringDecipher sentenceString = new StringDecipher(sentenceArray);
+	
+		// Key word of the command must be either the first or last of the
+		// sentence.
+		keyWord = sentenceString.getKey();
+		if (keyWord.equals(CommandKey.CLEAR)
+				&& sentenceString.getWordsLeft() != 0) {
+			keyWord = CommandKey.DELETE;
+		}
+		assert sentenceString.getWordsLeft() >= 0;
+	
+		if (sentenceString.getWordsLeft() == 0) {
+			isValid = keyWord.checkValidAlone();
+		}
+	
+		/*
+		 * If only the index is stated (apart from key word), index can be first
+		 * or last. Unless it's an add which makes sense if user wants to add a
+		 * number to tasklist. Or edit, which doesn't make sense as to which
+		 * task to edit. Clear too cannot have number as it by default clears
+		 * all. editIndex by default is -1.
+		 */
+		if (sentenceString.getWordsLeft() == 1
+				&& (!(keyWord.equals(CommandKey.CREATE) || keyWord
+						.equals(CommandKey.UPDATE)))) {
+			editIndex = sentenceString.getIndex();
+		}
+	
+		/*
+		 * If the command is one of the following (in the if statement),
+		 * taskIdentifiers words can be used to execute the command.
+		 */
+		if (keyWord.equals(CommandKey.DELETE)
+				|| keyWord.equals(CommandKey.COMPLETE)
+				|| keyWord.equals(CommandKey.READ)
+				|| keyWord.equals(CommandKey.UNCOMPLETE)
+				|| keyWord.equals(CommandKey.UNDO)
+				|| keyWord.equals(CommandKey.REDO)) {
+			taskWord = sentenceString.checkTaskWords(keyWord);
+		}
+	
+		/*
+		 * If the command is one of the following (in the if statement),
+		 * multiple index can be input by the user. Thus, this block is to check
+		 * and extract the indices.
+		 */
+		if (keyWord.equals(CommandKey.DELETE)
+				|| keyWord.equals(CommandKey.COMPLETE)
+				|| keyWord.equals(CommandKey.UNCOMPLETE)) {
+			multipleIndices = sentenceString.extractIndices();
+		}
+		/*
+		 * If the command word is the first word, index
+		 * of editing must be stated after it. Else if command word is not the
+		 * first word, index must be the first word. If it appears anywhere
+		 * else, it is regarded as time. Only when adding a task, index will not
+		 * be considered.
+		 */
+		if (sentenceString.getWordsLeft() >= 1) {
+			if (!(keyWord.equals(CommandKey.CREATE))) {
+				editIndex = sentenceString.getIndex();
+			}
+			toDo = sentenceString.remainingToString();
+	
+			LOGGER.log(Level.FINE, "toDo: " + toDo);
+			LOGGER.log(Level.FINE, "editIndex " + editIndex);
+		} else {
+			assert sentenceString.getWordsLeft() == 0;
+		}
+	
+		checkForQuotations();
+	
+		TimeParser timeParser = new TimeParser(toDo);
+		// sortedCommand = timeParser.getSortedCommand() + "";
+	
+		if (timeParser.isTimedTask()) {
+			// Start time is earlier than end time.
+			if ((timeParser.getStartTime()).compareTo(timeParser.getEndTime()) < 0) {
+				startTime = timeParser.getStartTime();
+				endTime = timeParser.getEndTime();
+			} else { // Start time is later than end time, so swap.
+				endTime = timeParser.getStartTime();
+				startTime = timeParser.getEndTime();
+			}
+			isTimedTask = true;
+		} else if (timeParser.isDeadLineTask()) {
+			endTime = timeParser.getEndTime();
+			isDeadlineTask = true;
+		} else {
+			assert timeParser.isFloatingTask();
+			isFloatingTask = true;
+		}
+	
+		if (endTime != null) {
+			smartParserCheck();
+		}
+		assert keyWord != null;
+	}
+
+	// Command without key command and time identifiers.
+	public String getCommand() {
+		toDo = toDo.trim();
+		ArrayList<String> prepWordsList = doPrepWordsList();
+		ArrayList<String> monthsList = doMonthsList();
+
+		String[] description;
+		int size = 0;
+		try {
+			size = TimeParser.parser.size();
+		} catch (Exception err) {
+
+		}
+		String[] identifers = new String[size];
+		// Storing date identified into an array.
+		for (int i = 0; i < size; i++) {
+			identifers[i] = TimeParser.parser.get(i).getText();
+		}
+
+		// Removing instances of integer if identified.
+		for (int k = 0; k < identifers.length; k++) {
+			if (isInteger(identifers[k])) {
+				identifers[k] = "";
+			}
+		}
+
+		// Removing instances of months if identified.
+		for (int j = 0; j < size; j++) {
+			if (monthsList.contains(identifers[j])) {
+				String regex1 = "\bjan\b";
+				String regex2 = "\bfeb\b";
+				String regex3 = "\bmar\b";
+				String regex4 = "\bapr\b";
+				String regex5 = "\bmay\b";
+				String regex6 = "\bjun\b";
+				String regex7 = "\bjul\b";
+				String regex8 = "\baug\b";
+				String regex9 = "\bsep\b";
+				String regex10 = "\boct\b";
+				String regex11 = "\bnov\b";
+				String regex12 = "\bdec\b";
+				String regex13 = "\bmon\b";
+				String regex14 = "\bwed\b";
+				String regex15 = "\beve\b";
+
+				if ((!identifers[j].equals(regex1))
+						|| (!identifers[j].equals(regex2))
+						|| (!identifers[j].equals(regex3))
+						|| (!identifers[j].equals(regex4))
+						|| (!identifers[j].equals(regex5))
+						|| (!identifers[j].equals(regex6))
+						|| (!identifers[j].equals(regex7))
+						|| (!identifers[j].equals(regex8))
+						|| (!identifers[j].equals(regex9))
+						|| (!identifers[j].equals(regex10))
+						|| (!identifers[j].equals(regex11))
+						|| (!identifers[j].equals(regex12))
+						|| (!identifers[j].equals(regex13))
+						|| (!identifers[j].equals(regex14))
+						|| (!identifers[j].equals(regex15))) {
+					identifers[j] = "";
+				}
+			}
+		}
+
+		// Replacing valid time and date instances with IDENTIFIER.
+		for (int k = 0; k < size; k++) {
+			toDo = toDo.replaceFirst(identifers[k], "IDENTIFIER");
+			description = toDo.split(" ");
+			for (int j = 0; j < description.length; j++) {
+				if (description[j].contains("IDENTIFIER") && j > 0) {
+					String prepWord = description[j - 1];
+					removeIdentifierAndPrep(prepWordsList, description, j,
+							prepWord);
+				}
+				removeIdentifier();
+			}
+		}
+		// If command contains quotations, replace the original quotes back.
+		if (ifContainQuo == true) {
+			toDo = toDo.replace("QUOTATION", ignoreChar);
+		}
+		return toDo;
+	}
+
+	// If identifier does not have preposition words before it, simply remove
+	// the identifier.
+	public void removeIdentifier() {
+		toDo = toDo.replace("IDENTIFIER", "");
+		toDo = toDo.replaceAll("( )+", " ");
+		toDo = toDo.trim();
+	}
+
+	// Removes identifier found and the preposition word that appears before it.
+	public void removeIdentifierAndPrep(ArrayList<String> prepWordsList,
+			String[] description, int j, String prepWord) {
+		if (prepWordsList.contains(prepWord)
+				&& description[j].equals("IDENTIFIER")) {
+			String finaltoDo = "";
+			description[j - 1] = "";
+			// Removes the preposition word.
+			for (int m = 0; m < description.length; m++) {
+				finaltoDo = finaltoDo + description[m] + " ";
+			}
+			toDo = finaltoDo;
+			toDo = toDo.replace("IDENTIFIER", ""); // Removes the identifier.
+			toDo = toDo.trim();
+			toDo = toDo.replaceAll("( )+", " ");
+		}
+	}
+
+	// Create an ArrayList consisting of preposition words.
+	public ArrayList<String> doPrepWordsList() {
+		ArrayList<String> prepWordsList = new ArrayList<String>();
+		prepWordsList.add("on");
+		prepWordsList.add("by");
+		prepWordsList.add("at");
+		prepWordsList.add("from");
+		prepWordsList.add("in");
+		prepWordsList.add("until");
+		return prepWordsList;
+	}
+
+	// Determine is a string contains purely integers.
+	public static boolean isInteger(String s) {
+		try {
+			Integer.parseInt(s);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		// Only got here if we didn't return false.
+		return true;
+	}
+
+	// Create an ArrayList consisting of months words.
+	public ArrayList<String> doMonthsList() {
+		ArrayList<String> monthsList = new ArrayList<String>();
+		monthsList.add("jan");
+		monthsList.add("feb");
+		monthsList.add("mar");
+		monthsList.add("apr");
+		monthsList.add("may");
+		monthsList.add("jun");
+		monthsList.add("jul");
+		monthsList.add("aug");
+		monthsList.add("sep");
+		monthsList.add("nov");
+		monthsList.add("dec");
+		monthsList.add("mon");
+		monthsList.add("wed");
+		monthsList.add("fri");
+		return monthsList;
+	}
+
+	// Check for command with quotations before parsing.
+	public void checkForQuotations() {
+		String tempCheck = toDo;
+		ArrayList<Integer> quotations = new ArrayList<Integer>();
+
+		// Check for the number of '"' in the string.
+		for (int i = 0; i < tempCheck.length(); i++) {
+			if (tempCheck.charAt(i) == '\"') {
+				quotations.add(i);
+			}
+		}
+
+		if (quotations.size() == 2) { // Quotations found.
+			ignoreStart = quotations.get(0);
+			ignoreEnd = quotations.get(1);
+			ignoreChar = tempCheck.substring(ignoreStart, ignoreEnd + 1);
+			ignoreChar = ignoreChar.trim();
+		}
+
+		// Sieve out the words found inside the quotations.
+		if (quotations.size() == 2) {
+			ifContainQuo = true;
+			toDo = toDo.replace(ignoreChar, "QUOTATION");
+			toDo = toDo.trim();
+			toDo = toDo.replaceAll("( )+", " ");
+		}
+	}
+
+	// Checks if the user has input nothing or just white spaces.
+	public boolean ifEmpty(String userCommand) {
+		userCommand.trim();
+		if (userCommand.equals("")) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	public CommandKey getKeyCommand() {
+		return keyWord;
+	}
+
+	// Edit index is tampered to return default 1.
+	public int getEditIndex() {
+		if (editIndex == -1) {
+			return 1;
+		}
+		return editIndex;
+	}
+	
+	public DateTime getStartTime() {
+		return startTime;
+	}
+
+	public DateTime getEndTime() {
+		return endTime;
+	}
+
+	public boolean isDeadlineTask() {
+		return isDeadlineTask;
+	}
+
+	public boolean isFloatingTask() {
+		return isFloatingTask;
+	}
+
+	public boolean isTimedTask() {
+		return isTimedTask;
+	}
+
+	public boolean isValid() {
+		return isValid;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public TaskIdentifiers getTaskWord() {
+		return taskWord;
+	}
+
+	// End of segment: src\parser\Parser.java
+
+
+
+
+
+	/**
+	 * origin: src\parser\TaskIdentifiers.java
+	 */
+
+/**This is the enum class together with the identifier method of TaskIdentifiers.
+ * Task Identifiers are the type of keywords important for certain command class.
+ * eg. Delete class needs most of the identifiers except Today, tomorrow and ... (time based)
+ * 	   Read class will use all of the identifiers.
+ * This class identifies the possible words for TaskIdentifiers and return the result
+ * to the class which invoked it.
+ *
+ */
+public enum TaskIdentifiers {
+	ALL, OVERDUE, FLOATING, DEADLINE, COMPLETED, UNCOMPLETED, INVALID,
+	TODAY, THIS_WEEK, NEXT_WEEK, THIS_MONTH, TOMORROW;
+	
+	public static TaskIdentifiers indentifyWords(String usedWords){
+		usedWords = usedWords.trim();
+		switch(usedWords){
+			case "all": 	//default word
+			case "a":		//short key
+				return TaskIdentifiers.ALL;
+			case "overdue":	//default word
+			case "over":	//alternate word
+			case "-o":		//short key
+				return TaskIdentifiers.OVERDUE;
+			case "floating"://default word	
+			case "flaoting"://spelling mistake
+			case "float":	//alternate word
+			case "flaot":	//alternate spelling mistake
+			case "-f":		//short key
+				return TaskIdentifiers.FLOATING;
+			case "deadline"://default word
+			case "dl":		//shortened word
+			case "-dl":		//short key
+				return TaskIdentifiers.DEADLINE;
+			case "completed"://default word (notice the past tense)
+			case "done":	//alternate word
+			case "checked":	//alternate word
+				return TaskIdentifiers.COMPLETED;
+			case "uncompleted":
+			case "notcompleted"://default long word
+			case "undone":	//alternate word
+			case "unchecked"://alternate word
+				return TaskIdentifiers.UNCOMPLETED;	
+			case "today":	//default word
+			case "-t":		//short key
+				return TaskIdentifiers.TODAY;
+			case "tomorrow"://default word
+			case "-tom":	//short key
+				return TaskIdentifiers.TOMORROW;
+			case "thisweek"://default long word
+			case "week":	//default word (if only week is input)
+			case "-w":		//short key
+				return TaskIdentifiers.THIS_WEEK;
+			case "nextweek"://default long word
+			case "next":
+			case "-nw":		//short key
+				return TaskIdentifiers.NEXT_WEEK;
+			case "thismonth"://default long word
+			case "month":	//default word (if only month is input)
+			case "-m":		//short key
+				return TaskIdentifiers.THIS_MONTH;
+			default:
+				return TaskIdentifiers.INVALID;
+		}
+	}
+	
+	public static String getTaskWord(TaskIdentifiers t){
+		if(t.equals(INVALID)){
+			return "invalid";
+		} else{
+			return "blabla";
+		}
+	}
+}
+
+	// End of segment: src\parser\TaskIdentifiers.java
+
+
+
+
+
+	/**
+	 * origin: src\parser\TimeParser.java
+	 */
+
+/** This class is meant to parse the command according to floating/deadline/timed task
+ * 	and filter out the identfiers if they are identified but are not an instance of time or date. 
+ */
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
+import org.ocpsoft.prettytime.nlp.parse.DateGroup;
+
+public class TimeParser {
+	private String userCommand; // Raw command from user.
+	private String sortedUserCommand; // Commands follows a format without a
+										// Date: e.g.add go to school
+	private DateTime endTime;
+	private DateTime startTime;
+	private List<Date> datesStart;
+	private List<Date> datesEnd;
+	static List<DateGroup> parser;
+	static List<DateGroup> parserNewTimedTask;
+	static List<DateGroup> parserNewDeadLineTask;
+	boolean hasFilteredTimedTask = false;
+	boolean hasFilteredDeadLineTask = false;
+	ArrayList<String> filterWords = new ArrayList<String>();
+
+	private final static Logger LOGGER = Logger.getLogger(TimeParser.class
+			.getName());
+
+	// private int numDate = -1;
+
+	public TimeParser(String someCommand) {
+		userCommand = someCommand.trim();
+		assert userCommand != null;
+
+		// Loop deals with cases such as op2 and cs2103 and prevent identifiers
+		// from removing them.
+		for (int k = 0; k < userCommand.length(); k++) {
+			if (Character.isDigit(userCommand.charAt(k))) {
+				if ((k != 0) && (Character.isLetter(userCommand.charAt(k - 1)))) {
+					replaceDigits(k);
+				}
+			}
+		}
+		parser = new PrettyTimeParser().parseSyntax(userCommand);
+		filterParser();
+		filterTimedTask();
+		filterDeadLineTask();
+
+		int size = parser.size();
+		if ((parser == null) || (size == 0)) {
+			LOGGER.log(Level.FINE, "Floating task detected.");
+			sortedUserCommand = userCommand + "";
+			assert isDateFree();
+		}
+
+		else if ((hasFilteredTimedTask == true)
+				|| (hasFilteredDeadLineTask == true) || (size == 1)
+				|| (size == 2)) {
+			parseTime();
+		}
+
+		else {
+			LOGGER.log(Level.FINE, "More than 2 dateGroups detected.");
+			LOGGER.log(Level.FINE, listAllDates(parser));
+			parseTime();
+		}
+		assert sortedUserCommand != null;
+	}
+
+	public void replaceDigits(int k) {
+		int digitInt = 0;
+		char digitChar = userCommand.charAt(k);
+		digitInt = Character.getNumericValue(digitChar);
+		ArrayList<Integer> digits = new ArrayList<Integer>();
+		digits.add(digitInt);
+		int length = userCommand.length();
+		userCommand = userCommand.substring(0, k) + "DIGIT"
+				+ userCommand.substring(k + 1, length);
+	}
+
+	// Deals with 2 identifiers namely, "thursday" and "8pm-10pm" but refers to
+	// the same day.
+	private void filterTimedTask() {
+		String[] descriptions;
+
+		if (parser.size() == 2) {
+			String first = parser.get(0).getText();
+			String second = parser.get(1).getText();
+
+			if (second.contains("to")) {
+				hasFilteredTimedTask = true;
+				descriptions = parser.get(1).getText().split("to");
+				String date = parser.get(0).getText();
+				userCommand = userCommand.replace(date, date + " "
+						+ descriptions[0]);
+				userCommand = userCommand.replace(second, date + " "
+						+ descriptions[1]);
+				userCommand = userCommand.replaceAll("( )+", " ");
+				parserNewTimedTask = new PrettyTimeParser()
+						.parseSyntax(userCommand);
+			}
+
+			else if (first.contains("to")) {
+				hasFilteredTimedTask = true;
+				descriptions = parser.get(0).getText().split("to");
+				String date = parser.get(1).getText();
+				userCommand = userCommand.replace(date, date + " "
+						+ descriptions[1]);
+				userCommand = userCommand.replace(first, date + " "
+						+ descriptions[0]);
+				userCommand = userCommand.replaceAll("( )+", " ");
+				parserNewTimedTask = new PrettyTimeParser()
+						.parseSyntax(userCommand);
+			}
+		}
+	}
+
+	// Deals with 2 identifiers namely, "monday" and "9pm" but they are
+	// separated.
+	private void filterDeadLineTask() {
+		if (parser.size() == 2) {
+			String start = parser.get(0).getText();
+			String end = parser.get(1).getText();
+			// Contains (5pm)and(12 dec 2015).
+			if ((!(start.contains(" "))) || (!(end.contains(" ")))) {
+				hasFilteredDeadLineTask = true;
+				userCommand = userCommand.replace(start, start + " " + end);
+				parserNewDeadLineTask = new PrettyTimeParser()
+						.parseSyntax(userCommand);
+			}
+		}
+	}
+
+	// //Removes "6" or "wed" but found in "wedding" and deals with "3 a" and
+	// "3 p" etc.
+	private void filterParser() {
+		filterWords();
+		String regex1 = "\bmon\b";
+		String regex2 = "\btue\b";
+		String regex3 = "\bwed\b";
+		String regex4 = "\bthu\b";
+		String regex5 = "\bfri\b";
+		String regex6 = "\bjan\b";
+		String regex7 = "\bfeb\b";
+		String regex8 = "\bmar\b";
+		String regex9 = "\bapr\b";
+		String regex10 = "\bmay\b";
+		String regex11 = "\bjun\b";
+		String regex12 = "\bjul\b";
+		String regex13 = "\baug\b";
+		String regex14 = "\bsep\b";
+		String regex15 = "\boct\b";
+		String regex16 = "\bnov\b";
+		String regex17 = "\bdec\b";
+		String regex18 = "\beve\b";
+
+		for (int j = 0; j < parser.size(); j++) {
+			String identified = parser.get(j).getText();
+			// Removes stand-alone integers like "6" if identified.
+			if (isInteger(parser.get(j).getText())) {
+				parser.remove(j);
+			}
+			// If "3 a" identified, remove it.
+			if ((identified.length() == 3) && (identified.charAt(2) == 'a')) {
+				parser.remove(j);
+			}
+			// If "3 p" identified, remove it.
+			if ((identified.length() == 3) && (identified.charAt(2) == 'p')) {
+				parser.remove(j);
+			}
+			// Remove "wed" if it is found in "wedding".
+			if (filterWords.contains(identified)) {
+				if ((!parser.get(j).getText().equals(regex1))
+						|| (!parser.get(j).getText().equals(regex2))
+						|| (!parser.get(j).getText().equals(regex3))
+						|| (!parser.get(j).getText().equals(regex4))
+						|| (!parser.get(j).getText().equals(regex5))
+						|| (!parser.get(j).getText().equals(regex6))
+						|| (!parser.get(j).getText().equals(regex7))
+						|| (!parser.get(j).getText().equals(regex8))
+						|| (!parser.get(j).getText().equals(regex9))
+						|| (!parser.get(j).getText().equals(regex10))
+						|| (!parser.get(j).getText().equals(regex11))
+						|| (!parser.get(j).getText().equals(regex12))
+						|| (!parser.get(j).getText().equals(regex13))
+						|| (!parser.get(j).getText().equals(regex14))
+						|| (!parser.get(j).getText().equals(regex15))
+						|| (!parser.get(j).getText().equals(regex16))
+						|| (!parser.get(j).getText().equals(regex17))
+						|| (!parser.get(j).getText().equals(regex18))) {
+					parser.remove(j);
+				}
+			}
+		}
+	}
+
+	// Adds word to the ArrayList to be filtered out.
+	public void filterWords() {
+		filterWords.add("mon");
+		filterWords.add("tue");
+		filterWords.add("wed");
+		filterWords.add("thu");
+		filterWords.add("fri");
+		filterWords.add("jan");
+		filterWords.add("feb");
+		filterWords.add("mar");
+		filterWords.add("apr");
+		filterWords.add("may");
+		filterWords.add("june");
+		filterWords.add("jul");
+		filterWords.add("aug");
+		filterWords.add("sep");
+		filterWords.add("oct");
+		filterWords.add("nov");
+		filterWords.add("dec");
+		filterWords.add("eve");
+	}
+
+	// Determine is a string contains purely integers.
+	public static boolean isInteger(String s) {
+		try {
+			Integer.parseInt(s);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		// Only got here if we didn't return false.
+		return true;
+	}
+
+	private String listAllDates(List<DateGroup> ParserTest) {
+		StringBuilder result = new StringBuilder("Dates are:\n");
+		for (int i = 0; i < ParserTest.size(); i++) {
+			result.append("DateGroup " + i + " " + ParserTest.get(i).getText()
+					+ ":\n");
+			for (int j = 0; j < ParserTest.get(i).getDates().size(); j++) {
+				result.append(ParserTest.get(i).getDates().get(j).toString());
+			}
+		}
+		return result.toString();
+	}
+
+	private void parseTime() {
+		LOGGER.log(Level.FINE, "Time String detected:"
+				+ parser.get(0).getText());
+		if (parser.size() == 2) {
+			LOGGER.log(Level.FINE, "Time String detected:"
+					+ parser.get(1).getText());
+		}
+		datesStart = parser.get(0).getDates();
+
+		if (parser.size() == 2) {
+			datesEnd = parser.get(1).getDates();
+		}
+		// "thursday" and "5pm to 7pm" as separate time instances.
+		if (hasFilteredTimedTask == true) {
+			parseTimedTask3();
+			// "thursday" and "5pm" as separate time instances.
+		} else if (hasFilteredDeadLineTask == true) {
+			parseDeadLineTask2();
+			// "thursday 5pm to friday 7pm" together.
+		} else if (datesStart.size() == 2) {
+			parseTimedTask1();
+			// "thursday 5pm" and "friday 7pm" as separate time instances.
+		} else if (parser.size() == 2) {
+			parseTimedTask2();
+			// "thursday 5pm" together.
+		} else if (datesStart.size() == 1) {
+			parseDeadLineTask1();
+		}
+	}
+
+	private void parseTimedTask1() {
+		// TODO Auto-generated method stub
+		LOGGER.log(Level.FINE, "Timed task1 detected.");
+		startTime = new DateTime(datesStart.get(0));
+		LOGGER.log(Level.FINE, "startTime: " + startTime.toString());
+		endTime = new DateTime(datesStart.get(1));
+		LOGGER.log(Level.FINE, "endTime: " + endTime.toString());
+		assert isDateFree();
+		assert startTime != null;
+		assert endTime != null;
+	}
+
+	private void parseTimedTask2() {
+		// TODO Auto-generated method stub
+		LOGGER.log(Level.FINE, "Timed task2 detected.");
+		startTime = new DateTime(datesStart.get(0));
+		LOGGER.log(Level.FINE, "startTime: " + startTime.toString());
+		endTime = new DateTime(datesEnd.get(0));
+		LOGGER.log(Level.FINE, "endTime: " + endTime.toString());
+		assert isDateFree();
+		assert startTime != null;
+		assert endTime != null;
+	}
+
+	private void parseTimedTask3() {
+		// TODO Auto-generated method stub
+		LOGGER.log(Level.FINE, "Timed task3 detected.");
+		startTime = new DateTime(parserNewTimedTask.get(0).getDates().get(0));
+		LOGGER.log(Level.FINE, "startTime: " + startTime.toString());
+		endTime = new DateTime(parserNewTimedTask.get(1).getDates().get(0));
+		LOGGER.log(Level.FINE, "endTime: " + endTime.toString());
+		assert isDateFree();
+		assert startTime != null;
+		assert endTime != null;
+	}
+
+	private void parseDeadLineTask1() {
+		// TODO Auto-generated method stub
+		LOGGER.log(Level.FINE, "DeadLine task1 detected.");
+		endTime = new DateTime(datesStart.get(0));
+		LOGGER.log(Level.FINE, "endTime: " + endTime.toString());
+		assert isDateFree();
+		assert endTime != null;
+	}
+
+	private void parseDeadLineTask2() {
+		// TODO Auto-generated method stub
+		LOGGER.log(Level.FINE, "DeadLine task2 detected.");
+		endTime = new DateTime(parserNewDeadLineTask.get(0).getDates().get(0));
+		LOGGER.log(Level.FINE, "endTime: " + endTime.toString());
+		assert isDateFree();
+		assert endTime != null;
+	}
+
+	public boolean isDateFree() {
+		List<DateGroup> parse = new PrettyTimeParser().parseSyntax(userCommand);
+		int numDate = parse.get(0).getDates().size();
+
+		if (numDate == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public String getSortedCommand() {
+		return sortedUserCommand;
+	}
+
+	public DateTime getStartTime() {
+		return startTime;
+	}
+
+	public DateTime getEndTime() {
+		return endTime;
+	}
+
+	public boolean isFloatingTask() {
+		if (parser.size() == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean isDeadLineTask() {
+		if (endTime != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean isTimedTask() {
+		if (startTime != null && endTime != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
+/*
+ * getDate: SimpleDateFormat sdf = new
+ * SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); output =
+ * sdf.format(mp.dateGroup.getDates().get(0));
+ */
+// search for key from the userCommand
+	// End of segment: src\parser\TimeParser.java
+
+
+
+
+
+	/**
+	 * origin: src\test\testParser.java
+	 */
+
+public class testParser {
+
+	@Test
+	public void testFloatingTask() {
+		String[] strs = { "Meet huimin to study", "Buy groceries",
+				"Pass by yunting house", "Go on a holiday", "Buy 7 oranges" };
+		for (int i = 0; i < strs.length; i++) {
+			Parser test = new Parser(strs[i]);
+			assertTrue(test.isFloatingTask());
+		}
+	}
+
+	@Test
+	public void testDeadLineTask() {
+		String[] strs = { "engin project due next tuesday",
+				"Buy groceries tomorrow",
+				"Pass by yunting house on 12 dec 2015",
+				"Go on a holiday with dad next wednesday",
+				"Buy 7 oranges by 8pm" };
+		for (int k = 0; k < strs.length; k++) {
+			Parser test = new Parser(strs[k]);
+			assertTrue(test.isDeadlineTask());
+		}
+	}
+
+	@Test
+	public void testTimedTask() {
+		String[] strs = { "from 7pm to 8pm meet huimin to study on thursday",
+				"camp from 7pm sunday to 10pm monday" };
+		for (int j = 0; j < strs.length; j++) {
+			Parser test = new Parser(strs[j]);
+			assertTrue(test.isTimedTask());
+		}
+	}
+}
+	// End of segment: src\test\testParser.java
+
+
+
+
+

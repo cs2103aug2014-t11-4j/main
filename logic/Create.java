@@ -6,16 +6,13 @@ import Storage.FloatingTask;
 import Storage.Task;
 import Storage.TaskList;
 import Storage.TimedTask;
-
+//@author A0112230H
 /** This class is the create class which adds the task that user
  * would want to add. This class has the function to add task either
  * in the floating tasklist or the deadline tasklist.
- * 
- * @author KenHua
  */
 
 public class Create extends CommandClass {
-
 	Task toDo;
 	int index;
 	

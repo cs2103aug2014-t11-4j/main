@@ -1,4 +1,5 @@
 package indigoSrc;
+
 import logic.Complete;
 import logic.Create;
 import logic.Delete;
@@ -6,15 +7,13 @@ import logic.Read;
 import logic.Search;
 import logic.UndoList;
 import logic.Update;
-
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-
 import Storage.TaskList;
 import parser.CommandKey;
 import parser.Parser;
 import parser.TaskIdentifiers;
-
+//@author A0112230H
 /**
  * This a main Logic of Indigo. Indigo is a software that can store, process
  * and display tasks on the desktop as a task manager. Indigo takes
@@ -22,11 +21,8 @@ import parser.TaskIdentifiers;
  * 
  * This class acts like a facade pattern that the GUI will call. This facade then calls 
  * the other classes of logic and components like storage and parser to execute a task.
- * 
- * @author KenHua
  *
  * saveData() and loadData() methods are written by Jiajie as it deals with the storage.
- * @author jjlu 
  */
 
 public class LogicFacade {
@@ -44,7 +40,7 @@ public class LogicFacade {
 	public LogicFacade(){
 		this("-v all");
 	}
-	
+
 	public LogicFacade(String userInput){
 		loadData();
 		parseString = new Parser(userInput);
@@ -63,7 +59,7 @@ public class LogicFacade {
 	private String readCommand(Parser parseString) {
 		return executeCommand(parseString.getKeyCommand());
 	}
-	
+
 	//Execute the task.
 	private String executeCommand(CommandKey commandKey) {
 		switch (commandKey){
@@ -181,7 +177,7 @@ public class LogicFacade {
 			uList.undo().undo();
 		}
 	}
-	
+
 	public String printMoves(int count, String word){
 		assert count >= 0;
 		if(count == 0){
@@ -190,7 +186,8 @@ public class LogicFacade {
 			return word + " " + count + " time(s).";
 		}
 	}
-
+	
+	//@author A0116678U
 	private static void saveData() {
 		//  save taskList into TEXT file
 		taskList.writeXMLDocument(FILE_NAME);

@@ -6,16 +6,13 @@ import parser.Parser;
 import Storage.DeadlineTask;
 import Storage.Task;
 import Storage.TaskList;
-
+//@author A0112230H
 /** This class is the search class which finds the task based on the user's
  * key words. This class has the function to search through the list of tasks to find
  * the tasks containing the keywords. 
- * 
- * @author KenHua
  */
 
 public class Search extends CommandClass {
-
 	private static final String NOT_FOUND = "Search words not found";
 	private static final String NO_TASKS_FOUND = "No Tasks with search words found";
 	private static final String FOUND = "Results found";

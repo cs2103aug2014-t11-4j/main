@@ -8,15 +8,13 @@ import Storage.FloatingTask;
 import Storage.Task;
 import Storage.TaskList;
 import Storage.TimedTask;
+//@author A0112230H
 /** This class is the update class which can update the task that user
  * would want to edit. User will have to indicate the index which the task 
  * lies to update the task.
- * 
- * @author KenHua
  */
 
 public class Update extends CommandClass{
-	
 	Task toDo;
 	Task toDoReplaced;
 	int index;

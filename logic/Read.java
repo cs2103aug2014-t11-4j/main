@@ -7,17 +7,14 @@ import Storage.DeadlineTask;
 import Storage.TaskList;
 import parser.Parser;
 import parser.TaskIdentifiers;
-
+//@author A0112230H
 /** This class is the read class which will display the list that user
  * would want to see. This class has different types of views that user
  * can choose from. The Tabbed Pane Display will have some default view
  * type implemented like viewToday() and viewThisWeek().
- * 
- * @author KenHua
  */
 
 public class Read extends CommandClass{
-	
 	private static final int TODAY = 0;
 	private static final int TOMORROW = 1;
 	private static final int NEXT_WEEK = 7;

@@ -1,4 +1,5 @@
 package gui;
+
 import indigoSrc.LogicFacade;
 
 import java.awt.Font;
@@ -15,12 +16,9 @@ import javax.swing.ScrollPaneConstants;
 
 import parser.CommandKey;
 import parser.Parser;
-
+//@author A0115530W
 /**This is the class deals with the JTabbedPane component of the GUI. It updates the tabs 
  * according to the users commands.
- * 
- * @author Sritam
- *
  */
 public class TabbedPaneDisplay extends JPanel {
 	

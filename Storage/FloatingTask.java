@@ -4,18 +4,13 @@ package Storage;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-
+//@author A0116678U
 /**
  * A floating task is a task with the following 4 fields
  * -isDone
  * -taskDescription
  * -taskDetails
  * -isImportant
- * 
- * 
- * 
- * @author jjlu
- *
  */
 
 public class FloatingTask extends Task{

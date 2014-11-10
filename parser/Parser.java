@@ -1,20 +1,18 @@
 package parser;
 
-/** This class is meant to read in the command line from the user in the form of a string
- * 	and parse it so that the logic can access it simply. 
- * @author Joanna
- * 
- * It can also parse index and return the type of tasks which needs to be invoked for commands
- * like read, delete, complete and undo
- * @author KenHua
- *
- */
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
-
+//@author A0115529E
+/** This class is meant to read in the command line from the user in the form of a string
+ * 	and parse it so that the logic can access it simply. 
+ * 
+ * It can also parse index and return the type of tasks which needs to be invoked for commands
+ * like read, delete, complete and undo
+ *
+ */
 public class Parser {
 	private boolean isValid;
 	private String message;
@@ -43,13 +41,112 @@ public class Parser {
 			.getName());
 	private ArrayList<Integer> multipleIndices = new ArrayList<Integer>();
 
-	// Command containing key command and its description.
-	public String getRawCommand() {
-		if (rawCommand != null) {
-			return rawCommand.trim();
-		} else {
-			return "";
+	public Parser(String userCommand) {
+		isValid = ifEmpty(userCommand);
+		message = "Command is sucessfully processed.";
+		editIndex = -1;
+	
+		String[] sentenceArray = userCommand.split("\\s+");
+		if (sentenceArray.length > 1) {
+			rawCommand = sentenceArray[1] + "";
 		}
+		StringDecipher sentenceString = new StringDecipher(sentenceArray);
+	
+		// Key word of the command must be either the first or last of the
+		// sentence.
+		keyWord = sentenceString.getKey();
+		if (keyWord.equals(CommandKey.CLEAR)
+				&& sentenceString.getWordsLeft() != 0) {
+			keyWord = CommandKey.DELETE;
+		}
+		assert sentenceString.getWordsLeft() >= 0;
+	
+		if (sentenceString.getWordsLeft() == 0) {
+			isValid = keyWord.checkValidAlone();
+		}
+	
+		/*
+		 * If only the index is stated (apart from key word), index can be first
+		 * or last. Unless it's an add which makes sense if user wants to add a
+		 * number to tasklist. Or edit, which doesn't make sense as to which
+		 * task to edit. Clear too cannot have number as it by default clears
+		 * all. editIndex by default is -1.
+		 */
+		if (sentenceString.getWordsLeft() == 1
+				&& (!(keyWord.equals(CommandKey.CREATE) || keyWord
+						.equals(CommandKey.UPDATE)))) {
+			editIndex = sentenceString.getIndex();
+		}
+	
+		/*
+		 * If the command is one of the following (in the if statement),
+		 * taskIdentifiers words can be used to execute the command.
+		 */
+		if (keyWord.equals(CommandKey.DELETE)
+				|| keyWord.equals(CommandKey.COMPLETE)
+				|| keyWord.equals(CommandKey.READ)
+				|| keyWord.equals(CommandKey.UNCOMPLETE)
+				|| keyWord.equals(CommandKey.UNDO)
+				|| keyWord.equals(CommandKey.REDO)) {
+			taskWord = sentenceString.checkTaskWords(keyWord);
+		}
+	
+		/*
+		 * If the command is one of the following (in the if statement),
+		 * multiple index can be input by the user. Thus, this block is to check
+		 * and extract the indices.
+		 */
+		if (keyWord.equals(CommandKey.DELETE)
+				|| keyWord.equals(CommandKey.COMPLETE)
+				|| keyWord.equals(CommandKey.UNCOMPLETE)) {
+			multipleIndices = sentenceString.extractIndices();
+		}
+		/*
+		 * If the command word is the first word, index
+		 * of editing must be stated after it. Else if command word is not the
+		 * first word, index must be the first word. If it appears anywhere
+		 * else, it is regarded as time. Only when adding a task, index will not
+		 * be considered.
+		 */
+		if (sentenceString.getWordsLeft() >= 1) {
+			if (!(keyWord.equals(CommandKey.CREATE))) {
+				editIndex = sentenceString.getIndex();
+			}
+			toDo = sentenceString.remainingToString();
+	
+			LOGGER.log(Level.FINE, "toDo: " + toDo);
+			LOGGER.log(Level.FINE, "editIndex " + editIndex);
+		} else {
+			assert sentenceString.getWordsLeft() == 0;
+		}
+	
+		checkForQuotations();
+	
+		TimeParser timeParser = new TimeParser(toDo);
+		// sortedCommand = timeParser.getSortedCommand() + "";
+	
+		if (timeParser.isTimedTask()) {
+			// Start time is earlier than end time.
+			if ((timeParser.getStartTime()).compareTo(timeParser.getEndTime()) < 0) {
+				startTime = timeParser.getStartTime();
+				endTime = timeParser.getEndTime();
+			} else { // Start time is later than end time, so swap.
+				endTime = timeParser.getStartTime();
+				startTime = timeParser.getEndTime();
+			}
+			isTimedTask = true;
+		} else if (timeParser.isDeadLineTask()) {
+			endTime = timeParser.getEndTime();
+			isDeadlineTask = true;
+		} else {
+			assert timeParser.isFloatingTask();
+			isFloatingTask = true;
+		}
+	
+		if (endTime != null) {
+			smartParserCheck();
+		}
+		assert keyWord != null;
 	}
 
 	// Command without key command and time identifiers.
@@ -206,114 +303,6 @@ public class Parser {
 		return monthsList;
 	}
 
-	public Parser(String userCommand) {
-		isValid = ifEmpty(userCommand);
-		message = "Command is sucessfully processed.";
-		editIndex = -1;
-
-		String[] sentenceArray = userCommand.split("\\s+");
-		if (sentenceArray.length > 1) {
-			rawCommand = sentenceArray[1] + "";
-		}
-		StringDecipher sentenceString = new StringDecipher(sentenceArray);
-
-		// Key word of the command must be either the first or last of the
-		// sentence.
-		keyWord = sentenceString.getKey();
-		if (keyWord.equals(CommandKey.CLEAR)
-				&& sentenceString.getWordsLeft() != 0) {
-			keyWord = CommandKey.DELETE;
-		}
-		assert sentenceString.getWordsLeft() >= 0;
-
-		if (sentenceString.getWordsLeft() == 0) {
-			isValid = keyWord.checkValidAlone();
-		}
-
-		/*
-		 * If only the index is stated (apart from key word), index can be first
-		 * or last. Unless it's an add which makes sense if user wants to add a
-		 * number to tasklist. Or edit, which doesn't make sense as to which
-		 * task to edit. Clear too cannot have number as it by default clears
-		 * all. editIndex by default is -1.
-		 */
-		if (sentenceString.getWordsLeft() == 1
-				&& (!(keyWord.equals(CommandKey.CREATE) || keyWord
-						.equals(CommandKey.UPDATE)))) {
-			editIndex = sentenceString.getIndex();
-		}
-
-		/*
-		 * If the command is one of the following (in the if statement),
-		 * taskIdentifiers words can be used to execute the command.
-		 */
-		if (keyWord.equals(CommandKey.DELETE)
-				|| keyWord.equals(CommandKey.COMPLETE)
-				|| keyWord.equals(CommandKey.READ)
-				|| keyWord.equals(CommandKey.UNCOMPLETE)
-				|| keyWord.equals(CommandKey.UNDO)
-				|| keyWord.equals(CommandKey.REDO)) {
-			taskWord = sentenceString.checkTaskWords(keyWord);
-		}
-
-		/*
-		 * If the command is one of the following (in the if statement),
-		 * multiple index can be input by the user. Thus, this block is to check
-		 * and extract the indices.
-		 */
-		if (keyWord.equals(CommandKey.DELETE)
-				|| keyWord.equals(CommandKey.COMPLETE)
-				|| keyWord.equals(CommandKey.UNCOMPLETE)) {
-			multipleIndices = sentenceString.extractIndices();
-		}
-		/*
-		 * === editIndex status === If the command word is the first word, index
-		 * of editing must be stated after it. Else if command word is not the
-		 * first word, index must be the first word. If it appears anywhere
-		 * else, it is regarded as time. Only when adding a task, index will not
-		 * be considered.
-		 */
-		if (sentenceString.getWordsLeft() >= 1) {
-			if (!(keyWord.equals(CommandKey.CREATE))) {
-				editIndex = sentenceString.getIndex();
-			}
-			toDo = sentenceString.remainingToString();
-
-			LOGGER.log(Level.FINE, "toDo: " + toDo);
-			LOGGER.log(Level.FINE, "editIndex " + editIndex);
-		} else {
-			assert sentenceString.getWordsLeft() == 0;
-		}
-
-		checkForQuotations();
-
-		TimeParser timeParser = new TimeParser(toDo);
-		// sortedCommand = timeParser.getSortedCommand() + "";
-
-		if (timeParser.isTimedTask()) {
-			// Start time is earlier than end time.
-			if ((timeParser.getStartTime()).compareTo(timeParser.getEndTime()) < 0) {
-				startTime = timeParser.getStartTime();
-				endTime = timeParser.getEndTime();
-			} else { // Start time is later than end time, so swap.
-				endTime = timeParser.getStartTime();
-				startTime = timeParser.getEndTime();
-			}
-			isTimedTask = true;
-		} else if (timeParser.isDeadLineTask()) {
-			endTime = timeParser.getEndTime();
-			isDeadlineTask = true;
-		} else {
-			assert timeParser.isFloatingTask();
-			isFloatingTask = true;
-		}
-
-		if (endTime != null) {
-			smartParserCheck();
-		}
-		assert keyWord != null;
-	}
-
 	// Check for command with quotations before parsing.
 	public void checkForQuotations() {
 		String tempCheck = toDo;
@@ -351,7 +340,7 @@ public class Parser {
 			return true;
 		}
 	}
-
+	
 	public CommandKey getKeyCommand() {
 		return keyWord;
 	}
@@ -363,17 +352,7 @@ public class Parser {
 		}
 		return editIndex;
 	}
-
-	public ArrayList<Integer> getMultipleIndices() {
-		return multipleIndices;
-	}
-
-	// Get the raw edit index, which is not tampered to return
-	// default 1.
-	public int getRawEditIndex() {
-		return editIndex;
-	}
-
+	
 	public DateTime getStartTime() {
 		return startTime;
 	}
@@ -392,6 +371,38 @@ public class Parser {
 
 	public boolean isTimedTask() {
 		return isTimedTask;
+	}
+
+	public boolean isValid() {
+		return isValid;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public TaskIdentifiers getTaskWord() {
+		return taskWord;
+	}
+
+	//@author A0112230H
+	// Command containing key command and its description.
+	public String getRawCommand() {
+		if (rawCommand != null) {
+			return rawCommand.trim();
+		} else {
+			return "";
+		}
+	}
+
+	// Get the raw edit index, which is not tampered to return
+	// default 1.
+	public int getRawEditIndex() {
+		return editIndex;
+	}
+
+	public ArrayList<Integer> getMultipleIndices() {
+		return multipleIndices;
 	}
 
 	// Checks if the date and time entered by user is not a past time. If it is,
@@ -420,17 +431,5 @@ public class Parser {
 				endTime = newDate;
 			}
 		}
-	}
-
-	public boolean isValid() {
-		return isValid;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public TaskIdentifiers getTaskWord() {
-		return taskWord;
 	}
 }
