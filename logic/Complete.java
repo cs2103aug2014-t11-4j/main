@@ -151,8 +151,6 @@ public class Complete extends CommandClass {
 	
 	private String unCheck() {
 		// TODO Auto-generated method stub	
-		taskListVar.unComplete(index);
-		//return toDo.toString() + " is not completed!";
 		if (isValid==false){
 			return "Invalid index";
 		} 
@@ -161,28 +159,20 @@ public class Complete extends CommandClass {
 			Stack<Integer> temp = new Stack<Integer>();
 			Stack<Task> taskTemp = new Stack<Task>();
 			int count = 0;
-			boolean gotOne = false;
 			while(!completeAllIndex.empty()){
 				int indexNum = completeAllIndex.pop();
-				if(indexNum == 1){
-					gotOne = true;
-				}
-				System.out.println(indexNum);
 				taskListVar.unComplete(indexNum);
 				temp.push(indexNum);
-				System.out.println(completeAll.peek());
 				taskTemp.push(completeAll.pop());
 				count++;
 			}
 			completeAllIndex = temp;
 			completeAll = taskTemp;
-			if (!gotOne){
-				taskListVar.complete(1);
-			}
 			return count + " task(s) is/are uncompleted.";
+		} else {
+			taskListVar.unComplete(index);
+			return toDo.toString() + " is uncompleted";
 		}
-		taskListVar.unComplete(index);
-		return toDo.toString() + " is uncompleted";
 	}
 
 	@Override

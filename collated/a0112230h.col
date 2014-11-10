@@ -356,8 +356,6 @@ public class Complete extends CommandClass {
 	
 	private String unCheck() {
 		// TODO Auto-generated method stub	
-		taskListVar.unComplete(index);
-		//return toDo.toString() + " is not completed!";
 		if (isValid==false){
 			return "Invalid index";
 		} 
@@ -376,9 +374,10 @@ public class Complete extends CommandClass {
 			completeAllIndex = temp;
 			completeAll = taskTemp;
 			return count + " task(s) is/are uncompleted.";
+		} else {
+			taskListVar.unComplete(index);
+			return toDo.toString() + " is uncompleted";
 		}
-		taskListVar.complete(index);
-		return toDo.toString() + " is uncompleted";
 	}
 
 	@Override
