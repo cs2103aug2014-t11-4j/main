@@ -15,12 +15,12 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class FloatingTask extends Task{
 	
-	public static void main(String[] args){
+	/*public static void main(String[] args){
 		Task task = new FloatingTask();
 		DateTimeFormatter dtf = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
 		System.out.println(task.toString(dtf));
 		System.out.println(task.getKeyTime());
-	}
+	}*/
 	
 	public FloatingTask(FloatingTask another){
 		super(another.getDescription());

@@ -6,7 +6,7 @@ import org.joda.time.format.DateTimeFormatter;
 //@author A0116678U
 public class DeadlineTask extends FloatingTask{
 	
-	public static void main(String[] args){
+	/*public static void main(String[] args){
 		DeadlineTask time = new DeadlineTask("deadline task", new DateTime(2014,10,9,19,15,00));
 
 		DateTimeFormatter dtf = DateTimeFormat.forPattern("YY-MM-dd HH:mm");
@@ -15,7 +15,7 @@ public class DeadlineTask extends FloatingTask{
 		
 		System.out.println(time.toString(dtf));
 		System.out.println(time2.toString(dtf));
-	}
+	}*/
 
 	public DeadlineTask(String description, DateTime time) {
 		super(description);

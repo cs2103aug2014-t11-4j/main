@@ -20,10 +20,10 @@ public class testTaskList {
 	private static String newLine = System.getProperty("line.separator");
 	private static StringBuilder outputStr = new StringBuilder("There are 9 tasks listed:"+newLine
 			+ "Deadline tasks are:"+newLine
-			+ "[No.1][10-10-10, 18:00:00]buy a fish"+newLine
-			+ "[No.2][10-10-10, 18:00:00 - 11-09-01, 22:22:22]: "+newLine
-			+ "something happens [Completed]"+newLine
-			+ "[No.3][11-09-01, 22:22:22 - 15-03-04, 05:08:09]: "+newLine
+			+ "1. 10/10/2010, 18:00, buy a fish"+newLine
+			+ "2. 10/10/2010, 18:00 - 01/09/2011, 22:22,"+newLine
+			+ "something happens" + '\u2713'+newLine
+			+ "3. 01/09/2011, 22:22 - 04/03/2015, 05:08,"+newLine
 			+ "something happens"+newLine);
 
 	@BeforeClass
@@ -57,7 +57,7 @@ public class testTaskList {
 		}
 		DateTime now = DateTime.now();
 		Task anotherTask = new DeadlineTask("edited Task",now);
-		outputStr.append("[No.4][" + LogicFacade.DATE_FORMAT.print(now)+ "]edited Task"+newLine);
+		outputStr.append("4. " + LogicFacade.DATE_FORMAT.print(now)+ ", edited Task"+newLine);
 		testList.complete(2);
 		testList.editTask(3, anotherTask);
 		testList.complete(8);
@@ -78,11 +78,11 @@ public class testTaskList {
 	@Test
 	public void testDeadlineTask(){
 		outputStr.append("Floating tasks are:"+newLine
-				+ "[No.1]lecture on Monday"+newLine
-				+ "[No.2]default task."+newLine
-				+ "[No.3]something happens"+newLine
-				+ "[No.4]default task."+newLine
-				+ "[No.5]buy a fish"+newLine);
+				+ "1. lecture on Monday"+newLine
+				+ "2. default task."+newLine
+				+ "3. something happens"+newLine
+				+ "4. default task."+newLine
+				+ "5. buy a fish"+newLine);
 		assertEquals(testList.viewAll(LogicFacade.DATE_FORMAT),outputStr.toString());
 	}
 

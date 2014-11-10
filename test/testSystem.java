@@ -19,7 +19,7 @@ public class testSystem {
 				"add time task today",
 				"add another time task tomorrow",
 				"add a third time task from 11am to 2pm yesterday",
-				"add a 4th wrong time task from 3pm to 11am next Monday",
+				"add a 4th time task from 3pm to 11am next Monday",
 				"delete 1",
 				"delete 5",
 				"delete 7",

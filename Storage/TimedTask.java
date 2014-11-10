@@ -5,11 +5,11 @@ import org.joda.time.format.DateTimeFormatter;
 
 //@author A0116678U
 public class TimedTask extends DeadlineTask {
-	public static void main(String[] args){
+	/*public static void main(String[] args){
 		Task time = new TimedTask("timed task", new DateTime(2014,10,9,19,15,00), new DateTime());
 		DateTimeFormatter dtf = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
 		System.out.println(time.toString(dtf));
-	}
+	}*/
 	
 	public TimedTask(String description, DateTime beginTime, DateTime endTime){
 		super(description,endTime);
