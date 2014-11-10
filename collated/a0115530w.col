@@ -92,6 +92,7 @@ public class FillUpMainWindow {
 	private JTextField readInput;
 	private JTextArea liveUserFeedback;
 	public TabbedPaneDisplay taskDisplay;
+	final public ImageIcon img = new ImageIcon(getClass().getResource("/gui/wood.jpg"));
 	
 	public DefiningConstraints gridBag = new DefiningConstraints();
 	
@@ -119,15 +120,9 @@ public class FillUpMainWindow {
 	}
 
 	private void setBackGroundImage() {
-		BufferedImage img;
-		try {
-			img = ImageIO.read(new File("gui/wood.jpg"));
-			JLabel background = new JLabel(new ImageIcon(img));
-			background.setBounds(MAIN_PANEL_POS_X,MAIN_PANEL_POS_Y, MAIN_PANEL_WIDTH, MAIN_PANEL_HEIGHT );
-			displayLayers.add(background,new Integer(0));
-		} catch (IOException e) {
-		}
-		
+		JLabel background = new JLabel(img);
+		background.setBounds(MAIN_PANEL_POS_X,MAIN_PANEL_POS_Y, MAIN_PANEL_WIDTH, MAIN_PANEL_HEIGHT );
+		displayLayers.add(background,new Integer(0));
 	}
 
 	private JPanel createUserInputPanel(){
@@ -422,6 +417,7 @@ public class InputWindow extends JFrame {
 	private static final int WINDOW_POS_Y = 10;
 	private static final int WINDOW_WIDTH = 450;
 	private static final int WINDOW_HEIGHT = 650;
+	final public ImageIcon img = new ImageIcon(getClass().getResource("/gui/goindigologo.jpg"));
 	
 	
 	@Override
@@ -455,7 +451,7 @@ public class InputWindow extends JFrame {
 		mainWindow.setBounds(WINDOW_POS_X, WINDOW_POS_Y, WINDOW_WIDTH, WINDOW_HEIGHT);
 		mainWindow.setResizable(false);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainWindow.setIconImage(new ImageIcon("gui/goindigologo.jpg").getImage());
+		mainWindow.setIconImage(img.getImage());
 	}
 
 }

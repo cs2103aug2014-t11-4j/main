@@ -19,6 +19,7 @@ public class InputWindow extends JFrame {
 	private static final int WINDOW_POS_Y = 10;
 	private static final int WINDOW_WIDTH = 450;
 	private static final int WINDOW_HEIGHT = 650;
+	final public ImageIcon img = new ImageIcon(getClass().getResource("/gui/goindigologo.jpg"));
 	
 	
 	@Override
@@ -52,7 +53,7 @@ public class InputWindow extends JFrame {
 		mainWindow.setBounds(WINDOW_POS_X, WINDOW_POS_Y, WINDOW_WIDTH, WINDOW_HEIGHT);
 		mainWindow.setResizable(false);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainWindow.setIconImage(new ImageIcon("gui/goindigologo.jpg").getImage());
+		mainWindow.setIconImage(img.getImage());
 	}
 
 }

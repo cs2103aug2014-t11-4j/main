@@ -12,11 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -54,6 +50,7 @@ public class FillUpMainWindow {
 	private JTextField readInput;
 	private JTextArea liveUserFeedback;
 	public TabbedPaneDisplay taskDisplay;
+	final public ImageIcon img = new ImageIcon(getClass().getResource("/gui/wood.jpg"));
 	
 	public DefiningConstraints gridBag = new DefiningConstraints();
 	
@@ -81,15 +78,9 @@ public class FillUpMainWindow {
 	}
 
 	private void setBackGroundImage() {
-		BufferedImage img;
-		try {
-			img = ImageIO.read(new File("gui/wood.jpg"));
-			JLabel background = new JLabel(new ImageIcon(img));
-			background.setBounds(MAIN_PANEL_POS_X,MAIN_PANEL_POS_Y, MAIN_PANEL_WIDTH, MAIN_PANEL_HEIGHT );
-			displayLayers.add(background,new Integer(0));
-		} catch (IOException e) {
-		}
-		
+		JLabel background = new JLabel(img);
+		background.setBounds(MAIN_PANEL_POS_X,MAIN_PANEL_POS_Y, MAIN_PANEL_WIDTH, MAIN_PANEL_HEIGHT );
+		displayLayers.add(background,new Integer(0));
 	}
 
 	private JPanel createUserInputPanel(){
