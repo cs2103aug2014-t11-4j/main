@@ -55,7 +55,6 @@ public class TimeParser {
 		if ((parser == null) || (size == 0)) {
 			LOGGER.log(Level.FINE, "Floating task detected.");
 			sortedUserCommand = userCommand + "";
-			assert isDateFree();
 		}
 
 		else if ((hasFilteredTimedTask == true)
